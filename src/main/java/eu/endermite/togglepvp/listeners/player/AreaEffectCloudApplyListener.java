@@ -38,9 +38,10 @@ public class AreaEffectCloudApplyListener implements Listener {
                     if(entity instanceof Player) {
                         Player damager = (Player) event.getEntity().getSource();
                         Player victim = (Player) entity;
+                        if (damager == victim)
+                            continue;
 
                         ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-
                         boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
 
                         if (!damagerPvpEnabled) {
