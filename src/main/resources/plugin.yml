@@ -8,6 +8,9 @@ commands:
   pvp:
     usage: /pvp [args]
 permissions:
+  togglepvp.command:
+    default: true
+    description: Allows usage of /pvp command
   togglepvp.command.toggle:
     default: true
     description: Allows usage of /pvp toggle/enable/disable command
