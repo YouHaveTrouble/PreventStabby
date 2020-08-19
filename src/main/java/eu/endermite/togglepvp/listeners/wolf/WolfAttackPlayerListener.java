@@ -9,6 +9,10 @@ import org.bukkit.event.Listener;
 
 public class WolfAttackPlayerListener implements Listener {
 
+    /**
+     * Wolves stop following player with pvp off after trying to hit them
+     * This is to fix any inconsistancy with wolf behaviour
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWolfAttack(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Wolf) {

@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 
 public class WolfTargettingListener implements Listener {
 
+    /**
+     * Stops wolves with owners targetting players with pvp off
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWolfTarget(org.bukkit.event.entity.EntityTargetEvent event) {
         if (event.getEntity() instanceof Wolf) {
