@@ -2,8 +2,9 @@ package eu.endermite.togglepvp;
 
 import eu.endermite.togglepvp.commands.MainCommand;
 import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.listeners.*;
 import eu.endermite.togglepvp.listeners.player.*;
+import eu.endermite.togglepvp.listeners.wolf.WolfAttackPlayerListener;
+import eu.endermite.togglepvp.listeners.wolf.WolfTargettingListener;
 import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
 import lombok.Getter;
@@ -38,7 +39,9 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerHitByFireworkListener(), this);
         getServer().getPluginManager().registerEvents(new FishingListener(), this);
         getServer().getPluginManager().registerEvents(new LavaDumpAndIgniteListener(), this);
+
         getServer().getPluginManager().registerEvents(new WolfTargettingListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
 
         getCommand("pvp").setExecutor(new MainCommand());
         getCommand("pvp").setTabCompleter(new MainCommand());

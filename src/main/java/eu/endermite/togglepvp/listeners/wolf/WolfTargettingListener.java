@@ -1,4 +1,4 @@
-package eu.endermite.togglepvp.listeners;
+package eu.endermite.togglepvp.listeners.wolf;
 
 import eu.endermite.togglepvp.TogglePvP;
 import org.bukkit.entity.Fox;
