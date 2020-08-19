@@ -5,7 +5,6 @@ import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +34,8 @@ public class MainCommand implements TabExecutor {
                         sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_such_command()));
                         break;
                 }
+            } else {
+                HelpCommand.help(sender, args);
             }
 
         return true;

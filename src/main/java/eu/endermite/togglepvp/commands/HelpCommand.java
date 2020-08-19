@@ -15,7 +15,7 @@ public class HelpCommand {
 
             List<String> helpPage = new ArrayList<>();
 
-            helpPage.add(PluginMessages.parseMessage("&b&m        &bTogglePvP Help&b&m        "));
+            helpPage.add(PluginMessages.parseMessage("&b&m             &bTogglePvP Help&b&m             "));
             helpPage.add(PluginMessages.parseMessage("&9/pvp &b&lhelp &f- shows this message"));
             if (sender.hasPermission("togglepvp.command.toggle")) {
                 helpPage.add(PluginMessages.parseMessage("&9/pvp &b&l[on/off] &f- enables or disables PvP"));
