@@ -13,7 +13,10 @@ permissions:
     description: Allows usage of /pvp command
   togglepvp.command.toggle:
     default: true
-    description: Allows usage of /pvp toggle/enable/disable command
+    description: Allows usage of /pvp <toggle/enable/disable> command
+  togglepvp.command.toggle.others:
+    default: op
+    description: Allows usage of /pvp <toggle/enable/disable> <player> command
   togglepvp.command.reload:
     default: op
     description: Allows usage of /pvp reload command

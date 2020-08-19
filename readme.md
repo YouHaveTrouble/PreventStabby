@@ -1,4 +1,4 @@
-<h2>TogglePvP</h2>
+<h2>TogglePvP ⚔</h2>
 
 Plugin is under heavy development and things will change often.
 
@@ -11,11 +11,17 @@ Permission: <code>togglepvp.command</code> (given by default) :
 </ul>
 
 Permission: <code>togglepvp.command.toggle</code> (given by default) :
-
 <ul>
-<li>/pvp toggle - displays help message</li>
+<li>/pvp toggle - toggles PvP</li>
 <li>/pvp on - enables PvP (aliases: enable)</li>
 <li>/pvp off - disables PvP (aliases: disable)</li>
+</ul>
+
+Permission: <code>togglepvp.command.toggle.others</code> (given by default) :
+<ul>
+<li>/pvp toggle [player] - toggles other player's PvP</li>
+<li>/pvp on [player] - enables other player's PvP (aliases: enable)</li>
+<li>/pvp off [player] - disables other player's PvP (aliases: disable)</li>
 </ul>
 
 <h3>Features</h3>
@@ -30,5 +36,7 @@ fishing rod on players who have pvp disabled.
 There is also a feature that disallows pouring lava or using
 flint and steel nearby players with disabled pvp. You can
 either disable it in config or set its radius.
+
+Tamed wolves will not attack players with pvp off.
 
 
