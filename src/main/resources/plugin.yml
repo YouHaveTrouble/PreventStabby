@@ -1,0 +1,13 @@
+name: TogglePvP
+version: ${project.version}
+main: eu.endermite.togglepvp.TogglePvP
+authors: [YouHaveTrouble]
+api-version: 1.13
+description: PvP toggle plugin
+commands:
+  pvp:
+    usage: /pvp [args]
+permissions:
+  togglepvp.command.toggle:
+    default: true
+    description: Allows usage of /pvp toggle/enable/disable command

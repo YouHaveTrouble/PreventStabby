@@ -1,0 +1,16 @@
+settings:
+  # Decides if pvp should be enabled or disabled by default
+  pvp_enabled_by_default: false
+
+  # Prevents dumping lava and lighting blocks on fire near players with pvp off
+  lava_and_fire_stopper:
+    enabled: true
+    radius: 2.5
+
+messages:
+  pvp_enabled: "&cYou enabled PvP!"
+  pvp_disabled: "&cYou disabled PvP!"
+  cannot_attack_victim: "&cYou can't attack players that have PvP turned off!"
+  cannot_attack_attacker: "&cYou can't attack players while you have PvP turned off!"
+  no_permission: "&cYou don't have permission to use that."
+  no_such_command: "&cNo such command."
