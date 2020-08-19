@@ -12,7 +12,6 @@ public class MainCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
         if (sender.hasPermission("togglepvp.command")) {
             if (args.length >= 1) {
                 switch (args[0].toLowerCase()) {
@@ -41,10 +40,8 @@ public class MainCommand implements TabExecutor {
                 HelpCommand.help(sender, args);
             }
         } else {
-            sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_such_command()));
+            sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_permission()));
         }
-
-
         return true;
     }
 
@@ -84,7 +81,6 @@ public class MainCommand implements TabExecutor {
                 }
             }
         }
-
         return commands;
     }
 }
