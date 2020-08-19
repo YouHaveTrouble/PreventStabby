@@ -19,6 +19,10 @@ public class FishingListener implements Listener {
             Player damager = event.getPlayer();
             Player victim = (Player) event.getCaught();
 
+            if (damager == victim) {
+                return;
+            }
+
             ConfigCache config = TogglePvP.getPlugin().getConfigCache();
             boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
             boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
