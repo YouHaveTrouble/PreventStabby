@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 public final class TogglePvP extends JavaPlugin {
 
@@ -43,8 +44,8 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WolfTargettingListener(), this);
         getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
 
-        getCommand("pvp").setExecutor(new MainCommand());
-        getCommand("pvp").setTabCompleter(new MainCommand());
+        Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
+        Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());
     }
 
     public void reloadPluginConfig() {

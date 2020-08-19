@@ -13,7 +13,7 @@ public class MainCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender.hasPermission("togglepvp.command"))
+        if (sender.hasPermission("togglepvp.command")) {
             if (args.length >= 1) {
                 switch (args[0].toLowerCase()) {
                     case "help":
@@ -30,6 +30,9 @@ public class MainCommand implements TabExecutor {
                     case "disable":
                         PvpToggleCommand.disable(sender, args);
                         break;
+                    case "reload":
+                        ReloadCommand.reload(sender);
+                        break;
                     default:
                         sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_such_command()));
                         break;
@@ -37,6 +40,10 @@ public class MainCommand implements TabExecutor {
             } else {
                 HelpCommand.help(sender, args);
             }
+        } else {
+            sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_such_command()));
+        }
+
 
         return true;
     }
@@ -49,6 +56,9 @@ public class MainCommand implements TabExecutor {
         List<String> noPerm = new ArrayList<>();
         noPerm.add("help");
 
+        List<String> reloadPerm = new ArrayList<>();
+        reloadPerm.add("reload");
+
         List<String> togglePerm = new ArrayList<>();
         togglePerm.add("toggle");
         togglePerm.add("on");
@@ -57,14 +67,20 @@ public class MainCommand implements TabExecutor {
         togglePerm.add("disable");
 
         if (args.length == 1) {
+            for (String noPermCmd : noPerm) {
+                if (noPermCmd.startsWith(arg1))
+                    commands.add(noPermCmd);
+            }
             if (sender.hasPermission("togglepvp.command.toggle")) {
-                for (String noPermCmd : noPerm) {
-                    if (noPermCmd.startsWith(arg1))
-                        commands.add(noPermCmd);
-                }
                 for (String togglePermCmd : togglePerm) {
                     if (togglePermCmd.startsWith(arg1))
                         commands.add(togglePermCmd);
+                }
+            }
+            if (sender.hasPermission("togglepvp.command.reload")) {
+                for (String reloadPermCmd : reloadPerm) {
+                    if (reloadPermCmd.startsWith(arg1))
+                        commands.add(reloadPermCmd);
                 }
             }
         }
