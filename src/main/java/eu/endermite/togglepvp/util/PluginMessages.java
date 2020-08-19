@@ -19,4 +19,9 @@ public class PluginMessages {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
     }
 
+    public static String parsePlayerName(Player player, String message) {
+        message = message.replaceAll("%player%", player.getDisplayName());
+        return parseMessage(message);
+    }
+
 }

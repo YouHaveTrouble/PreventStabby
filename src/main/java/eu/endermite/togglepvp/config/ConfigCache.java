@@ -7,7 +7,14 @@ import org.bukkit.configuration.Configuration;
 public class ConfigCache {
 
     @Getter private final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled;
-    @Getter private final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker, no_permission, no_such_command;
+    @Getter private final String pvp_enabled;
+    @Getter private final String pvp_disabled;
+    @Getter private final String cannot_attack_victim;
+    @Getter private final String cannot_attack_attacker;
+    @Getter private final String no_permission;
+    @Getter private final String no_such_command;
+    @Getter private final String pvp_enabled_other;
+    @Getter private final String pvp_disabled_other;
     @Getter private final double lava_and_fire_stopper_radius;
 
     public ConfigCache() {
@@ -27,5 +34,7 @@ public class ConfigCache {
         this.cannot_attack_attacker = config.getString("messages.cannot_attack_attacker", "&cYou can't attack players while you have PvP turned off!");
         this.no_permission = config.getString("messages.no_permission", "&cYou don't have permission to use that.");
         this.no_such_command = config.getString("messages.no_such_command", "&cNo such command.");
+        this.pvp_enabled_other = config.getString("messages.pvp_enabled_others", "&cYou've enabled %player%'s PvP.");
+        this.pvp_disabled_other =config.getString("messages.pvp_disabled_others", "&cYou've disabled %player%'s PvP.");
     }
 }

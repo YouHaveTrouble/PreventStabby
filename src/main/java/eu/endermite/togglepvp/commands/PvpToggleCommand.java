@@ -38,8 +38,34 @@ public class PvpToggleCommand {
                 } else {
                     sender.sendMessage("Try /pvp toggle <player>");
                 }
-            }
+            } else if (args.length == 2) {
+                if (!sender.hasPermission("togglepvp.command.toggle.others")) {
+                    String message = TogglePvP.getPlugin().getConfigCache().getNo_permission();
+                    BaseComponent[] component = TextComponent.fromLegacyText(message);
+                    sender.spigot().sendMessage(component);
+                    return;
+                }
+                try {
+                    Player player = Bukkit.getPlayer(args[1]);
+                    boolean currentState = TogglePvP.getPlugin().getPlayerManager().togglePlayerPvpState(player);
+                    String message;
+                    if (currentState) {
+                        message = TogglePvP.getPlugin().getConfigCache().getPvp_enabled_other();
+                    } else {
+                        message = TogglePvP.getPlugin().getConfigCache().getPvp_disabled_other();
+                    }
+                    sender.sendMessage(PluginMessages.parsePlayerName(player, message));
 
+                } catch (NullPointerException e) {
+                    sender.sendMessage(PluginMessages.parseMessage("&cPlayer offline."));
+                }
+            } else {
+                if (sender.hasPermission("togglepvp.command.toggle.others")) {
+                    sender.sendMessage("Try /pvp toggle <player>");
+                } else {
+                    sender.sendMessage("Try /pvp toggle");
+                }
+            }
         });
     }
 
@@ -60,6 +86,27 @@ public class PvpToggleCommand {
             } else {
                 sender.sendMessage("Try /pvp enable <player>");
             }
+        } else if (args.length == 2) {
+            if (!sender.hasPermission("togglepvp.command.toggle.others")) {
+                String message = TogglePvP.getPlugin().getConfigCache().getNo_permission();
+                BaseComponent[] component = TextComponent.fromLegacyText(message);
+                sender.spigot().sendMessage(component);
+                return;
+            }
+            try {
+                Player player = Bukkit.getPlayer(args[1]);
+                String message = TogglePvP.getPlugin().getConfigCache().getPvp_enabled_other();
+                sender.sendMessage(PluginMessages.parsePlayerName(player, message));
+                TogglePvP.getPlugin().getPlayerManager().setPlayerPvpState(player, true);
+            } catch (NullPointerException e) {
+                sender.sendMessage(PluginMessages.parseMessage("&cPlayer offline."));
+            }
+        } else {
+            if (sender.hasPermission("togglepvp.command.toggle.others")) {
+                sender.sendMessage("Try /pvp enable <player>");
+            } else {
+                sender.sendMessage("Try /pvp enable");
+            }
         }
     }
 
@@ -79,6 +126,27 @@ public class PvpToggleCommand {
                 player.spigot().sendMessage(ChatMessageType.CHAT, component);
             } else {
                 sender.sendMessage("Try /pvp disable <player>");
+            }
+        } else if (args.length == 2) {
+            if (!sender.hasPermission("togglepvp.command.toggle.others")) {
+                String message = TogglePvP.getPlugin().getConfigCache().getNo_permission();
+                BaseComponent[] component = TextComponent.fromLegacyText(message);
+                sender.spigot().sendMessage(component);
+                return;
+            }
+            try {
+                Player player = Bukkit.getPlayer(args[1]);
+                String message = TogglePvP.getPlugin().getConfigCache().getPvp_disabled_other();
+                sender.sendMessage(PluginMessages.parsePlayerName(player, message));
+                TogglePvP.getPlugin().getPlayerManager().setPlayerPvpState(player, true);
+            } catch (NullPointerException e) {
+                sender.sendMessage(PluginMessages.parseMessage("&cPlayer offline."));
+            }
+        } else {
+            if (sender.hasPermission("togglepvp.command.toggle.others")) {
+                sender.sendMessage("Try /pvp disable <player>");
+            } else {
+                sender.sendMessage("Try /pvp disable");
             }
         }
     }
