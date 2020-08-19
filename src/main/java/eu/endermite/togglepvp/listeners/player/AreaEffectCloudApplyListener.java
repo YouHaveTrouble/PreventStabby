@@ -30,6 +30,7 @@ public class AreaEffectCloudApplyListener implements Listener {
                     potionEffectType.equals(PotionEffectType.POISON) ||
                     potionEffectType.equals(PotionEffectType.SLOW_DIGGING) ||
                     potionEffectType.equals(PotionEffectType.WEAKNESS) ||
+                    potionEffectType.equals(PotionEffectType.SLOW) ||
                     potionEffectType.equals(PotionEffectType.WITHER)) {
 
                 Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
@@ -43,11 +44,10 @@ public class AreaEffectCloudApplyListener implements Listener {
 
                         ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                         boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
-
                         if (!damagerPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                            return;
+                            continue;
                         }
                         boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
                         if (!victimPvpEnabled) {

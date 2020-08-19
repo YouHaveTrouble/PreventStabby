@@ -35,6 +35,7 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerAttackListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new AreaEffectCloudApplyListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerHitBySplashPotionListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByLightningListener(), this);
         getServer().getPluginManager().registerEvents(new LightningBlockIgniteListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByFireworkListener(), this);
@@ -70,8 +71,5 @@ public final class TogglePvP extends JavaPlugin {
     }
 
     public DatabaseSQLite getSqLite() {return sqLite;}
-
-
-
 
 }
