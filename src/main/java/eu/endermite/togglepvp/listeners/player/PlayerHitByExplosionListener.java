@@ -17,7 +17,6 @@ import java.util.UUID;
 
 public class PlayerHitByExplosionListener implements Listener {
 
-
     /**
      * Cancels explosion damage for players with pvp off that is caused by players
      */

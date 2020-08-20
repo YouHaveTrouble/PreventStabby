@@ -6,7 +6,7 @@ import eu.endermite.togglepvp.listeners.player.*;
 import eu.endermite.togglepvp.listeners.player.WolfAttackPlayerListener;
 import eu.endermite.togglepvp.listeners.player.WolfTargettingPlayerListener;
 import eu.endermite.togglepvp.listeners.wolf.PlayerAttackWolfListener;
-import eu.endermite.togglepvp.listeners.wolf.PlayerHitWolfByProjectile;
+import eu.endermite.togglepvp.listeners.wolf.PlayerHitWolfWithProjectile;
 import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
@@ -52,7 +52,7 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
 
         getServer().getPluginManager().registerEvents(new PlayerAttackWolfListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerHitWolfByProjectile(), this);
+        getServer().getPluginManager().registerEvents(new PlayerHitWolfWithProjectile(), this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
         Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());
