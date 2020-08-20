@@ -39,4 +39,10 @@ either disable it in config or set its radius.
 
 Tamed wolves will not attack players with pvp off.
 
+<h3>TODO</h3>
+<ul>
+<li>combat timer - deny players changing pvp state mid combat</li>
+<li>smart cache - way to check offline players pvp state without constant I/O</li>
+</ul>
+
 
