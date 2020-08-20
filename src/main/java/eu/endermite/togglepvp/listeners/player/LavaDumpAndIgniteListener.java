@@ -17,6 +17,9 @@ public class LavaDumpAndIgniteListener implements Listener {
 
     private ConfigCache config = TogglePvP.getPlugin().getConfigCache();
 
+    /**
+     * Prevents dumping lava and pufferfish bucket near players with pvp off
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLavaDump(org.bukkit.event.player.PlayerBucketEmptyEvent event) {
 
@@ -48,9 +51,11 @@ public class LavaDumpAndIgniteListener implements Listener {
                 }
             }
         }
-
-
     }
+
+    /**
+     * Prevents setting blocks on fire near players with pvp off
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onIgnite(org.bukkit.event.block.BlockIgniteEvent event) {
 
@@ -82,11 +87,5 @@ public class LavaDumpAndIgniteListener implements Listener {
                 }
             }
         }
-
-
     }
-
-
-
-
 }
