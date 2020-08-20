@@ -2,10 +2,14 @@ settings:
   # Decides if pvp should be enabled or disabled by default
   pvp_enabled_by_default: false
 
-  # Prevents dumping lava and lighting blocks on fire near players with pvp off
+  # Prevents dumping lava and pufferfish bucket, placing wither roses and lighting blocks on fire near players with pvp off
   lava_and_fire_stopper:
     enabled: true
     radius: 2.5
+
+  # Disables channeling (trident enchant) lightning strike
+  # You may want to keep it disabled because players with pvp off can use it to attack players with pvp on
+  channeling_enchant_disabled: false
 
 messages:
   pvp_enabled: "&cYou enabled PvP!"

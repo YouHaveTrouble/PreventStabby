@@ -6,7 +6,8 @@ import org.bukkit.configuration.Configuration;
 
 public class ConfigCache {
 
-    @Getter private final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled;
+    @Getter private final boolean pvp_enabled_by_default;
+    @Getter private final boolean lava_and_fire_stopper_enabled;
     @Getter private final String pvp_enabled;
     @Getter private final String pvp_disabled;
     @Getter private final String cannot_attack_victim;
@@ -16,6 +17,7 @@ public class ConfigCache {
     @Getter private final String pvp_enabled_other;
     @Getter private final String pvp_disabled_other;
     @Getter private final double lava_and_fire_stopper_radius;
+    @Getter private final boolean channeling_enchant_disabled;
 
     public ConfigCache() {
 
@@ -26,6 +28,8 @@ public class ConfigCache {
 
         this.lava_and_fire_stopper_enabled = config.getBoolean("settings.lava_and_fire_stopper.enabled", true);
         this.lava_and_fire_stopper_radius = config.getDouble("settings.lava_and_fire_stopper.radius", 2.5);
+
+        this.channeling_enchant_disabled = config.getBoolean("channeling_enchant_disabled", true);
 
         // Messages
         this.pvp_enabled = config.getString("messages.pvp_enabled", "&cYou enabled PvP!");

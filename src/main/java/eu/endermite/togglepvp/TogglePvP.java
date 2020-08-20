@@ -41,6 +41,8 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerHitByFireworkListener(), this);
         getServer().getPluginManager().registerEvents(new FishingListener(), this);
         getServer().getPluginManager().registerEvents(new LavaDumpAndIgniteListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerPlaceWitherRoseListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerHitByExplosionListener(), this);
 
         getServer().getPluginManager().registerEvents(new WolfTargettingListener(), this);
         getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
