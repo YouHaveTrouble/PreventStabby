@@ -4,10 +4,8 @@ import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -72,6 +70,10 @@ public class PlayerHitByExplosionListener implements Listener {
             }
         }
     }
+
+    /**
+     * Tag ender crystal with destroying players uuid
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerPrimedTnt(org.bukkit.event.entity.ExplosionPrimeEvent event) {
         if (event.getEntity() instanceof TNTPrimed) {
@@ -86,6 +88,29 @@ public class PlayerHitByExplosionListener implements Listener {
                     tntPrimed.setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvP.getPlugin(), damagerUuid));
                 }catch (NullPointerException ignored) {}
             }
+        }
+    }
+
+    /**
+     * Tag TNT minecart with placing player uuid
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerPlacedTntMinecart(org.bukkit.event.entity.EntityPlaceEvent event) {
+        if (event.getEntityType().equals(EntityType.MINECART_TNT)) {
+            if (event.getPlayer() != null) {
+                event.getEntity().setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvP.getPlugin(), event.getPlayer().getUniqueId().toString()));
+            }
+        }
+    }
+
+    /**
+     * Tag TNT minecart with uuid of player who last nudged it
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerNudgedTntMinecart(org.bukkit.event.vehicle.VehicleEntityCollisionEvent event) {
+        if (event.getVehicle() instanceof ExplosiveMinecart && event.getEntity() instanceof Player) {
+            Player damager = (Player) event.getEntity();
+            event.getVehicle().setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvP.getPlugin(), damager.getUniqueId().toString()));
         }
     }
 
