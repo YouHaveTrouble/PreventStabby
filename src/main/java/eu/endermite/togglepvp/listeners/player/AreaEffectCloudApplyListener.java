@@ -43,13 +43,13 @@ public class AreaEffectCloudApplyListener implements Listener {
                             continue;
 
                         ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
+                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                         if (!damagerPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             continue;
                         }
-                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                         if (!victimPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());

@@ -20,7 +20,7 @@ public class WolfTargettingListener implements Listener {
             if (wolf.getOwner() != null) {
                 if (event.getTarget() instanceof Player) {
                     Player victim = (Player) event.getTarget();
-                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!victimPvpEnabled) {
                         event.setCancelled(true);
                     }
@@ -31,7 +31,7 @@ public class WolfTargettingListener implements Listener {
             if (fox.getFirstTrustedPlayer() != null) {
                 if (event.getTarget() instanceof Player) {
                     Player victim = (Player) event.getTarget();
-                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!victimPvpEnabled) {
                         event.setCancelled(true);
                     }

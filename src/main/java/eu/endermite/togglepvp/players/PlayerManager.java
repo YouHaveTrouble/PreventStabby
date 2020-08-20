@@ -1,50 +1,65 @@
 package eu.endermite.togglepvp.players;
 
 import eu.endermite.togglepvp.TogglePvP;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class PlayerManager {
 
-    HashMap<Player, HashMap<String, Object>> playerList = new HashMap<>();
+    @Getter HashMap<UUID, HashMap<String, Object>> playerList = new HashMap<>();
 
     public PlayerManager() {
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             HashMap<String, Object> playerData;
-            playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(p);
-            playerList.put(p, playerData);
+            playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(p.getUniqueId());
+            playerData.put("cachetime", refreshedCacheTime());
+            playerList.put(p.getUniqueId(), playerData);
         }
     }
 
-    public HashMap<String, Object> getPlayer(Player p) {
-        return playerList.get(p);
+
+    public long refreshedCacheTime() {
+        long cacheTime = TogglePvP.getPlugin().getConfigCache().getCache_time();
+        return Instant.now().getEpochSecond()+cacheTime;
     }
 
-    public void addPlayer(Player player, HashMap<String,Object> data) {
-        playerList.put(player, data);
+    public void refreshPlayersCacheTime(UUID uuid) {
+        playerList.get(uuid).replace("cachetime", refreshedCacheTime());
     }
 
-    public void removePlayer(Player player) {
-        playerList.remove(player);
+    public HashMap<String, Object> getPlayer(UUID uuid) {
+        return playerList.get(uuid);
     }
 
-    public boolean getPlayerPvPState(Player p) {
-        return (boolean) playerList.get(p).get("pvpenabled");
+    public void addPlayer(UUID uuid, HashMap<String,Object> data) {
+        playerList.put(uuid, data);
     }
 
-    public void setPlayerPvpState(Player player, boolean state) {
-        playerList.get(player).replace("pvpenabled", state);
+    public void removePlayer(UUID uuid) {
+        playerList.remove(uuid);
     }
 
-    public boolean togglePlayerPvpState(Player player) {
-        boolean currentState = (boolean) playerList.get(player).get("pvpenabled");
+    public boolean getPlayerPvPState(UUID uuid) {
+        return (boolean) playerList.get(uuid).get("pvpenabled");
+    }
+
+    public void setPlayerPvpState(UUID uuid, boolean state) {
+        playerList.get(uuid).replace("pvpenabled", state);
+    }
+
+    public boolean togglePlayerPvpState(UUID uuid) {
+        boolean currentState = (boolean) playerList.get(uuid).get("pvpenabled");
         if (currentState) {
-            playerList.get(player).replace("pvpenabled", false);
+            playerList.get(uuid).replace("pvpenabled", false);
             return false;
         } else {
-            playerList.get(player).replace("pvpenabled", true);
+            playerList.get(uuid).replace("pvpenabled", true);
             return true;
         }
     }

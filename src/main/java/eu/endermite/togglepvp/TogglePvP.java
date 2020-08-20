@@ -6,6 +6,7 @@ import eu.endermite.togglepvp.listeners.player.*;
 import eu.endermite.togglepvp.listeners.wolf.WolfAttackPlayerListener;
 import eu.endermite.togglepvp.listeners.wolf.WolfTargettingListener;
 import eu.endermite.togglepvp.players.PlayerManager;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,8 @@ public final class TogglePvP extends JavaPlugin {
         sqLite.createDatabaseFile();
         sqLite.testConnection();
         playerManager = new PlayerManager();
+
+        SmartCache.runSmartCache();
 
         getServer().getPluginManager().registerEvents(new PlayerJoinAndLeaveListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerAttackListener(), this);

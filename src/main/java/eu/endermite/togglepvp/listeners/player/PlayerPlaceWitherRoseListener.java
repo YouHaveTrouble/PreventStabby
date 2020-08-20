@@ -34,13 +34,13 @@ public class PlayerPlaceWitherRoseListener implements Listener {
                     Player damager = event.getPlayer();
                     Player victim = (Player) entity;
                     if (victim != damager) {
-                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
+                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                         if (!damagerPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             event.setCancelled(true);
                             return;
                         }
-                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                         if (!victimPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                             event.setCancelled(true);

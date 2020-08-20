@@ -30,8 +30,8 @@ public class PlayerHitByProjectileListener implements Listener {
 
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
 
-                boolean damagerPvpEnabled = (boolean) TogglePvP.getPlugin().getPlayerManager().getPlayer(damager).get("pvpenabled");
-                boolean victimPvpEnabled = (boolean) TogglePvP.getPlugin().getPlayerManager().getPlayer(victim).get("pvpenabled");
+                boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
 
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);

@@ -22,7 +22,7 @@ public class PlayerHitByLightningListener implements Listener {
     public void onPlayerLightningDamage(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1 && event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
-            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
             }

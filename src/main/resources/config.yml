@@ -11,6 +11,11 @@ settings:
   # You may want to keep it disabled because players with pvp off can use it to attack players with pvp on
   channeling_enchant_disabled: false
 
+  # Time (in seconds) to keep player data in memory when players goes offline.
+  # This is used for checking if offline players pvp state.
+  # Adjust only if you know what you're doing. NEVER set to less than 6.
+  cache_time: 30
+
 messages:
   pvp_enabled: "&cYou enabled PvP!"
   pvp_disabled: "&cYou disabled PvP!"

@@ -18,6 +18,7 @@ public class ConfigCache {
     @Getter private final String pvp_disabled_other;
     @Getter private final double lava_and_fire_stopper_radius;
     @Getter private final boolean channeling_enchant_disabled;
+    @Getter private final long cache_time;
 
     public ConfigCache() {
 
@@ -29,7 +30,9 @@ public class ConfigCache {
         this.lava_and_fire_stopper_enabled = config.getBoolean("settings.lava_and_fire_stopper.enabled", true);
         this.lava_and_fire_stopper_radius = config.getDouble("settings.lava_and_fire_stopper.radius", 2.5);
 
-        this.channeling_enchant_disabled = config.getBoolean("channeling_enchant_disabled", true);
+        this.channeling_enchant_disabled = config.getBoolean("settings.channeling_enchant_disabled", true);
+
+        this.cache_time = config.getLong("settings.cache_time", 30L);
 
         // Messages
         this.pvp_enabled = config.getString("messages.pvp_enabled", "&cYou enabled PvP!");

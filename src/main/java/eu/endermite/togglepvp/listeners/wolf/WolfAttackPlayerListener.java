@@ -18,8 +18,11 @@ public class WolfAttackPlayerListener implements Listener {
         if (event.getDamager() instanceof Wolf) {
             Wolf wolf = (Wolf) event.getDamager();
             if (wolf.getOwner() != null && event.getEntity() instanceof Player) {
+
+                //TODO check if offline wolf owner has pvp on or off and cancel this accordingly
+
                 Player victim = (Player) event.getEntity();
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                 if (!victimPvpEnabled) {
                     wolf.setAngry(false);
                     event.setCancelled(true);

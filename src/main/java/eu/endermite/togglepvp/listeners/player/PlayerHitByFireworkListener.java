@@ -19,7 +19,7 @@ public class PlayerHitByFireworkListener implements Listener {
                 if (damager == victim) {
                     return;
                 }
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                 }

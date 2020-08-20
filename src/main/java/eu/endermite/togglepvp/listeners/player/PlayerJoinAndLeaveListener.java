@@ -17,9 +17,9 @@ public class PlayerJoinAndLeaveListener implements Listener {
 
         Player player = event.getPlayer();
         HashMap<String, Object> playerData;
-        playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(player);
-        TogglePvP.getPlugin().getPlayerManager().addPlayer(player, playerData);
-
+        playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(player.getUniqueId());
+        playerData.put("cachetime", TogglePvP.getPlugin().getPlayerManager().refreshedCacheTime());
+        TogglePvP.getPlugin().getPlayerManager().addPlayer(player.getUniqueId(), playerData);
     }
     /**
      * This event is here to dump player's saved options from memory
@@ -27,8 +27,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        TogglePvP.getPlugin().getSqLite().updatePlayerInfo(player, TogglePvP.getPlugin().getPlayerManager().getPlayer(player));
-        TogglePvP.getPlugin().getPlayerManager().removePlayer(player);
+        TogglePvP.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), TogglePvP.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()));
     }
 
 }

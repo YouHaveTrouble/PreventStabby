@@ -23,7 +23,7 @@ public class LightningBlockIgniteListener implements Listener {
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
 
-                    if (!TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(player)) {
+                    if (!TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(player.getUniqueId())) {
                         event.setCancelled(true);
                         return;
                     }

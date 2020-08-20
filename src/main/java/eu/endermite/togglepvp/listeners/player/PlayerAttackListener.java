@@ -25,8 +25,8 @@ public class PlayerAttackListener implements Listener {
 
             ConfigCache config = TogglePvP.getPlugin().getConfigCache();
 
-            boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager);
-            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim);
+            boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
 
             if (!damagerPvpEnabled) {
                 event.setCancelled(true);

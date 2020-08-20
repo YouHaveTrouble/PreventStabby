@@ -1,13 +1,11 @@
 package eu.endermite.togglepvp.util;
 
 import eu.endermite.togglepvp.TogglePvP;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 
 public class DatabaseSQLite {
 
@@ -56,14 +54,14 @@ public class DatabaseSQLite {
         }
     }
 
-    public HashMap<String, Object> getPlayerInfo(Player p) {
+    public HashMap<String, Object> getPlayerInfo(UUID uuid) {
         HashMap<String, Object> dataHashMap = new HashMap<>();
 
         try {
             Connection conn = DriverManager.getConnection(url);
             Statement insertnewuser = conn.createStatement();
             try {
-                String newuserdata = "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES ('" + p.getUniqueId().toString() + "', " + TogglePvP.getPlugin().getConfigCache().isPvp_enabled_by_default() + ")";
+                String newuserdata = "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES ('" + uuid.toString() + "', " + TogglePvP.getPlugin().getConfigCache().isPvp_enabled_by_default() + ")";
                 insertnewuser.execute(newuserdata);
             } catch (SQLException e) {
                 if (e.getErrorCode() != 19) {
@@ -71,7 +69,7 @@ public class DatabaseSQLite {
                 }
             }
             Statement statement = conn.createStatement();
-            String sql = "SELECT * FROM `players` WHERE `player_uuid` = '" + p.getUniqueId().toString() + "';";
+            String sql = "SELECT * FROM `players` WHERE `player_uuid` = '" + uuid.toString() + "';";
             statement.execute(sql);
             ResultSet result = statement.getResultSet();
             dataHashMap.put("pvpenabled", result.getBoolean("pvpenabled"));
@@ -84,13 +82,13 @@ public class DatabaseSQLite {
         return null;
     }
 
-    public void updatePlayerInfo(Player p, HashMap<String, Object> data) {
+    public void updatePlayerInfo(UUID uuid, HashMap<String, Object> data) {
 
         try {
             Connection conn = DriverManager.getConnection(url);
             Statement insertnewuser = conn.createStatement();
             try {
-                String newuserdata = "UPDATE `players` SET pvpenabled = "+data.get("pvpenabled")+" WHERE `player_uuid` = '"+p.getUniqueId().toString()+"';";
+                String newuserdata = "UPDATE `players` SET pvpenabled = "+data.get("pvpenabled")+" WHERE `player_uuid` = '"+uuid.toString()+"';";
                 insertnewuser.execute(newuserdata);
             } catch (SQLException e) {
                 TogglePvP.getPlugin().getLogger().severe("Error while saving player data!");
