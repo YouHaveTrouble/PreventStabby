@@ -1,6 +1,7 @@
-package eu.endermite.togglepvp.listeners.wolf;
+package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -8,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-public class WolfTargettingListener implements Listener {
+public class WolfTargettingPlayerListener implements Listener {
 
     /**
      * Stops wolves with owners targetting players with pvp off
@@ -19,9 +20,11 @@ public class WolfTargettingListener implements Listener {
             Wolf wolf = (Wolf) event.getEntity();
             if (wolf.getOwner() != null) {
                 if (event.getTarget() instanceof Player) {
+
+                    boolean attackerPvPEnabled = (boolean) SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).get("pvpenabled");
                     Player victim = (Player) event.getTarget();
                     boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                    if (!victimPvpEnabled) {
+                    if (!attackerPvPEnabled || !victimPvpEnabled) {
                         event.setCancelled(true);
                     }
                 }

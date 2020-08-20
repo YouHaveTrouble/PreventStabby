@@ -2,8 +2,8 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
@@ -24,26 +24,23 @@ public class PlayerHitByExplosionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerHitByExplosion(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
-
             if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
                 return;
             }
-
             Player victim = (Player) event.getEntity();
             try {
-                UUID playeruuid = UUID.fromString(event.getDamager().getMetadata("PLAYEREXPLODED").get(0).asString());
-                Player damager = Bukkit.getPlayer(playeruuid);
-                if (victim != damager) {
+                UUID damageruuid = UUID.fromString(event.getDamager().getMetadata("PLAYEREXPLODED").get(0).asString());
+                if (!victim.getUniqueId().equals(damageruuid)) {
                     ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                    boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                    boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(damageruuid).get("pvpenabled");
                     if (!damagerPvpEnabled) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
+                        PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_attacker());
                         event.setCancelled(true);
                         return;
                     }
                     boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!victimPvpEnabled) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                        PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_victim());
                         event.setCancelled(true);
                         return;
                     }
@@ -55,6 +52,7 @@ public class PlayerHitByExplosionListener implements Listener {
     /**
      * Tags ender crystal with exploder uuid
      */
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerHitEnderCrystal(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof EnderCrystal) {
@@ -94,6 +92,7 @@ public class PlayerHitByExplosionListener implements Listener {
     /**
      * Tag TNT minecart with placing player uuid
      */
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerPlacedTntMinecart(org.bukkit.event.entity.EntityPlaceEvent event) {
         if (event.getEntityType().equals(EntityType.MINECART_TNT)) {

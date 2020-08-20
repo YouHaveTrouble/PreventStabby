@@ -12,6 +12,8 @@ public class ConfigCache {
     @Getter private final String pvp_disabled;
     @Getter private final String cannot_attack_victim;
     @Getter private final String cannot_attack_attacker;
+    @Getter private final String cannot_attack_pets_victim;
+    @Getter private final String cannot_attack_pets_attacker;
     @Getter private final String no_permission;
     @Getter private final String no_such_command;
     @Getter private final String pvp_enabled_other;
@@ -39,6 +41,8 @@ public class ConfigCache {
         this.pvp_disabled = config.getString("messages.pvp_disabled", "&cYou disabled PvP!");
         this.cannot_attack_victim = config.getString("messages.cannot_attack_victim", "&cYou can't attack players that have PvP turned off!");
         this.cannot_attack_attacker = config.getString("messages.cannot_attack_attacker", "&cYou can't attack players while you have PvP turned off!");
+        this.cannot_attack_pets_victim = config.getString("messages.cannot_attack_pets_victim", "&cYou can't attack pets while you have PvP turned off");
+        this.cannot_attack_pets_attacker = config.getString("messages.cannot_attack_pets_attacker", "&cYou can't attack pets of players that have PvP turned off");
         this.no_permission = config.getString("messages.no_permission", "&cYou don't have permission to use that.");
         this.no_such_command = config.getString("messages.no_such_command", "&cNo such command.");
         this.pvp_enabled_other = config.getString("messages.pvp_enabled_others", "&cYou've enabled %player%'s PvP.");

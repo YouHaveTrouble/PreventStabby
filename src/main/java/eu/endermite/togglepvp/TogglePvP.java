@@ -3,8 +3,10 @@ package eu.endermite.togglepvp;
 import eu.endermite.togglepvp.commands.MainCommand;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.listeners.player.*;
-import eu.endermite.togglepvp.listeners.wolf.WolfAttackPlayerListener;
-import eu.endermite.togglepvp.listeners.wolf.WolfTargettingListener;
+import eu.endermite.togglepvp.listeners.player.WolfAttackPlayerListener;
+import eu.endermite.togglepvp.listeners.player.WolfTargettingPlayerListener;
+import eu.endermite.togglepvp.listeners.wolf.PlayerAttackWolfListener;
+import eu.endermite.togglepvp.listeners.wolf.PlayerHitWolfByProjectile;
 import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
@@ -46,9 +48,11 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LavaDumpAndIgniteListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerPlaceWitherRoseListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByExplosionListener(), this);
-
-        getServer().getPluginManager().registerEvents(new WolfTargettingListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfTargettingPlayerListener(), this);
         getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
+
+        getServer().getPluginManager().registerEvents(new PlayerAttackWolfListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerHitWolfByProjectile(), this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
         Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());

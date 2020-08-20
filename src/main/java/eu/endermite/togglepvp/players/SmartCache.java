@@ -28,16 +28,32 @@ public class SmartCache {
                 }
 
                 // Check for entries that should be invalidated
-                long now = Instant.now().getEpochSecond();
-                Iterator<Map.Entry<UUID, HashMap<String, Object>>> it = TogglePvP.getPlugin().getPlayerManager().getPlayerList().entrySet().iterator();
-                while(it.hasNext()) {
-                    Map.Entry<UUID,HashMap<String, Object>> cacheEntry = it.next();
-                    if ((Long) cacheEntry.getValue().get("cachetime") < now) {
-                        TogglePvP.getPlugin().getPlayerManager().removePlayer(cacheEntry.getKey());
-                    }
-                }
+                try {
+                    long now = Instant.now().getEpochSecond();
+                    TogglePvP.getPlugin().getPlayerManager().getPlayerList().entrySet().removeIf(cacheEntry -> (Long) cacheEntry.getValue().get("cachetime") < now);
+                } catch (Exception ignored) {}
             }
         }.runTaskTimerAsynchronously(TogglePvP.getPlugin(), 100, 100);
+    }
+
+    public static HashMap<String, Object> getPlayerData(UUID uuid) {
+        // Try to get data from cache and refresh it
+        try {
+            TogglePvP.getPlugin().getPlayerManager().refreshPlayersCacheTime(uuid);
+            return TogglePvP.getPlugin().getPlayerManager().getPlayer(uuid);
+        } catch (NullPointerException e) {
+            // If player data is not in cache get it from database and put into cache
+            try {
+                HashMap<String, Object> playerData;
+                playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(uuid);
+                playerData.put("cachetime", TogglePvP.getPlugin().getPlayerManager().refreshedCacheTime());
+                TogglePvP.getPlugin().getPlayerManager().addPlayer(uuid, playerData);
+                return playerData;
+            } catch (NullPointerException ex) {
+                // Return null if database call fails
+                return null;
+            }
+        }
     }
 
 

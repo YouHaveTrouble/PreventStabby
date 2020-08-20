@@ -21,6 +21,8 @@ messages:
   pvp_disabled: "&cYou disabled PvP!"
   cannot_attack_victim: "&cYou can't attack players that have PvP turned off!"
   cannot_attack_attacker: "&cYou can't attack players while you have PvP turned off!"
+  cannot_attack_pets_victim: "&cYou can't attack pets of players that have PvP turned off"
+  cannot_attack_pets_attacker: "&cYou can't attack pets while you have PvP turned off"
   no_permission: "&cYou don't have permission to use that."
   no_such_command: "&cNo such command."
   pvp_enabled_others: "&cYou've enabled %player%'s PvP."

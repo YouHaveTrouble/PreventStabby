@@ -1,6 +1,7 @@
-package eu.endermite.togglepvp.listeners.wolf;
+package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -18,14 +19,16 @@ public class WolfAttackPlayerListener implements Listener {
         if (event.getDamager() instanceof Wolf) {
             Wolf wolf = (Wolf) event.getDamager();
             if (wolf.getOwner() != null && event.getEntity() instanceof Player) {
-
-                //TODO check if offline wolf owner has pvp on or off and cancel this accordingly
-
-                Player victim = (Player) event.getEntity();
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                if (!victimPvpEnabled) {
-                    wolf.setAngry(false);
-                    event.setCancelled(true);
+                try {
+                    boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).get("pvpenabled");
+                    Player victim = (Player) event.getEntity();
+                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                    if (!victimPvpEnabled || !damagerPvpEnabled) {
+                        wolf.setAngry(false);
+                        event.setCancelled(true);
+                    }
+                } catch (NullPointerException e) {
+                    return;
                 }
             }
         }
