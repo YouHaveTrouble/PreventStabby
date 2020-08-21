@@ -56,6 +56,7 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WolfHitByFireworkListener(), this);
         getServer().getPluginManager().registerEvents(new WolfTargettingWolfListener(), this);
         getServer().getPluginManager().registerEvents(new WolfHitByExplosionListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfLeashListener(), this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
         Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());
