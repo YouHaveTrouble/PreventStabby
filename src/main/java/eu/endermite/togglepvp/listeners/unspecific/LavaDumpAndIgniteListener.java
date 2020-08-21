@@ -105,6 +105,25 @@ public class LavaDumpAndIgniteListener implements Listener {
                             return;
                         }
                     }
+                } else if (entity instanceof Wolf) {
+                    Wolf victim = (Wolf) entity;
+                    if (victim.getOwner() == null) {
+                        return;
+                    }
+                    boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                    if (!damagerPvpEnabled) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    try {
+                        boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                        if (!victimPvpEnabled) {
+                            PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                            event.setCancelled(true);
+                            return;
+                        }
+                    } catch (NullPointerException ignored) {}
                 }
             }
         }
