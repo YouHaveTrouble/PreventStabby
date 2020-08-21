@@ -4,9 +4,9 @@ import eu.endermite.togglepvp.commands.MainCommand;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.listeners.player.*;
 import eu.endermite.togglepvp.listeners.player.WolfAttackPlayerListener;
-import eu.endermite.togglepvp.listeners.player.WolfTargettingPlayerListener;
-import eu.endermite.togglepvp.listeners.wolf.PlayerAttackWolfListener;
-import eu.endermite.togglepvp.listeners.wolf.PlayerHitWolfWithProjectile;
+import eu.endermite.togglepvp.listeners.wolf.WolfTargettingPlayerListener;
+import eu.endermite.togglepvp.listeners.unspecific.*;
+import eu.endermite.togglepvp.listeners.wolf.*;
 import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
@@ -41,18 +41,21 @@ public final class TogglePvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerHitByProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new AreaEffectCloudApplyListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitBySplashPotionListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerHitByLightningListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityHitByLightningListener(), this);
         getServer().getPluginManager().registerEvents(new LightningBlockIgniteListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByFireworkListener(), this);
         getServer().getPluginManager().registerEvents(new FishingListener(), this);
         getServer().getPluginManager().registerEvents(new LavaDumpAndIgniteListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerPlaceWitherRoseListener(), this);
+        getServer().getPluginManager().registerEvents(new PlaceWitherRoseListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitByExplosionListener(), this);
         getServer().getPluginManager().registerEvents(new WolfTargettingPlayerListener(), this);
         getServer().getPluginManager().registerEvents(new WolfAttackPlayerListener(), this);
-
         getServer().getPluginManager().registerEvents(new PlayerAttackWolfListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerHitWolfWithProjectile(), this);
+        getServer().getPluginManager().registerEvents(new WolfHitBySplashPotionListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfHitByFireworkListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfTargettingWolfListener(), this);
+        getServer().getPluginManager().registerEvents(new WolfHitByExplosionListener(), this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
         Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());

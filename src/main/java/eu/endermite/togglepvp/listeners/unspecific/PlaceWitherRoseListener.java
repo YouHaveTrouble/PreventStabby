@@ -1,19 +1,21 @@
-package eu.endermite.togglepvp.listeners.player;
+package eu.endermite.togglepvp.listeners.unspecific;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.BoundingBoxUtil;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.BoundingBox;
 
-public class PlayerPlaceWitherRoseListener implements Listener {
+public class PlaceWitherRoseListener implements Listener {
 
     private ConfigCache config = TogglePvP.getPlugin().getConfigCache();
 
@@ -46,6 +48,24 @@ public class PlayerPlaceWitherRoseListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                    }
+                } else if (entity instanceof Wolf) {
+                    Wolf victim = (Wolf) entity;
+                    if (victim.getOwner() == null) {
+                        return;
+                    }
+                    Player damager = event.getPlayer();
+                    boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                    if (!damagerPvpEnabled) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                    if (!victimPvpEnabled) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                        event.setCancelled(true);
+                        return;
                     }
                 }
             }

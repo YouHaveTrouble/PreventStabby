@@ -1,23 +1,26 @@
-package eu.endermite.togglepvp.listeners.player;
+package eu.endermite.togglepvp.listeners.wolf;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class PlayerHitBySplashPotionListener implements Listener {
+public class WolfHitBySplashPotionListener implements Listener {
 
     /**
-     * If thrown potion is applies negative effects and it's thrown by a player it will ahve no effect on player with pvp off
+     * If thrown potion applies negative effects and it's thrown by a player
+     * it will have no effect on a pet of a player with pvp off
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerHitBySplashPotion(org.bukkit.event.entity.PotionSplashEvent event) {
+    public void onWolfHitBySplashPotion(org.bukkit.event.entity.PotionSplashEvent event) {
 
         if (!(event.getEntity().getShooter() instanceof Player))
             return;
@@ -34,26 +37,28 @@ public class PlayerHitBySplashPotionListener implements Listener {
                     effect.getType().equals(PotionEffectType.WEAKNESS) ||
                     effect.getType().equals(PotionEffectType.SLOW) ||
                     effect.getType().equals(PotionEffectType.WITHER)) {
-                    harmful = true;
+                harmful = true;
             }
         }
         if (!harmful)
             return;
         for (Entity entity : event.getAffectedEntities()) {
-            if (entity instanceof Player) {
+            if (entity instanceof Wolf) {
                 Player damager = (Player) event.getEntity().getShooter();
-                Player victim = (Player) entity;
-                if (damager == victim)
-                    continue;
+                Wolf victim = (Wolf) entity;
+
+                if (victim.getOwner() == null) {
+                    return;
+                }
 
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                 if (!damagerPvpEnabled) {
                     event.setIntensity(victim, 0);
-                    PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
+                    PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                     continue;
                 }
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
                 if (!victimPvpEnabled) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
@@ -61,4 +66,5 @@ public class PlayerHitBySplashPotionListener implements Listener {
             }
         }
     }
+
 }
