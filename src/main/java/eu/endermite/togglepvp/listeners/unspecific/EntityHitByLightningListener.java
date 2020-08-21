@@ -15,6 +15,7 @@ import org.bukkit.metadata.FixedMetadataValue;
  * Listen for lightning strikes and tag the trident spawned ones.
  * Idea from aasmus' PvPToggle plugin
  */
+@eu.endermite.togglepvp.util.Listener
 public class EntityHitByLightningListener implements Listener {
 
     /**

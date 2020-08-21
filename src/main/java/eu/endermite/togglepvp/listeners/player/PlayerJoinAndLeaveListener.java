@@ -4,9 +4,9 @@ import eu.endermite.togglepvp.TogglePvP;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 import java.util.HashMap;
 
+@eu.endermite.togglepvp.util.Listener
 public class PlayerJoinAndLeaveListener implements Listener {
 
     /**

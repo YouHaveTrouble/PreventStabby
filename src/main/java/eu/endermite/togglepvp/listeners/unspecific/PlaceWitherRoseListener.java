@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.BoundingBox;
 
+@eu.endermite.togglepvp.util.Listener
 public class PlaceWitherRoseListener implements Listener {
 
     private ConfigCache config = TogglePvP.getPlugin().getConfigCache();

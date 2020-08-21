@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@eu.endermite.togglepvp.util.Listener
 public class WolfHitBySplashPotionListener implements Listener {
 
     /**

@@ -11,10 +11,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-
 import java.util.UUID;
 
-
+@eu.endermite.togglepvp.util.Listener
 public class PlayerHitByExplosionListener implements Listener {
 
     /**

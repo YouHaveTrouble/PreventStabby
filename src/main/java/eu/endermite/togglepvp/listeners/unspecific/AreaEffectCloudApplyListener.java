@@ -11,9 +11,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.potion.PotionEffectType;
-
 import java.util.Iterator;
 
+@eu.endermite.togglepvp.util.Listener
 public class AreaEffectCloudApplyListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)

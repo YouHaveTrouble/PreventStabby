@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+@eu.endermite.togglepvp.util.Listener
 public class FishingListener implements Listener {
 
     ConfigCache config = TogglePvP.getPlugin().getConfigCache();

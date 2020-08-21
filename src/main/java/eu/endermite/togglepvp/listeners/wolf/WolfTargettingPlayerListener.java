@@ -2,13 +2,13 @@ package eu.endermite.togglepvp.listeners.wolf;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.players.SmartCache;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+@eu.endermite.togglepvp.util.Listener
 public class WolfTargettingPlayerListener implements Listener {
     /**
      * Stops wolves with owners targetting players with pvp off

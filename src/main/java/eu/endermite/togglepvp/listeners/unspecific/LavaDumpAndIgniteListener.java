@@ -15,6 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.BoundingBox;
 
+
+@eu.endermite.togglepvp.util.Listener
 public class LavaDumpAndIgniteListener implements Listener {
 
     private ConfigCache config = TogglePvP.getPlugin().getConfigCache();

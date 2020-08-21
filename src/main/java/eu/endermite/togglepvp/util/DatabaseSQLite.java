@@ -36,7 +36,7 @@ public class DatabaseSQLite {
         return true;
     }
 
-    public void testConnection() {
+    public boolean testConnection() {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -48,10 +48,12 @@ public class DatabaseSQLite {
                 if (conn != null) {
                     conn.close();
                 }
+                return true;
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
         }
+        return false;
     }
 
     public HashMap<String, Object> getPlayerInfo(UUID uuid) {
