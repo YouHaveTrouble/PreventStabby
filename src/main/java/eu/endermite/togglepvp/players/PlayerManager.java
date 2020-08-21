@@ -29,8 +29,19 @@ public class PlayerManager {
         return Instant.now().getEpochSecond()+cacheTime;
     }
 
+    public long refreshedCombatTime() {
+        long combatTime = TogglePvP.getPlugin().getConfigCache().getCombat_time();
+        return Instant.now().getEpochSecond()+combatTime;
+    }
+
     public void refreshPlayersCacheTime(UUID uuid) {
         playerList.get(uuid).replace("cachetime", refreshedCacheTime());
+    }
+
+    public void refreshPlayersCombatTime(UUID uuid) {
+        try {
+            playerList.get(uuid).replace("combattime", refreshedCombatTime());
+        } catch (Exception ignored) {}
     }
 
     public HashMap<String, Object> getPlayer(UUID uuid) {

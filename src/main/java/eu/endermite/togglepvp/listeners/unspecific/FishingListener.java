@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.unspecific;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -36,7 +37,9 @@ public class FishingListener implements Listener {
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                return;
             }
+            CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
         } else if (event.getCaught() instanceof Wolf) {
             Wolf victim = (Wolf) event.getCaught();
             if (victim.getOwner() == null) {
@@ -53,8 +56,9 @@ public class FishingListener implements Listener {
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                return;
             }
+            CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
         }
     }
-
 }

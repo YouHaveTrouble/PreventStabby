@@ -4,6 +4,7 @@ import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.BoundingBoxUtil;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,6 +52,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     }
                 } else if (entity instanceof Wolf) {
                     Wolf victim = (Wolf) entity;
@@ -70,6 +72,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
                     } catch (NullPointerException ignored) {}
                 }
             }
@@ -106,6 +109,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     }
                 } else if (entity instanceof Wolf) {
                     Wolf victim = (Wolf) entity;
@@ -125,6 +129,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
                     } catch (NullPointerException ignored) {}
                 }
             }

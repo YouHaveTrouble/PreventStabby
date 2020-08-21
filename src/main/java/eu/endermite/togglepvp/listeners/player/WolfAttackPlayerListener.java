@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -27,10 +28,10 @@ public class WolfAttackPlayerListener implements Listener {
                     if (!victimPvpEnabled || !damagerPvpEnabled) {
                         wolf.setAngry(false);
                         event.setCancelled(true);
+                        return;
                     }
-                } catch (NullPointerException e) {
-                    return;
-                }
+                    CombatTimer.refreshPlayersCombatTime(wolf.getOwner().getUniqueId(), victim.getUniqueId());
+                } catch (NullPointerException ignored) {}
             }
         }
     }

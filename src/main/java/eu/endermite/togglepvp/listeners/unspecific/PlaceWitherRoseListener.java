@@ -4,6 +4,7 @@ import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.BoundingBoxUtil;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,15 +23,12 @@ public class PlaceWitherRoseListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerWitherRosePlace(org.bukkit.event.block.BlockPlaceEvent event) {
-
         if (!TogglePvP.getPlugin().getConfigCache().isLava_and_fire_stopper_enabled())
             return;
 
         if(event.getBlock().getType().equals(Material.WITHER_ROSE)) {
-
             Location location = event.getBlockPlaced().getLocation();
             double radius = config.getLava_and_fire_stopper_radius();
-
             BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
             for (Entity entity : location.getWorld().getNearbyEntities(boundingBox)) {
                 if (entity instanceof Player) {
@@ -49,6 +47,7 @@ public class PlaceWitherRoseListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     }
                 } else if (entity instanceof Wolf) {
                     Wolf victim = (Wolf) entity;
@@ -68,6 +67,7 @@ public class PlaceWitherRoseListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
+                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
                 }
             }
         }

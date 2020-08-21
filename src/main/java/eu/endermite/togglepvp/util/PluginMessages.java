@@ -34,4 +34,11 @@ public class PluginMessages {
         return parseMessage(message);
     }
 
+    public static void broadcastMessage(Player player, String message) {
+        message = parsePlayerName(player, message);
+        message = parseMessage(message);
+        BaseComponent[] component = TextComponent.fromLegacyText(parseMessage(message));
+        Bukkit.spigot().broadcast(component);
+    }
+
 }

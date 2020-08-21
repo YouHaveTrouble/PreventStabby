@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -28,12 +29,9 @@ public class PlayerHitByProjectileListener implements Listener {
                 if (damager == victim) {
                     return;
                 }
-
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                 boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
@@ -42,7 +40,9 @@ public class PlayerHitByProjectileListener implements Listener {
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                    return;
                 }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
             }
         }
     }

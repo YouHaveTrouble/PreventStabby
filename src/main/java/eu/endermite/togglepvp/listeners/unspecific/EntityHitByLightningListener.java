@@ -46,14 +46,11 @@ public class EntityHitByLightningListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLightningStrike(LightningStrikeEvent event){
         if(event.getCause() == LightningStrikeEvent.Cause.TRIDENT){
-
             if (TogglePvP.getPlugin().getConfigCache().isChanneling_enchant_disabled()) {
                 event.setCancelled(true);
                 return;
             }
-
             event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(TogglePvP.getPlugin(), event.getLightning().getLocation()));
         }
     }
-
 }

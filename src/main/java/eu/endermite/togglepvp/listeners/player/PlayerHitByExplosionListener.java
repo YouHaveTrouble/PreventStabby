@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.player;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
@@ -42,6 +43,7 @@ public class PlayerHitByExplosionListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
+                    CombatTimer.refreshPlayersCombatTime(damageruuid, victim.getUniqueId());
                 }
             } catch (NullPointerException | IndexOutOfBoundsException ignored) {}
         }

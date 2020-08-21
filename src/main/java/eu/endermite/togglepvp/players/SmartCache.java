@@ -47,6 +47,7 @@ public class SmartCache {
                 HashMap<String, Object> playerData;
                 playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(uuid);
                 playerData.put("cachetime", TogglePvP.getPlugin().getPlayerManager().refreshedCacheTime());
+                playerData.put("combattime", Instant.now().getEpochSecond()-1);
                 TogglePvP.getPlugin().getPlayerManager().addPlayer(uuid, playerData);
                 return playerData;
             } catch (NullPointerException ex) {

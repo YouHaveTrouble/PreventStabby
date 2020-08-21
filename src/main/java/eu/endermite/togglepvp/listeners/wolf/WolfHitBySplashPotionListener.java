@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.wolf;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -63,7 +64,9 @@ public class WolfHitBySplashPotionListener implements Listener {
                 if (!victimPvpEnabled) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                    continue;
                 }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
             }
         }
     }

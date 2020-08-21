@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.wolf;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -38,7 +39,9 @@ public class PlayerHitWolfWithProjectile implements Listener {
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                    return;
                 }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
             }
         }
     }

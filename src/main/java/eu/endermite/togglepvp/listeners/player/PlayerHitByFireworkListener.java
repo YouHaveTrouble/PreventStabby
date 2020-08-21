@@ -1,6 +1,7 @@
 package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -31,7 +32,9 @@ public class PlayerHitByFireworkListener implements Listener {
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager.getUniqueId(), TogglePvP.getPlugin().getConfigCache().getCannot_attack_victim());
+                    return;
                 }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
             }
         }
     }

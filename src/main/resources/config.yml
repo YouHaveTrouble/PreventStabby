@@ -11,6 +11,15 @@ settings:
   # You may want to keep it disabled because players with pvp off can use it to attack players with pvp on
   channeling_enchant_disabled: false
 
+  # Time (in seconds) to keep player in combat
+  combat_time: 25
+
+  # Kill the player if they log out during combat
+  punish_for_combat_logout:
+    enabled: true
+    announce: true
+    message: "&f%player% logged out while in combat. What a loser."
+
   # Time (in seconds) to keep player data in memory when players goes offline.
   # This is used for checking if offline players pvp state.
   # Adjust only if you know what you're doing. NEVER set to less than 6.
@@ -27,3 +36,5 @@ messages:
   no_such_command: "&cNo such command."
   pvp_enabled_others: "&cYou've enabled %player%'s PvP."
   pvp_disabled_others: "&cYou've disabled %player%'s PvP."
+  entering_combat: "&cEntering combat"
+  leaving_combat: "&cLeaving combat"

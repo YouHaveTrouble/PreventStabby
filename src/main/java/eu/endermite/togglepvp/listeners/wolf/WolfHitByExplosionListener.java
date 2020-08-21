@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.wolf;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -40,10 +41,10 @@ public class WolfHitByExplosionListener implements Listener {
                 if (!victimPvpEnabled) {
                     PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_pets_victim());
                     event.setCancelled(true);
+                    return;
                 }
-            } catch (NullPointerException | IndexOutOfBoundsException ignored) {
-            }
+                CombatTimer.refreshPlayersCombatTime(damageruuid, victim.getOwner().getUniqueId());
+            } catch (NullPointerException | IndexOutOfBoundsException ignored) {}
         }
     }
-
 }

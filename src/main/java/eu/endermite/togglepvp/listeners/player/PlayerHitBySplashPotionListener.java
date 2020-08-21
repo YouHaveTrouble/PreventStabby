@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -58,7 +59,9 @@ public class PlayerHitBySplashPotionListener implements Listener {
                 if (!victimPvpEnabled) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                    continue;
                 }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
             }
         }
     }

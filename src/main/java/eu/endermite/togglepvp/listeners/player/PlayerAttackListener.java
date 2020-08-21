@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -37,7 +38,9 @@ public class PlayerAttackListener implements Listener {
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                return;
             }
+            CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
         }
     }
 

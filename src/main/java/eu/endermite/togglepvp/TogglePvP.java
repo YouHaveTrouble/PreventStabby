@@ -37,7 +37,7 @@ public final class TogglePvP extends JavaPlugin {
         sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/TogglePvP/TogglePvP.db", dbFile);
         sqLite.createDatabaseFile();
         if (!sqLite.testConnection()) {
-            getLogger().severe("Error with accessing database.");
+            getLogger().severe("Error with accessing database. Check if server has write rights.");
             getLogger().severe("Plugin will now disable.");
             getServer().getPluginManager().disablePlugin(this);
         }

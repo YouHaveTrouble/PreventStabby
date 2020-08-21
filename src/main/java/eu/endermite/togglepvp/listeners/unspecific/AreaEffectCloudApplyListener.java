@@ -3,6 +3,7 @@ package eu.endermite.togglepvp.listeners.unspecific;
 import eu.endermite.togglepvp.TogglePvP;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -56,7 +57,9 @@ public class AreaEffectCloudApplyListener implements Listener {
                         if (!victimPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                            continue;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     } else if (entity instanceof Wolf) {
                         Wolf victim = (Wolf) entity;
                         if (victim.getOwner() == null) {
@@ -73,11 +76,12 @@ public class AreaEffectCloudApplyListener implements Listener {
                         if (!victimPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                            continue;
                         }
+                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
                     }
                 }
             }
         }
     }
-
 }
