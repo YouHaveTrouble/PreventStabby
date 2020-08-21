@@ -17,12 +17,13 @@ public class WolfHitByFireworkListener implements Listener {
     public void onFireworkDamage(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Firework && event.getEntity() instanceof Wolf) {
             Wolf victim = (Wolf) event.getEntity();
-            if (victim.getOwner() == null) {
+            if (victim.getOwner() == null)
                 return;
-            }
             Firework firework = (Firework) event.getDamager();
             if (firework.getShooter() instanceof Player) {
                 Player damager = (Player) firework.getShooter();
+                if (victim.getOwner() == damager)
+                    return;
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getOwner().getUniqueId());
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);

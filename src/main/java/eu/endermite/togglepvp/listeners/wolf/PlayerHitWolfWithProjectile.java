@@ -24,10 +24,10 @@ public class PlayerHitWolfWithProjectile implements Listener {
             Projectile projectile = (Projectile) event.getDamager();
             if (projectile.getShooter() instanceof Player) {
                 Wolf victim = (Wolf) event.getEntity();
-                if (victim.getOwner() == null) {
+                Player damager = (Player) projectile.getShooter();
+                if (victim.getOwner() == null || victim.getOwner() == damager) {
                     return;
                 }
-                Player damager = (Player) projectile.getShooter();
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                 boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");

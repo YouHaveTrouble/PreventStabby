@@ -62,7 +62,7 @@ public class AreaEffectCloudApplyListener implements Listener {
                         CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     } else if (entity instanceof Wolf) {
                         Wolf victim = (Wolf) entity;
-                        if (victim.getOwner() == null) {
+                        if (victim.getOwner() == null || victim.getOwner() == damager) {
                             return;
                         }
                         ConfigCache config = TogglePvP.getPlugin().getConfigCache();

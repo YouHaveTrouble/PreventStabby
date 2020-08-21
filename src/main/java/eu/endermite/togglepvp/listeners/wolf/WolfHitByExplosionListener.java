@@ -30,6 +30,9 @@ public class WolfHitByExplosionListener implements Listener {
             }
             try {
                 UUID damageruuid = UUID.fromString(event.getDamager().getMetadata("PLAYEREXPLODED").get(0).asString());
+                if (victim.getOwner().getUniqueId() == damageruuid) {
+                    return;
+                }
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                 boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(damageruuid).get("pvpenabled");
                 if (!damagerPvpEnabled) {

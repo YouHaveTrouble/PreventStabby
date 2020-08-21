@@ -42,10 +42,10 @@ public class FishingListener implements Listener {
             CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
         } else if (event.getCaught() instanceof Wolf) {
             Wolf victim = (Wolf) event.getCaught();
-            if (victim.getOwner() == null) {
+            Player damager = event.getPlayer();
+            if (victim.getOwner() == null || victim.getOwner() == damager) {
                 return;
             }
-            Player damager = event.getPlayer();
             boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
             if (!damagerPvpEnabled) {
                 event.setCancelled(true);

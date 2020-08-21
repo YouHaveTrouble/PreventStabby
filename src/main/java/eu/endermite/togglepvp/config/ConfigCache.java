@@ -27,6 +27,7 @@ public class ConfigCache {
     @Getter private final String punish_for_combat_logout_message;
     @Getter private final String entering_combat;
     @Getter private final String leaving_combat;
+    @Getter final String cant_do_that_during_combat;
 
     public ConfigCache() {
 
@@ -60,6 +61,7 @@ public class ConfigCache {
         this.pvp_disabled_other = config.getString("messages.pvp_disabled_others", "&cYou've disabled %player%'s PvP.");
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
+        this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
 
     }
 }

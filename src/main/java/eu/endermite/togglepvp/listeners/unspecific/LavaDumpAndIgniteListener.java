@@ -113,7 +113,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                     }
                 } else if (entity instanceof Wolf) {
                     Wolf victim = (Wolf) entity;
-                    if (victim.getOwner() == null) {
+                    if (victim.getOwner() == null || victim.getOwner() == damager) {
                         return;
                     }
                     boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());

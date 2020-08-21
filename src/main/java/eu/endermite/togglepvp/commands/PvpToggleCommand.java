@@ -1,6 +1,7 @@
 package eu.endermite.togglepvp.commands;
 
 import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -25,6 +26,12 @@ public class PvpToggleCommand {
             if (args.length == 1) {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
+
+                    if (CombatTimer.isInCombat(player.getUniqueId())) {
+                        sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                        return;
+                    }
+
                     boolean currentState = TogglePvP.getPlugin().getPlayerManager().togglePlayerPvpState(player.getUniqueId());
 
                     String message = "";
@@ -44,6 +51,14 @@ public class PvpToggleCommand {
                     BaseComponent[] component = TextComponent.fromLegacyText(message);
                     sender.spigot().sendMessage(component);
                     return;
+                }
+
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (CombatTimer.isInCombat(player.getUniqueId())) {
+                        sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                        return;
+                    }
                 }
                 try {
                     Player player = Bukkit.getPlayer(args[1]);
@@ -79,6 +94,10 @@ public class PvpToggleCommand {
         if (args.length == 1) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                if (CombatTimer.isInCombat(player.getUniqueId())) {
+                    sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                    return;
+                }
                 TogglePvP.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
                 String message = PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getPvp_enabled());
                 BaseComponent[] component = TextComponent.fromLegacyText(message);
@@ -92,6 +111,13 @@ public class PvpToggleCommand {
                 BaseComponent[] component = TextComponent.fromLegacyText(message);
                 sender.spigot().sendMessage(component);
                 return;
+            }
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (CombatTimer.isInCombat(player.getUniqueId())) {
+                    sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                    return;
+                }
             }
             try {
                 Player player = Bukkit.getPlayer(args[1]);
@@ -120,6 +146,10 @@ public class PvpToggleCommand {
         if (args.length == 1) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                if (CombatTimer.isInCombat(player.getUniqueId())) {
+                    sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                    return;
+                }
                 TogglePvP.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), false);
                 String message = PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getPvp_disabled());
                 BaseComponent[] component = TextComponent.fromLegacyText(message);
@@ -133,6 +163,13 @@ public class PvpToggleCommand {
                 BaseComponent[] component = TextComponent.fromLegacyText(message);
                 sender.spigot().sendMessage(component);
                 return;
+            }
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (CombatTimer.isInCombat(player.getUniqueId())) {
+                    sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getCant_do_that_during_combat()));
+                    return;
+                }
             }
             try {
                 Player player = Bukkit.getPlayer(args[1]);

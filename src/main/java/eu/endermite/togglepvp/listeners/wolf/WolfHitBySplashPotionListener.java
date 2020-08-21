@@ -48,10 +48,8 @@ public class WolfHitBySplashPotionListener implements Listener {
             if (entity instanceof Wolf) {
                 Player damager = (Player) event.getEntity().getShooter();
                 Wolf victim = (Wolf) entity;
-
-                if (victim.getOwner() == null) {
-                    return;
-                }
+                if (victim.getOwner() == null || victim.getOwner() == damager)
+                    continue;
 
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());

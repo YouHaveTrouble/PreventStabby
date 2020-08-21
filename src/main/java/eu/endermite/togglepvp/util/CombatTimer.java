@@ -24,4 +24,16 @@ public class CombatTimer {
         refreshPlayersCombatTime(victim_uuid);
     }
 
+    public static boolean isInCombat(UUID uuid) {
+        try {
+            long combattimer = (long) SmartCache.getPlayerData(uuid).get("combattime");
+            long now = Instant.now().getEpochSecond();
+            return combattimer > now;
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
 }

@@ -51,10 +51,10 @@ public class PlaceWitherRoseListener implements Listener {
                     }
                 } else if (entity instanceof Wolf) {
                     Wolf victim = (Wolf) entity;
-                    if (victim.getOwner() == null) {
+                    Player damager = event.getPlayer();
+                    if (victim.getOwner() == null || victim.getOwner() == damager) {
                         return;
                     }
-                    Player damager = event.getPlayer();
                     boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                     if (!damagerPvpEnabled) {
                         PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

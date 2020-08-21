@@ -38,3 +38,4 @@ messages:
   pvp_disabled_others: "&cYou've disabled %player%'s PvP."
   entering_combat: "&cEntering combat"
   leaving_combat: "&cLeaving combat"
+  cant_do_that_during_combat: "&cYou can't do that while in combat!"
