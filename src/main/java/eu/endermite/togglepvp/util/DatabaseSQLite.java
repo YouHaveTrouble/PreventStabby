@@ -41,16 +41,12 @@ public class DatabaseSQLite {
         try {
             conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
+            if (conn != null) {
+                conn.close();
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
         }
         return false;
     }
@@ -72,8 +68,9 @@ public class DatabaseSQLite {
             String sql = "SELECT * FROM `players` WHERE `player_uuid` = '" + uuid.toString() + "';";
             statement.execute(sql);
             ResultSet result = statement.getResultSet();
+            boolean state = result.getBoolean("pvpenabled");
             conn.close();
-            return new PlayerData(result.getBoolean("pvpenabled"));
+            return new PlayerData(state);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

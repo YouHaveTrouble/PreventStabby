@@ -18,6 +18,9 @@ public class PlayerJoinAndLeaveListener implements Listener {
         Player player = event.getPlayer();
 
         PlayerData playerData = TogglePvp.getPlugin().getSqLite().getPlayerInfo(player.getUniqueId());
+
+        System.out.println(playerData.isPvpEnabled());
+
         TogglePvp.getPlugin().getPlayerManager().addPlayer(player.getUniqueId(), playerData);
     }
     /**

@@ -33,6 +33,7 @@ public final class TogglePvp extends JavaPlugin {
             getLogger().severe("Error with accessing database. Check if server has write rights.");
             getLogger().severe("Plugin will now disable.");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         playerManager = new PlayerManager();
 

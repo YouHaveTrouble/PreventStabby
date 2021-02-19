@@ -1,6 +1,6 @@
 name: TogglePvP
 version: ${project.version}
-main: eu.endermite.togglepvp.TogglePvP
+main: eu.endermite.togglepvp.TogglePvp
 authors: [YouHaveTrouble]
 api-version: 1.13
 description: PvP toggle plugin
