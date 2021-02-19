@@ -58,7 +58,7 @@ public class WolfHitBySplashPotionListener implements Listener {
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                     continue;
                 }
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                 if (!victimPvpEnabled) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());

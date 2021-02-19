@@ -25,13 +25,13 @@ public class WolfLeashListener implements Listener {
                 return;
             }
             ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-            boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(damager.getUniqueId()).get("pvpenabled");
+            boolean damagerPvpEnabled = SmartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled();
             if (!damagerPvpEnabled) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                 event.setCancelled(true);
                 return;
             }
-            boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+            boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
             if (!victimPvpEnabled) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                 event.setCancelled(true);

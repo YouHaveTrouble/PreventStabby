@@ -66,7 +66,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                         return;
                     }
                     try {
-                        boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                         if (!victimPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                             event.setCancelled(true);
@@ -123,7 +123,7 @@ public class LavaDumpAndIgniteListener implements Listener {
                         return;
                     }
                     try {
-                        boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                         if (!victimPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                             event.setCancelled(true);

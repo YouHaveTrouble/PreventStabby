@@ -22,7 +22,7 @@ public class WolfAttackPlayerListener implements Listener {
             Wolf wolf = (Wolf) event.getDamager();
             if (wolf.getOwner() != null && event.getEntity() instanceof Player) {
                 try {
-                    boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).get("pvpenabled");
+                    boolean damagerPvpEnabled = SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).isPvpEnabled();
                     Player victim = (Player) event.getEntity();
                     boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!victimPvpEnabled || !damagerPvpEnabled) {

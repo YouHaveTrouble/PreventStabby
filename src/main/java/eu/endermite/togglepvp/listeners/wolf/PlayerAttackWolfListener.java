@@ -34,7 +34,7 @@ public class PlayerAttackWolfListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).get("pvpenabled");
+                boolean victimPvpEnabled = SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).isPvpEnabled();
                 if (!victimPvpEnabled) {
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                     event.setCancelled(true);

@@ -34,7 +34,7 @@ public class LightningBlockIgniteListener implements Listener {
                     if (victim.getOwner() == null) {
                         return;
                     }
-                    if (!(boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled")) {
+                    if (!SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                         event.setCancelled(true);
                         return;
                     }

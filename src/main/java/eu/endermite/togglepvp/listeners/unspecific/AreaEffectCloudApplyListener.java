@@ -72,7 +72,7 @@ public class AreaEffectCloudApplyListener implements Listener {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                             continue;
                         }
-                        boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                         if (!victimPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());

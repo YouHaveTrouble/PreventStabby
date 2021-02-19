@@ -34,13 +34,13 @@ public class WolfHitByExplosionListener implements Listener {
                     return;
                 }
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(damageruuid).get("pvpenabled");
+                boolean damagerPvpEnabled = SmartCache.getPlayerData(damageruuid).isPvpEnabled();
                 if (!damagerPvpEnabled) {
                     PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_pets_attacker());
                     event.setCancelled(true);
                     return;
                 }
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                 if (!victimPvpEnabled) {
                     PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_pets_victim());
                     event.setCancelled(true);

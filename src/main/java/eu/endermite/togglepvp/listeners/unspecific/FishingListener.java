@@ -52,7 +52,7 @@ public class FishingListener implements Listener {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                 return;
             }
-            boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+            boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());

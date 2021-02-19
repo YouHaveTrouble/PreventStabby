@@ -11,14 +11,11 @@ import java.util.UUID;
 
 public class PlayerManager {
 
-    @Getter HashMap<UUID, HashMap<String, Object>> playerList = new HashMap<>();
+    @Getter HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     public PlayerManager() {
-
         for (Player p : Bukkit.getOnlinePlayers()) {
-            HashMap<String, Object> playerData;
-            playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(p.getUniqueId());
-            playerData.put("cachetime", refreshedCacheTime());
+            PlayerData playerData = TogglePvP.getPlugin().getSqLite().getPlayerInfo(p.getUniqueId());
             playerList.put(p.getUniqueId(), playerData);
         }
     }
@@ -35,20 +32,20 @@ public class PlayerManager {
     }
 
     public void refreshPlayersCacheTime(UUID uuid) {
-        playerList.get(uuid).replace("cachetime", refreshedCacheTime());
+        playerList.get(uuid).refreshCachetime();
     }
 
     public void refreshPlayersCombatTime(UUID uuid) {
         try {
-            playerList.get(uuid).replace("combattime", refreshedCombatTime());
+            playerList.get(uuid).refreshCombatTime();
         } catch (Exception ignored) {}
     }
 
-    public HashMap<String, Object> getPlayer(UUID uuid) {
+    public PlayerData getPlayer(UUID uuid) {
         return playerList.get(uuid);
     }
 
-    public void addPlayer(UUID uuid, HashMap<String,Object> data) {
+    public void addPlayer(UUID uuid, PlayerData data) {
         playerList.put(uuid, data);
     }
 
@@ -57,20 +54,20 @@ public class PlayerManager {
     }
 
     public boolean getPlayerPvPState(UUID uuid) {
-        return (boolean) playerList.get(uuid).get("pvpenabled");
+        return playerList.get(uuid).isPvpEnabled();
     }
 
     public void setPlayerPvpState(UUID uuid, boolean state) {
-        playerList.get(uuid).replace("pvpenabled", state);
+        playerList.get(uuid).setPvpEnabled(state);
     }
 
     public boolean togglePlayerPvpState(UUID uuid) {
-        boolean currentState = (boolean) playerList.get(uuid).get("pvpenabled");
+        boolean currentState = (boolean) playerList.get(uuid).isPvpEnabled();
         if (currentState) {
-            playerList.get(uuid).replace("pvpenabled", false);
+            playerList.get(uuid).setPvpEnabled(false);
             return false;
         } else {
-            playerList.get(uuid).replace("pvpenabled", true);
+            playerList.get(uuid).setPvpEnabled(true);
             return true;
         }
     }

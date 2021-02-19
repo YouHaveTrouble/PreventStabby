@@ -19,7 +19,7 @@ public class WolfTargettingPlayerListener implements Listener {
             Wolf wolf = (Wolf) event.getEntity();
             if (wolf.getOwner() != null) {
                 if (event.getTarget() instanceof Player) {
-                    boolean attackerPvPEnabled = (boolean) SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).get("pvpenabled");
+                    boolean attackerPvPEnabled = SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).isPvpEnabled();
                     Player victim = (Player) event.getTarget();
                     boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!attackerPvPEnabled || !victimPvpEnabled) {

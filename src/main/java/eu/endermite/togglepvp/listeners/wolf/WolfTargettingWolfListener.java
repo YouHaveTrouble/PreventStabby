@@ -16,8 +16,8 @@ public class WolfTargettingWolfListener implements Listener {
             Wolf victim = (Wolf) event.getEntity();
             if (damager.getOwner() != null && damager.getOwner() != null) {
                 try {
-                    boolean damagerPvpEnabled = (boolean) SmartCache.getPlayerData(damager.getOwner().getUniqueId()).get("pvpenabled");
-                    boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                    boolean damagerPvpEnabled = SmartCache.getPlayerData(damager.getOwner().getUniqueId()).isPvpEnabled();
+                    boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                     if (!victimPvpEnabled || !damagerPvpEnabled) {
                         damager.setAngry(false);
                         event.setCancelled(true);

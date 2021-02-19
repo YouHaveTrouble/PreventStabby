@@ -30,7 +30,7 @@ public class PlayerHitWolfWithProjectile implements Listener {
                 }
                 ConfigCache config = TogglePvP.getPlugin().getConfigCache();
                 boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

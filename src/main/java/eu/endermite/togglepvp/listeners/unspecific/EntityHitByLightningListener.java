@@ -32,7 +32,7 @@ public class EntityHitByLightningListener implements Listener {
                 }
             } else if (event.getEntity() instanceof Wolf) {
                 Wolf victim = (Wolf) event.getEntity();
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).get("pvpenabled");
+                boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                 }
