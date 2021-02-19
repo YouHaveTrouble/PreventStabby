@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.commands;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,14 +33,14 @@ public class MainCommand implements TabExecutor {
                         ReloadCommand.reload(sender);
                         break;
                     default:
-                        sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_such_command()));
+                        sender.sendMessage(PluginMessages.parseMessage(TogglePvp.getPlugin().getConfigCache().getNo_such_command()));
                         break;
                 }
             } else {
                 HelpCommand.help(sender, args);
             }
         } else {
-            sender.sendMessage(PluginMessages.parseMessage(TogglePvP.getPlugin().getConfigCache().getNo_permission()));
+            sender.sendMessage(PluginMessages.parseMessage(TogglePvp.getPlugin().getConfigCache().getNo_permission()));
         }
         return true;
     }

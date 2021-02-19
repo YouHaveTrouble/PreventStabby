@@ -1,11 +1,10 @@
 package eu.endermite.togglepvp.util;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.PlayerData;
 
 import java.io.File;
 import java.sql.*;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class DatabaseSQLite {
@@ -62,7 +61,7 @@ public class DatabaseSQLite {
             Connection conn = DriverManager.getConnection(url);
             Statement insertnewuser = conn.createStatement();
             try {
-                String newuserdata = "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES ('" + uuid.toString() + "', " + TogglePvP.getPlugin().getConfigCache().isPvp_enabled_by_default() + ")";
+                String newuserdata = "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES ('" + uuid.toString() + "', " + TogglePvp.getPlugin().getConfigCache().isPvp_enabled_by_default() + ")";
                 insertnewuser.execute(newuserdata);
             } catch (SQLException e) {
                 if (e.getErrorCode() != 19) {
@@ -82,7 +81,6 @@ public class DatabaseSQLite {
     }
 
     public void updatePlayerInfo(UUID uuid, PlayerData data) {
-
         try {
             Connection conn = DriverManager.getConnection(url);
             Statement insertnewuser = conn.createStatement();
@@ -90,7 +88,7 @@ public class DatabaseSQLite {
                 String newuserdata = "UPDATE `players` SET pvpenabled = "+data.isPvpEnabled()+" WHERE `player_uuid` = '"+uuid.toString()+"';";
                 insertnewuser.execute(newuserdata);
             } catch (SQLException e) {
-                TogglePvP.getPlugin().getLogger().severe("Error while saving player data!");
+                TogglePvp.getPlugin().getLogger().severe("Error while saving player data!");
                 e.printStackTrace();
             }
         } catch (SQLException throwables) {

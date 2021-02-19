@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 @eu.endermite.togglepvp.util.Listener
 public class FishingListener implements Listener {
 
-    ConfigCache config = TogglePvP.getPlugin().getConfigCache();
+    ConfigCache config = TogglePvp.getPlugin().getConfigCache();
 
     /**
      * Prevents hooking players with disabled pvp with fishing rod
@@ -27,13 +27,13 @@ public class FishingListener implements Listener {
             if (damager == victim) {
                 return;
             }
-            boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+            boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
             if (!damagerPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                 return;
             }
-            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+            boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
             if (!victimPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
@@ -46,7 +46,7 @@ public class FishingListener implements Listener {
             if (victim.getOwner() == null || victim.getOwner() == damager) {
                 return;
             }
-            boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+            boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
             if (!damagerPvpEnabled) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());

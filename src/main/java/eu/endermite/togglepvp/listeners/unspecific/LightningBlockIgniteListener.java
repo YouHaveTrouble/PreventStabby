@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
@@ -25,7 +25,7 @@ public class LightningBlockIgniteListener implements Listener {
             for (Entity entity : lightningStrike.getNearbyEntities(2,2,2)) {
                 if (entity instanceof Player) {
                     Player victim = (Player) entity;
-                    if (!TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId())) {
+                    if (!TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId())) {
                         event.setCancelled(true);
                         return;
                     }

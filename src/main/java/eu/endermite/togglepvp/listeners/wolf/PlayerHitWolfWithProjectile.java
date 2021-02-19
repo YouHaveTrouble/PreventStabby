@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
@@ -28,8 +28,8 @@ public class PlayerHitWolfWithProjectile implements Listener {
                 if (victim.getOwner() == null || victim.getOwner() == damager) {
                     return;
                 }
-                ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                 boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);

@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
@@ -24,7 +24,7 @@ public class WolfLeashListener implements Listener {
             if (victim.getOwner() == damager) {
                 return;
             }
-            ConfigCache config = TogglePvP.getPlugin().getConfigCache();
+            ConfigCache config = TogglePvp.getPlugin().getConfigCache();
             boolean damagerPvpEnabled = SmartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled();
             if (!damagerPvpEnabled) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

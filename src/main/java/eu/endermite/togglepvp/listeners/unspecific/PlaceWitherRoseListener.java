@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.BoundingBoxUtil;
@@ -19,11 +19,11 @@ import org.bukkit.util.BoundingBox;
 @eu.endermite.togglepvp.util.Listener
 public class PlaceWitherRoseListener implements Listener {
 
-    private ConfigCache config = TogglePvP.getPlugin().getConfigCache();
+    private ConfigCache config = TogglePvp.getPlugin().getConfigCache();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerWitherRosePlace(org.bukkit.event.block.BlockPlaceEvent event) {
-        if (!TogglePvP.getPlugin().getConfigCache().isLava_and_fire_stopper_enabled())
+        if (!TogglePvp.getPlugin().getConfigCache().isLava_and_fire_stopper_enabled())
             return;
 
         if(event.getBlock().getType().equals(Material.WITHER_ROSE)) {
@@ -35,13 +35,13 @@ public class PlaceWitherRoseListener implements Listener {
                     Player damager = event.getPlayer();
                     Player victim = (Player) entity;
                     if (victim != damager) {
-                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                         if (!damagerPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             event.setCancelled(true);
                             return;
                         }
-                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                         if (!victimPvpEnabled) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                             event.setCancelled(true);
@@ -55,7 +55,7 @@ public class PlaceWitherRoseListener implements Listener {
                     if (victim.getOwner() == null || victim.getOwner() == damager) {
                         return;
                     }
-                    boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                     if (!damagerPvpEnabled) {
                         PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                         event.setCancelled(true);

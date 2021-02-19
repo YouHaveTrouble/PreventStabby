@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -21,7 +21,7 @@ public class WolfTargettingPlayerListener implements Listener {
                 if (event.getTarget() instanceof Player) {
                     boolean attackerPvPEnabled = SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).isPvpEnabled();
                     Player victim = (Player) event.getTarget();
-                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                    boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!attackerPvPEnabled || !victimPvpEnabled) {
                         event.setCancelled(true);
                     }

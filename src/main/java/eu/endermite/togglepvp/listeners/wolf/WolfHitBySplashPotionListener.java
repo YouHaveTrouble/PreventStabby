@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
@@ -51,8 +51,8 @@ public class WolfHitBySplashPotionListener implements Listener {
                 if (victim.getOwner() == null || victim.getOwner() == damager)
                     continue;
 
-                ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                 if (!damagerPvpEnabled) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.player;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class WolfAttackPlayerListener implements Listener {
                 try {
                     boolean damagerPvpEnabled = SmartCache.getPlayerData(wolf.getOwner().getUniqueId()).isPvpEnabled();
                     Player victim = (Player) event.getEntity();
-                    boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                    boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                     if (!victimPvpEnabled || !damagerPvpEnabled) {
                         wolf.setAngry(false);
                         event.setCancelled(true);

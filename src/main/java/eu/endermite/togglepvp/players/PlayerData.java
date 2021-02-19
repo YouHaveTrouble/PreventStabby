@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.players;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 
 import java.time.Instant;
 
@@ -28,7 +28,7 @@ public class PlayerData {
     }
 
     public void refreshCachetime() {
-        this.cachetime = Instant.now().getEpochSecond()+TogglePvP.getPlugin().getConfigCache().getCache_time();
+        this.cachetime = Instant.now().getEpochSecond()+ TogglePvp.getPlugin().getConfigCache().getCache_time();
     }
 
     public long getCombattime() {
@@ -40,6 +40,6 @@ public class PlayerData {
     }
 
     public void refreshCombatTime() {
-        this.combattime = Instant.now().getEpochSecond()+TogglePvP.getPlugin().getConfigCache().getCombat_time();
+        this.combattime = Instant.now().getEpochSecond()+ TogglePvp.getPlugin().getConfigCache().getCombat_time();
     }
 }

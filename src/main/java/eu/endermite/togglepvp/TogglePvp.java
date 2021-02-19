@@ -2,11 +2,6 @@ package eu.endermite.togglepvp;
 
 import eu.endermite.togglepvp.commands.MainCommand;
 import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.listeners.player.*;
-import eu.endermite.togglepvp.listeners.player.WolfAttackPlayerListener;
-import eu.endermite.togglepvp.listeners.wolf.WolfTargettingPlayerListener;
-import eu.endermite.togglepvp.listeners.unspecific.*;
-import eu.endermite.togglepvp.listeners.wolf.*;
 import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.Listener;
@@ -15,16 +10,14 @@ import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Set;
 
-public final class TogglePvP extends JavaPlugin {
+public final class TogglePvp extends JavaPlugin {
 
-    @Getter private static TogglePvP plugin;
+    @Getter private static TogglePvp plugin;
     private ConfigCache configCache;
     private PlayerManager playerManager;
     private DatabaseSQLite sqLite;

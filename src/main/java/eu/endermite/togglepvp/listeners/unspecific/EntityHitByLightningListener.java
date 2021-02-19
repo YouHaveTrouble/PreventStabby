@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class EntityHitByLightningListener implements Listener {
         if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1) {
             if (event.getEntity() instanceof Player) {
                 Player victim = (Player) event.getEntity();
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
                 }
@@ -46,11 +46,11 @@ public class EntityHitByLightningListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLightningStrike(LightningStrikeEvent event){
         if(event.getCause() == LightningStrikeEvent.Cause.TRIDENT){
-            if (TogglePvP.getPlugin().getConfigCache().isChanneling_enchant_disabled()) {
+            if (TogglePvp.getPlugin().getConfigCache().isChanneling_enchant_disabled()) {
                 event.setCancelled(true);
                 return;
             }
-            event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(TogglePvP.getPlugin(), event.getLightning().getLocation()));
+            event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(TogglePvp.getPlugin(), event.getLightning().getLocation()));
         }
     }
 }

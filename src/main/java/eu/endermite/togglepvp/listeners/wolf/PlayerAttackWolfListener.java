@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
@@ -26,8 +26,8 @@ public class PlayerAttackWolfListener implements Listener {
                     return;
                 }
 
-                ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                boolean damagerPvpState = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                boolean damagerPvpState = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
 
                 if (!damagerPvpState) {
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

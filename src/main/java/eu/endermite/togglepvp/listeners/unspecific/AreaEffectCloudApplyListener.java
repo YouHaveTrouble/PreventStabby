@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
@@ -46,14 +46,14 @@ public class AreaEffectCloudApplyListener implements Listener {
                         if (damager == victim)
                             continue;
 
-                        ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                        ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                         if (!damagerPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             continue;
                         }
-                        boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                         if (!victimPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
@@ -65,8 +65,8 @@ public class AreaEffectCloudApplyListener implements Listener {
                         if (victim.getOwner() == null || victim.getOwner() == damager) {
                             return;
                         }
-                        ConfigCache config = TogglePvP.getPlugin().getConfigCache();
-                        boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+                        ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
                         if (!damagerPvpEnabled) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());

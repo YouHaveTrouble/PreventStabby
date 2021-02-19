@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.commands;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,7 @@ import java.util.List;
 public class HelpCommand {
 
     public static void help(CommandSender sender, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(TogglePvP.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(TogglePvp.getPlugin(), () -> {
 
             List<String> helpPage = new ArrayList<>();
 

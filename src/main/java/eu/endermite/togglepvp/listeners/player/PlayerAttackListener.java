@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.player;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
@@ -25,10 +25,10 @@ public class PlayerAttackListener implements Listener {
             Player damager = (Player) damagerEntity;
             Player victim = (Player) victimEntity;
 
-            ConfigCache config = TogglePvP.getPlugin().getConfigCache();
+            ConfigCache config = TogglePvp.getPlugin().getConfigCache();
 
-            boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-            boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+            boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
+            boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
 
             if (!damagerPvpEnabled) {
                 event.setCancelled(true);

@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.listeners.wolf;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Firework;
@@ -24,16 +24,16 @@ public class WolfHitByFireworkListener implements Listener {
                 Player damager = (Player) firework.getShooter();
                 if (victim.getOwner() == damager)
                     return;
-                boolean damagerPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getOwner().getUniqueId());
+                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getOwner().getUniqueId());
                 if (!damagerPvpEnabled) {
                     event.setCancelled(true);
-                    PluginMessages.sendActionBar(damager.getUniqueId(), TogglePvP.getPlugin().getConfigCache().getCannot_attack_pets_attacker());
+                    PluginMessages.sendActionBar(damager.getUniqueId(), TogglePvp.getPlugin().getConfigCache().getCannot_attack_pets_attacker());
                     return;
                 }
-                boolean victimPvpEnabled = TogglePvP.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
+                boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
                 if (!victimPvpEnabled) {
                     event.setCancelled(true);
-                    PluginMessages.sendActionBar(damager.getUniqueId(), TogglePvP.getPlugin().getConfigCache().getCannot_attack_pets_victim());
+                    PluginMessages.sendActionBar(damager.getUniqueId(), TogglePvp.getPlugin().getConfigCache().getCannot_attack_pets_victim());
                     return;
                 }
                 CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());

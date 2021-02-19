@@ -1,6 +1,6 @@
 package eu.endermite.togglepvp.config;
 
-import eu.endermite.togglepvp.TogglePvP;
+import eu.endermite.togglepvp.TogglePvp;
 import lombok.Getter;
 import org.bukkit.configuration.Configuration;
 
@@ -31,7 +31,7 @@ public class ConfigCache {
 
     public ConfigCache() {
 
-        Configuration config = TogglePvP.getPlugin().getConfig();
+        Configuration config = TogglePvp.getPlugin().getConfig();
 
         // Settings
         this.pvp_enabled_by_default = config.getBoolean("settings.pvp_enabled_by_default", false);
