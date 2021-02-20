@@ -28,6 +28,7 @@ public class ConfigCache {
     @Getter private final String entering_combat;
     @Getter private final String leaving_combat;
     @Getter final String cant_do_that_during_combat;
+    @Getter final boolean only_owner_can_interact_with_pet;
 
     public ConfigCache() {
 
@@ -62,6 +63,6 @@ public class ConfigCache {
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
         this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
-
+        this.only_owner_can_interact_with_pet = config.getBoolean("only_owner_can_interact_with_pet", false);
     }
 }
