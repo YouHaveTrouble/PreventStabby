@@ -46,7 +46,7 @@ public class ConfigCache {
         this.punish_for_combat_logout = config.getBoolean("settings.punish_for_combat_logout.enabled", true);
         this.punish_for_combat_logout_announce = config.getBoolean("settings.punish_for_combat_logout.announce", true);
         this.punish_for_combat_logout_message = config.getString("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
-
+        this.only_owner_can_interact_with_pet = config.getBoolean("settings.only_owner_can_interact_with_pet", false);
         this.cache_time = config.getLong("settings.cache_time", 30L);
 
         // Messages
@@ -63,6 +63,5 @@ public class ConfigCache {
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
         this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
-        this.only_owner_can_interact_with_pet = config.getBoolean("only_owner_can_interact_with_pet", false);
     }
 }
