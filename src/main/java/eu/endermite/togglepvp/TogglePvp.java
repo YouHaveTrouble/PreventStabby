@@ -21,6 +21,7 @@ public final class TogglePvp extends JavaPlugin {
     private ConfigCache configCache;
     private PlayerManager playerManager;
     private DatabaseSQLite sqLite;
+    private SmartCache smartCache;
 
     @Override
     public void onEnable() {
@@ -36,8 +37,8 @@ public final class TogglePvp extends JavaPlugin {
             return;
         }
         playerManager = new PlayerManager();
-
-        SmartCache.runSmartCache();
+        smartCache = new SmartCache();
+        smartCache.runSmartCache();
 
         // Register listeners
         Reflections reflections = new Reflections(new String[]{"eu.endermite.togglepvp"});
@@ -81,4 +82,7 @@ public final class TogglePvp extends JavaPlugin {
 
     public DatabaseSQLite getSqLite() {return sqLite;}
 
+    public SmartCache getSmartCache() {
+        return smartCache;
+    }
 }

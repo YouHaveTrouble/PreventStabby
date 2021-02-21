@@ -1,11 +1,7 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.players.SmartCache;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,16 +21,16 @@ public class LightningBlockIgniteListener implements Listener {
             for (Entity entity : lightningStrike.getNearbyEntities(2,2,2)) {
                 if (entity instanceof Player) {
                     Player victim = (Player) entity;
-                    if (!TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId())) {
+                    if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                         event.setCancelled(true);
                         return;
                     }
-                } else if (entity instanceof Wolf) {
-                    Wolf victim = (Wolf) entity;
+                } else if (entity instanceof Tameable) {
+                    Tameable victim = (Tameable) entity;
                     if (victim.getOwner() == null) {
                         return;
                     }
-                    if (!SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
+                    if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                         event.setCancelled(true);
                         return;
                     }

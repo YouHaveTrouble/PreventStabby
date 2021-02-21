@@ -1,6 +1,5 @@
 package eu.endermite.togglepvp;
 
-import eu.endermite.togglepvp.players.SmartCache;
 import java.util.UUID;
 
 public class TogglePvpAPI {
@@ -11,7 +10,7 @@ public class TogglePvpAPI {
      * @param newState State to set
      */
     public static void setPvpEnabled(UUID uuid, boolean newState) {
-        SmartCache.setPlayerPvpState(uuid, newState);
+        TogglePvp.getPlugin().getSmartCache().setPlayerPvpState(uuid, newState);
     }
 
     /**
@@ -20,7 +19,7 @@ public class TogglePvpAPI {
      * @return true if enabled, false if disabled
      */
     public static boolean getPvpEnabled(UUID uuid) {
-        return SmartCache.getPlayerData(uuid).isPvpEnabled();
+        return TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).isPvpEnabled();
     }
 
 

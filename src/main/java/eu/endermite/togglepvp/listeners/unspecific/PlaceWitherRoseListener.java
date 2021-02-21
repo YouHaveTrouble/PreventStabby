@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,14 +19,16 @@ import org.bukkit.util.BoundingBox;
 @eu.endermite.togglepvp.util.Listener
 public class PlaceWitherRoseListener implements Listener {
 
-    private ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerWitherRosePlace(org.bukkit.event.block.BlockPlaceEvent event) {
-        if (!TogglePvp.getPlugin().getConfigCache().isLava_and_fire_stopper_enabled())
+
+        ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
+        if (!config.isLava_and_fire_stopper_enabled())
             return;
 
-        if(event.getBlock().getType().equals(Material.WITHER_ROSE)) {
+        if (event.getBlock().getType().equals(Material.WITHER_ROSE)) {
             Location location = event.getBlockPlaced().getLocation();
             double radius = config.getLava_and_fire_stopper_radius();
             BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
@@ -34,35 +36,31 @@ public class PlaceWitherRoseListener implements Listener {
                 if (entity instanceof Player) {
                     Player damager = event.getPlayer();
                     Player victim = (Player) entity;
-                    if (victim != damager) {
-                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                        if (!damagerPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                        if (!victimPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
+                    if (victim == damager)
+                        return;
+                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
+                        event.setCancelled(true);
+                        return;
                     }
-                } else if (entity instanceof Wolf) {
-                    Wolf victim = (Wolf) entity;
+                    if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
+                } else if (entity instanceof Tameable) {
+                    Tameable victim = (Tameable) entity;
                     Player damager = event.getPlayer();
                     if (victim.getOwner() == null || victim.getOwner() == damager) {
                         return;
                     }
-                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                    if (!damagerPvpEnabled) {
+                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                         PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                         event.setCancelled(true);
                         return;
                     }
-                    boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                    if (!victimPvpEnabled) {
+                    if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                         PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                         event.setCancelled(true);
                         return;

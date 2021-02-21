@@ -1,10 +1,9 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.players.SmartCache;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,14 +25,12 @@ public class EntityHitByLightningListener implements Listener {
         if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1) {
             if (event.getEntity() instanceof Player) {
                 Player victim = (Player) event.getEntity();
-                boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                if (!victimPvpEnabled) {
+                if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                     event.setCancelled(true);
                 }
-            } else if (event.getEntity() instanceof Wolf) {
-                Wolf victim = (Wolf) event.getEntity();
-                boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                if (!victimPvpEnabled) {
+            } else if (event.getEntity() instanceof Tameable) {
+                Tameable victim = (Tameable) event.getEntity();
+                if (victim.getOwner() != null && !TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                     event.setCancelled(true);
                 }
             }

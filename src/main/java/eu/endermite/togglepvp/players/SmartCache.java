@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class SmartCache {
 
-    public static void runSmartCache() {
+    public void runSmartCache() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
             // Refresh cache timer if player is online
             for (Map.Entry<UUID, PlayerData> e : TogglePvp.getPlugin().getPlayerManager().getPlayerList().entrySet()) {
@@ -29,7 +29,7 @@ public class SmartCache {
         }, 100, 100);
     }
 
-    public static PlayerData getPlayerData(UUID uuid) {
+    public PlayerData getPlayerData(UUID uuid) {
         // Try to get data from cache and refresh it
         try {
             TogglePvp.getPlugin().getPlayerManager().refreshPlayersCacheTime(uuid);
@@ -47,7 +47,7 @@ public class SmartCache {
         }
     }
 
-    public static void setPlayerPvpState(UUID uuid, boolean state) {
+    public void setPlayerPvpState(UUID uuid, boolean state) {
         // If player is in cache update that
         if (TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid) != null) {
             TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).setPvpEnabled(state);

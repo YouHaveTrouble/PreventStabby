@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,45 +35,43 @@ public class LavaDumpAndIgniteListener implements Listener {
             Location location = event.getBlockClicked().getLocation();
             Player damager = event.getPlayer();
             double radius = config.getLava_and_fire_stopper_radius();
+            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
             BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
             for (Entity entity : location.getWorld().getNearbyEntities(boundingBox)) {
                 if (entity instanceof Player) {
                     Player victim = (Player) entity;
                     if (victim != damager) {
-                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                        if (!damagerPvpEnabled) {
+                        if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             event.setCancelled(true);
                             return;
                         }
-                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                        if (!victimPvpEnabled) {
+                        if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                             event.setCancelled(true);
                             return;
                         }
                         CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                     }
-                } else if (entity instanceof Wolf) {
-                    Wolf victim = (Wolf) entity;
+                } else if (entity instanceof Tameable) {
+                    Tameable victim = (Tameable) entity;
                     if (victim.getOwner() == null) {
                         return;
                     }
-                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                    if (!damagerPvpEnabled) {
+                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                         PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                         event.setCancelled(true);
                         return;
                     }
-                    try {
-                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                        if (!victimPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
-                    } catch (NullPointerException ignored) {}
+
+                    boolean victimPvpEnabled = smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
+                    if (!victimPvpEnabled) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
+
                 }
             }
         }
@@ -88,51 +86,48 @@ public class LavaDumpAndIgniteListener implements Listener {
         if (!TogglePvp.getPlugin().getConfigCache().isLava_and_fire_stopper_enabled())
             return;
 
-        if (event.getPlayer() !=null) {
-            Location location = event.getBlock().getLocation();
-            Player damager = event.getPlayer();
-            double radius = config.getLava_and_fire_stopper_radius();
-            BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
-            for (Entity entity : location.getWorld().getNearbyEntities(boundingBox)) {
-                if (entity instanceof Player) {
-                    Player victim = (Player) entity;
-                    if (victim != damager) {
-                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                        if (!damagerPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                        if (!victimPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
-                    }
-                } else if (entity instanceof Wolf) {
-                    Wolf victim = (Wolf) entity;
-                    if (victim.getOwner() == null || victim.getOwner() == damager) {
-                        return;
-                    }
-                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                    if (!damagerPvpEnabled) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+        if (event.getPlayer() == null)
+            return;
+
+        Location location = event.getBlock().getLocation();
+        Player damager = event.getPlayer();
+        double radius = config.getLava_and_fire_stopper_radius();
+        BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        for (Entity entity : location.getWorld().getNearbyEntities(boundingBox)) {
+            if (entity instanceof Player) {
+                Player victim = (Player) entity;
+                if (victim != damager) {
+                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                         event.setCancelled(true);
                         return;
                     }
-                    try {
-                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                        if (!victimPvpEnabled) {
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
-                            event.setCancelled(true);
-                            return;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
-                    } catch (NullPointerException ignored) {}
+                    if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
+                        PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
+                        event.setCancelled(true);
+                        return;
+                    }
+                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                 }
+            } else if (entity instanceof Tameable) {
+                Tameable victim = (Tameable) entity;
+                if (victim.getOwner() == null || victim.getOwner() == damager) {
+                    return;
+                }
+                if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
+                    PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+                    event.setCancelled(true);
+                    return;
+                }
+                if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
+                    PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+                    event.setCancelled(true);
+                    return;
+                }
+                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
             }
         }
+
     }
 }

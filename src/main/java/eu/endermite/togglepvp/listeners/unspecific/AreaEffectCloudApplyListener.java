@@ -7,7 +7,7 @@ import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
@@ -36,6 +36,8 @@ public class AreaEffectCloudApplyListener implements Listener {
                     potionEffectType.equals(PotionEffectType.SLOW) ||
                     potionEffectType.equals(PotionEffectType.WITHER)) {
 
+                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
                 Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
                 Player damager = (Player) event.getEntity().getSource();
                 while(it.hasNext()) {
@@ -47,33 +49,29 @@ public class AreaEffectCloudApplyListener implements Listener {
                             continue;
 
                         ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                        if (!damagerPvpEnabled) {
+                        if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                             continue;
                         }
-                        boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                        if (!victimPvpEnabled) {
+                        if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                             continue;
                         }
                         CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
-                    } else if (entity instanceof Wolf) {
-                        Wolf victim = (Wolf) entity;
+                    } else if (entity instanceof Tameable) {
+                        Tameable victim = (Tameable) entity;
                         if (victim.getOwner() == null || victim.getOwner() == damager) {
                             return;
                         }
                         ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                        boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                        if (!damagerPvpEnabled) {
+                        if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                             continue;
                         }
-                        boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                        if (!victimPvpEnabled) {
+                        if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                             it.remove();
                             PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                             continue;

@@ -6,7 +6,7 @@ import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,33 +27,31 @@ public class FishingListener implements Listener {
             if (damager == victim) {
                 return;
             }
-            boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-            if (!damagerPvpEnabled) {
+            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+            if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                 return;
             }
-            boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-            if (!victimPvpEnabled) {
+            if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                 return;
             }
             CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
-        } else if (event.getCaught() instanceof Wolf) {
-            Wolf victim = (Wolf) event.getCaught();
+        } else if (event.getCaught() instanceof Tameable) {
+            Tameable victim = (Tameable) event.getCaught();
             Player damager = event.getPlayer();
             if (victim.getOwner() == null || victim.getOwner() == damager) {
                 return;
             }
-            boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-            if (!damagerPvpEnabled) {
+            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+            if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                 return;
             }
-            boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-            if (!victimPvpEnabled) {
+            if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                 event.setCancelled(true);
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                 return;

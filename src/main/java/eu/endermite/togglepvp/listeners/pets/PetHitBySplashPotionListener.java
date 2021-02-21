@@ -1,4 +1,4 @@
-package eu.endermite.togglepvp.listeners.wolf;
+package eu.endermite.togglepvp.listeners.pets;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
@@ -7,7 +7,7 @@ import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 @eu.endermite.togglepvp.util.Listener
-public class WolfHitBySplashPotionListener implements Listener {
+public class PetHitBySplashPotionListener implements Listener {
 
     /**
      * If thrown potion applies negative effects and it's thrown by a player
@@ -45,21 +45,21 @@ public class WolfHitBySplashPotionListener implements Listener {
         if (!harmful)
             return;
         for (Entity entity : event.getAffectedEntities()) {
-            if (entity instanceof Wolf) {
+            if (entity instanceof Tameable) {
                 Player damager = (Player) event.getEntity().getShooter();
-                Wolf victim = (Wolf) entity;
+                Tameable victim = (Tameable) entity;
                 if (victim.getOwner() == null || victim.getOwner() == damager)
                     continue;
 
                 ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                if (!damagerPvpEnabled) {
+                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
+                if (!TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId())) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                     continue;
                 }
-                boolean victimPvpEnabled = (boolean) SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-                if (!victimPvpEnabled) {
+                if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                     continue;

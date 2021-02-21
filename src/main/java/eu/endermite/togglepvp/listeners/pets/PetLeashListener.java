@@ -1,38 +1,37 @@
-package eu.endermite.togglepvp.listeners.wolf;
+package eu.endermite.togglepvp.listeners.pets;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 @eu.endermite.togglepvp.util.Listener
-public class WolfLeashListener implements Listener {
+public class PetLeashListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onWolfLeash(org.bukkit.event.entity.PlayerLeashEntityEvent event) {
-        if (event.getEntity() instanceof Wolf) {
-            Wolf victim = (Wolf) event.getEntity();
-            if (victim.getOwner() == null) {
+    public void onPetLeash(org.bukkit.event.entity.PlayerLeashEntityEvent event) {
+        if (event.getEntity() instanceof Tameable) {
+            Tameable victim = (Tameable) event.getEntity();
+            if (victim.getOwner() == null)
                 return;
-            }
+
             Player damager = event.getPlayer();
-            if (victim.getOwner() == damager) {
+            if (victim.getOwner() == damager)
                 return;
-            }
+
             ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-            boolean damagerPvpEnabled = SmartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled();
-            if (!damagerPvpEnabled) {
+            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+            if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                 event.setCancelled(true);
                 return;
             }
-            boolean victimPvpEnabled = SmartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
-            if (!victimPvpEnabled) {
+            if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                 event.setCancelled(true);
             }
