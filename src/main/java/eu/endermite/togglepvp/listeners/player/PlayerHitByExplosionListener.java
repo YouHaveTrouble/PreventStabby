@@ -2,10 +2,13 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,23 +32,24 @@ public class PlayerHitByExplosionListener implements Listener {
             Player victim = (Player) event.getEntity();
             try {
                 UUID damageruuid = UUID.fromString(event.getDamager().getMetadata("PLAYEREXPLODED").get(0).asString());
-                if (!victim.getUniqueId().equals(damageruuid)) {
-                    ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getSmartCache().getPlayerData(damageruuid).isPvpEnabled();
-                    if (!damagerPvpEnabled) {
-                        PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_attacker());
-                        event.setCancelled(true);
-                        return;
-                    }
-                    boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                    if (!victimPvpEnabled) {
-                        PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_victim());
-                        event.setCancelled(true);
-                        return;
-                    }
-                    CombatTimer.refreshPlayersCombatTime(damageruuid, victim.getUniqueId());
+                if (victim.getUniqueId().equals(damageruuid))
+                    return;
+
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(damageruuid).isPvpEnabled()) {
+                    PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_attacker());
+                    event.setCancelled(true);
+                    return;
                 }
-            } catch (NullPointerException | IndexOutOfBoundsException ignored) {}
+                if (!TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId())) {
+                    PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_victim());
+                    event.setCancelled(true);
+                    return;
+                }
+                CombatTimer.refreshPlayersCombatTime(damageruuid, victim.getUniqueId());
+
+            } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+            }
         }
     }
 
@@ -78,13 +82,14 @@ public class PlayerHitByExplosionListener implements Listener {
             TNTPrimed tntPrimed = (TNTPrimed) event.getEntity();
             if (tntPrimed.getSource() instanceof Player) {
                 Player damager = (Player) tntPrimed.getSource();
-                tntPrimed.setMetadata("PLAYEREXPLODED",new FixedMetadataValue( TogglePvp.getPlugin(), damager.getUniqueId().toString()));
+                tntPrimed.setMetadata("PLAYEREXPLODED", new FixedMetadataValue(TogglePvp.getPlugin(), damager.getUniqueId().toString()));
             } else if (tntPrimed.getSource() instanceof TNTPrimed) {
                 try {
                     TNTPrimed sourceTnt = (TNTPrimed) tntPrimed.getSource();
                     String damagerUuid = sourceTnt.getMetadata("PLAYEREXPLODED").get(0).asString();
-                    tntPrimed.setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvp.getPlugin(), damagerUuid));
-                }catch (NullPointerException ignored) {}
+                    tntPrimed.setMetadata("PLAYEREXPLODED", new FixedMetadataValue(TogglePvp.getPlugin(), damagerUuid));
+                } catch (NullPointerException ignored) {
+                }
             }
         }
     }
@@ -97,7 +102,7 @@ public class PlayerHitByExplosionListener implements Listener {
     public void onPlayerPlacedTntMinecart(org.bukkit.event.entity.EntityPlaceEvent event) {
         if (event.getEntityType().equals(EntityType.MINECART_TNT)) {
             if (event.getPlayer() != null) {
-                event.getEntity().setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvp.getPlugin(), event.getPlayer().getUniqueId().toString()));
+                event.getEntity().setMetadata("PLAYEREXPLODED", new FixedMetadataValue(TogglePvp.getPlugin(), event.getPlayer().getUniqueId().toString()));
             }
         }
     }
@@ -109,7 +114,7 @@ public class PlayerHitByExplosionListener implements Listener {
     public void onPlayerNudgedTntMinecart(org.bukkit.event.vehicle.VehicleEntityCollisionEvent event) {
         if (event.getVehicle() instanceof ExplosiveMinecart && event.getEntity() instanceof Player) {
             Player damager = (Player) event.getEntity();
-            event.getVehicle().setMetadata("PLAYEREXPLODED", new FixedMetadataValue( TogglePvp.getPlugin(), damager.getUniqueId().toString()));
+            event.getVehicle().setMetadata("PLAYEREXPLODED", new FixedMetadataValue(TogglePvp.getPlugin(), damager.getUniqueId().toString()));
         }
     }
 
