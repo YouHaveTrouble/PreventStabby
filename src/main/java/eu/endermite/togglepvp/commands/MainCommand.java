@@ -2,13 +2,30 @@ package eu.endermite.togglepvp.commands;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.PluginMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainCommand implements TabExecutor {
+
+    private final HashMap<String, String> subCommands = new HashMap<>();
+
+    public MainCommand() {
+        subCommands.put("help", "togglepvp.command");
+        subCommands.put("toggle", "togglepvp.command.toggle");
+        subCommands.put("on", "togglepvp.command.toggle");
+        subCommands.put("enable", "togglepvp.command.toggle");
+        subCommands.put("off", "togglepvp.command.toggle");
+        subCommands.put("disable", "togglepvp.command.toggle");
+        subCommands.put("reload", "togglepvp.command.reload");
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -48,39 +65,29 @@ public class MainCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> commands = new ArrayList<>();
-        String arg1 = args[0].toLowerCase();
-
-        List<String> noPerm = new ArrayList<>();
-        noPerm.add("help");
-
-        List<String> reloadPerm = new ArrayList<>();
-        reloadPerm.add("reload");
-
-        List<String> togglePerm = new ArrayList<>();
-        togglePerm.add("toggle");
-        togglePerm.add("on");
-        togglePerm.add("enable");
-        togglePerm.add("off");
-        togglePerm.add("disable");
-
         if (args.length == 1) {
-            for (String noPermCmd : noPerm) {
-                if (noPermCmd.startsWith(arg1))
-                    commands.add(noPermCmd);
+            String arg1 = args[0].toLowerCase();
+            for (Map.Entry<String, String> entry : subCommands.entrySet()) {
+                if (entry.getKey().toLowerCase().startsWith(arg1) && sender.hasPermission(entry.getValue()))
+                    commands.add(entry.getKey());
             }
-            if (sender.hasPermission("togglepvp.command.toggle")) {
-                for (String togglePermCmd : togglePerm) {
-                    if (togglePermCmd.startsWith(arg1))
-                        commands.add(togglePermCmd);
-                }
+            return commands;
+        } else if (args.length == 2 && sender.hasPermission("togglepvp.command.toggle")) {
+            switch (args[0].toLowerCase()) {
+                default:
+                    break;
+                case "toggle":
+                case "on":
+                case "enable":
+                case "off":
+                case "disable":
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        commands.add(player.getName());
+                    }
+                    break;
             }
-            if (sender.hasPermission("togglepvp.command.reload")) {
-                for (String reloadPermCmd : reloadPerm) {
-                    if (reloadPermCmd.startsWith(arg1))
-                        commands.add(reloadPermCmd);
-                }
-            }
+            return commands;
         }
-        return commands;
+        return null;
     }
 }
