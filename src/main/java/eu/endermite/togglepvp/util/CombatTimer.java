@@ -10,7 +10,7 @@ public class CombatTimer {
     public static void refreshPlayersCombatTime(UUID uuid) {
         try {
             long now = Instant.now().getEpochSecond();
-            long combattime = SmartCache.getPlayerData(uuid).getCombattime();
+            long combattime = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
             if (combattime < now) {
                 PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
             }
@@ -25,7 +25,7 @@ public class CombatTimer {
 
     public static boolean isInCombat(UUID uuid) {
         try {
-            long combattimer = SmartCache.getPlayerData(uuid).getCombattime();
+            long combattimer = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
             long now = Instant.now().getEpochSecond();
             return combattimer > now;
         } catch (Exception e) {

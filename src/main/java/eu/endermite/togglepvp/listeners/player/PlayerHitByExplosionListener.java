@@ -31,7 +31,7 @@ public class PlayerHitByExplosionListener implements Listener {
                 UUID damageruuid = UUID.fromString(event.getDamager().getMetadata("PLAYEREXPLODED").get(0).asString());
                 if (!victim.getUniqueId().equals(damageruuid)) {
                     ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                    boolean damagerPvpEnabled = SmartCache.getPlayerData(damageruuid).isPvpEnabled();
+                    boolean damagerPvpEnabled = TogglePvp.getPlugin().getSmartCache().getPlayerData(damageruuid).isPvpEnabled();
                     if (!damagerPvpEnabled) {
                         PluginMessages.sendActionBar(damageruuid, config.getCannot_attack_attacker());
                         event.setCancelled(true);
