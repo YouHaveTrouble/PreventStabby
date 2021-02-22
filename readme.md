@@ -1,23 +1,21 @@
 <h2>TogglePvP ⚔</h2>
 
-Plugin is under heavy development and things will change often.
-
 Use Issues section to report bugs or submit suggestions.
 
 <h3>Commands</h3>
-Permission: <code>togglepvp.command</code> (given by default) :
+Permission: <code>togglepvp.command</code> (given by default to everyone) :
 <ul>
 <li>/pvp help- displays help message</li>
 </ul>
 
-Permission: <code>togglepvp.command.toggle</code> (given by default) :
+Permission: <code>togglepvp.command.toggle</code> (given by default to everyone) :
 <ul>
 <li>/pvp toggle - toggles PvP</li>
 <li>/pvp on - enables PvP (aliases: enable)</li>
 <li>/pvp off - disables PvP (aliases: disable)</li>
 </ul>
 
-Permission: <code>togglepvp.command.toggle.others</code> (given by default) :
+Permission: <code>togglepvp.command.toggle.others</code> (given by default to ops) :
 <ul>
 <li>/pvp toggle [player] - toggles other player's PvP</li>
 <li>/pvp on [player] - enables other player's PvP (aliases: enable)</li>
@@ -37,11 +35,9 @@ There is also a feature that disallows pouring lava or using
 flint and steel nearby players with disabled pvp. You can
 either disable it in config or set its radius.
 
-Tamed wolves will not attack players with pvp off.
+All the protections are extended to tameable entities (pets) that set player's uuid as their owner on tame.
 
-<h3>TODO</h3>
-<ul>
-<li>combat timer - deny players changing pvp state mid combat</li>
-</ul>
+Pets will not attack players with pvp off or if their owner has pvp off.
+
 
 
