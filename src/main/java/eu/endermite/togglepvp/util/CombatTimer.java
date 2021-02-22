@@ -1,7 +1,6 @@
 package eu.endermite.togglepvp.util;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.players.SmartCache;
 import java.time.Instant;
 import java.util.UUID;
 

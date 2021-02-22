@@ -1,21 +1,42 @@
 package eu.endermite.togglepvp.players;
 
 import eu.endermite.togglepvp.TogglePvp;
+import eu.endermite.togglepvp.util.CombatTimer;
+import eu.endermite.togglepvp.util.PluginMessages;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerManager {
 
-    @Getter HashMap<UUID, PlayerData> playerList = new HashMap<>();
+    @Getter
+    HashMap<UUID, PlayerData> playerList = new HashMap<>();
+
+    public final BukkitTask combatTrackerTask;
 
     public PlayerManager() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             PlayerData playerData = TogglePvp.getPlugin().getSqLite().getPlayerInfo(p.getUniqueId());
             playerList.put(p.getUniqueId(), playerData);
         }
+
+        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
+            for (Map.Entry<UUID, PlayerData> set : playerList.entrySet()) {
+                UUID uuid = set.getKey();
+                if (!CombatTimer.isInCombat(uuid)) {
+                    if (set.getValue().getLastCombatCheck()) {
+                        set.getValue().setLastCombatCheck(false);
+                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                    }
+                } else {
+                    set.getValue().setLastCombatCheck(true);
+                }
+            }
+        }, 20, 20);
     }
 
     public void refreshPlayersCacheTime(UUID uuid) {
@@ -25,7 +46,7 @@ public class PlayerManager {
     public void refreshPlayersCombatTime(UUID uuid) {
         try {
             playerList.get(uuid).refreshCombatTime();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) { }
     }
 
     public PlayerData getPlayer(UUID uuid) {
@@ -36,25 +57,21 @@ public class PlayerManager {
         playerList.put(uuid, data);
     }
 
-    public void removePlayer(UUID uuid) {
-        playerList.remove(uuid);
-    }
-
     public boolean getPlayerPvPState(UUID uuid) {
-        return playerList.get(uuid).isPvpEnabled();
+        return TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).isPvpEnabled();
     }
 
     public void setPlayerPvpState(UUID uuid, boolean state) {
-        playerList.get(uuid).setPvpEnabled(state);
+        TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).setPvpEnabled(state);
     }
 
     public boolean togglePlayerPvpState(UUID uuid) {
-        boolean currentState = playerList.get(uuid).isPvpEnabled();
-        if (currentState) {
-            playerList.get(uuid).setPvpEnabled(false);
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        if (smartCache.getPlayerData(uuid).isPvpEnabled()) {
+            smartCache.getPlayerData(uuid).setPvpEnabled(false);
             return false;
         } else {
-            playerList.get(uuid).setPvpEnabled(true);
+            smartCache.getPlayerData(uuid).setPvpEnabled(true);
             return true;
         }
     }

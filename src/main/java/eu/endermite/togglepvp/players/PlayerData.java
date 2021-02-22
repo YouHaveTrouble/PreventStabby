@@ -8,10 +8,12 @@ public class PlayerData {
 
     private long cachetime, combattime;
     private boolean pvpEnabled;
+    private boolean lastCombatCheck;
 
     public PlayerData(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
+
         refreshCachetime();
     }
 
@@ -41,5 +43,13 @@ public class PlayerData {
 
     public void refreshCombatTime() {
         this.combattime = Instant.now().getEpochSecond()+ TogglePvp.getPlugin().getConfigCache().getCombat_time();
+    }
+
+    public boolean getLastCombatCheck() {
+        return lastCombatCheck;
+    }
+
+    public void setLastCombatCheck(boolean bool) {
+        lastCombatCheck = bool;
     }
 }
