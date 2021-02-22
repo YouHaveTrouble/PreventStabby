@@ -4,7 +4,6 @@ import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,10 +3,8 @@ package eu.endermite.togglepvp.commands;
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,9 +15,8 @@ public class PvpToggleCommand {
         Bukkit.getScheduler().runTaskAsynchronously(TogglePvp.getPlugin(), () -> {
 
             if (!sender.hasPermission("togglepvp.command.toggle")) {
-                String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                sender.spigot().sendMessage(component);
+                String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+                sender.sendMessage(message);
                 return;
             }
 
@@ -40,16 +37,14 @@ public class PvpToggleCommand {
                     } else {
                         message = PluginMessages.parseMessage(TogglePvp.getPlugin().getConfigCache().getPvp_disabled());
                     }
-                    BaseComponent[] component = TextComponent.fromLegacyText(message);
-                    player.spigot().sendMessage(ChatMessageType.CHAT, component);
+                    player.sendMessage(message);
                 } else {
                     sender.sendMessage("Try /pvp toggle <player>");
                 }
             } else if (args.length == 2) {
                 if (!sender.hasPermission("togglepvp.command.toggle.others")) {
-                    String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-                    BaseComponent[] component = TextComponent.fromLegacyText(message);
-                    sender.spigot().sendMessage(component);
+                    String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+                    sender.sendMessage(message);
                     return;
                 }
 
@@ -86,9 +81,8 @@ public class PvpToggleCommand {
 
     public static void enable(CommandSender sender, String[] args) {
         if (!sender.hasPermission("togglepvp.command.toggle")) {
-            String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-            BaseComponent[] component = TextComponent.fromLegacyText(message);
-            sender.spigot().sendMessage(component);
+            String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+            sender.sendMessage(message);
             return;
         }
         if (args.length == 1) {
@@ -100,16 +94,14 @@ public class PvpToggleCommand {
                 }
                 TogglePvp.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
                 String message = PluginMessages.parseMessage(TogglePvp.getPlugin().getConfigCache().getPvp_enabled());
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                player.spigot().sendMessage(ChatMessageType.CHAT, component);
+                player.sendMessage(message);
             } else {
                 sender.sendMessage("Try /pvp enable <player>");
             }
         } else if (args.length == 2) {
             if (!sender.hasPermission("togglepvp.command.toggle.others")) {
-                String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                sender.spigot().sendMessage(component);
+                String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+                sender.sendMessage(message);
                 return;
             }
             if (sender instanceof Player) {
@@ -138,9 +130,8 @@ public class PvpToggleCommand {
 
     public static void disable(CommandSender sender, String[] args) {
         if (!sender.hasPermission("togglepvp.command.toggle")) {
-            String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-            BaseComponent[] component = TextComponent.fromLegacyText(message);
-            sender.spigot().sendMessage(component);
+            String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+            sender.sendMessage(message);
             return;
         }
         if (args.length == 1) {
@@ -152,16 +143,14 @@ public class PvpToggleCommand {
                 }
                 TogglePvp.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), false);
                 String message = PluginMessages.parseMessage(TogglePvp.getPlugin().getConfigCache().getPvp_disabled());
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                player.spigot().sendMessage(ChatMessageType.CHAT, component);
+                player.sendMessage(message);
             } else {
                 sender.sendMessage("Try /pvp disable <player>");
             }
         } else if (args.length == 2) {
             if (!sender.hasPermission("togglepvp.command.toggle.others")) {
                 String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                sender.spigot().sendMessage(component);
+                sender.sendMessage(message);
                 return;
             }
             if (sender instanceof Player) {

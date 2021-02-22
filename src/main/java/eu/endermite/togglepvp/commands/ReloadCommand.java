@@ -1,9 +1,8 @@
 package eu.endermite.togglepvp.commands;
 
 import eu.endermite.togglepvp.TogglePvp;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ReloadCommand {
@@ -12,9 +11,8 @@ public class ReloadCommand {
 
         Bukkit.getScheduler().runTaskAsynchronously(TogglePvp.getPlugin(), () -> {
             if (!sender.hasPermission("togglepvp.command.reload")) {
-                String message = TogglePvp.getPlugin().getConfigCache().getNo_permission();
-                BaseComponent[] component = TextComponent.fromLegacyText(message);
-                sender.spigot().sendMessage(component);
+                String message = ChatColor.translateAlternateColorCodes('&', TogglePvp.getPlugin().getConfigCache().getNo_permission());
+                sender.sendMessage(message);
                 return;
             }
             TogglePvp.getPlugin().reloadPluginConfig(sender);
