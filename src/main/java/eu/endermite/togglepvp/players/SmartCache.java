@@ -42,7 +42,7 @@ public class SmartCache {
                 return playerData;
             } catch (NullPointerException ex) {
                 // Return false if database call fails
-                return new PlayerData(false, 0);
+                return new PlayerData(false);
             }
         }
     }
@@ -53,7 +53,7 @@ public class SmartCache {
             TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).setPvpEnabled(state);
         }
         // Update the database aswell
-        TogglePvp.getPlugin().getSqLite().updatePlayerInfo(uuid, new PlayerData(state, 0));
+        TogglePvp.getPlugin().getSqLite().updatePlayerInfo(uuid, new PlayerData(state));
     }
 
 

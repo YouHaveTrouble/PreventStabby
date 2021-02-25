@@ -17,14 +17,11 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
-        PlayerData playerData = TogglePvp.getPlugin().getSqLite().getPlayerInfo(player.getUniqueId());
-
-        TogglePvp.getPlugin().getPlayerManager().addPlayer(player.getUniqueId(), playerData);
+        PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
         playerData.setLoginTimestamp(Instant.now().getEpochSecond());
     }
     /**
-     * This event is here to dump player's saved options from memory
+     * This event is here to save player's data to database
      * Also punishes players who log out during combat
      */
     @EventHandler
@@ -38,12 +35,11 @@ public class PlayerJoinAndLeaveListener implements Listener {
 
             if (combatTime > now) {
                 player.setHealth(0);
-                if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce()) {
+                if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce())
                     PluginMessages.broadcastMessage(player, TogglePvp.getPlugin().getConfigCache().getPunish_for_combat_logout_message());
-                }
+
                 PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
                 playerData.setCombattime(now-1);
-
             }
         }
     }

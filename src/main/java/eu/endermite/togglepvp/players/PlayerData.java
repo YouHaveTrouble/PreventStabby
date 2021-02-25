@@ -11,11 +11,10 @@ public class PlayerData {
     private boolean lastCombatCheck;
     private long loginTimestamp;
 
-    public PlayerData(boolean pvpEnabled, long loginTimestamp) {
+    public PlayerData(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
-        this.loginTimestamp = loginTimestamp;
-
+        this.loginTimestamp = Instant.now().getEpochSecond()-1;
         refreshCachetime();
     }
 
