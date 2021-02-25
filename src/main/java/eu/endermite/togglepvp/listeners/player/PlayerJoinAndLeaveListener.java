@@ -18,7 +18,8 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        PlayerData playerData = smartCache.getPlayerData(player.getUniqueId());
         playerData.setLoginTimestamp(Instant.now().getEpochSecond());
     }
 

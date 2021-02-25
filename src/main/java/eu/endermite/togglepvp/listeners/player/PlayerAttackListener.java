@@ -29,7 +29,6 @@ public class PlayerAttackListener implements Listener {
             Player victim = (Player) victimEntity;
 
             ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-
             SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
 
             if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
