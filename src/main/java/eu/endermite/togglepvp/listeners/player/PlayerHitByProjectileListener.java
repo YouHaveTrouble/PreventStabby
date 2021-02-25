@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
@@ -9,6 +10,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
+import java.time.Instant;
 
 @eu.endermite.togglepvp.util.Listener
 public class PlayerHitByProjectileListener implements Listener {
@@ -30,14 +33,20 @@ public class PlayerHitByProjectileListener implements Listener {
                     return;
                 }
                 ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                if (!damagerPvpEnabled) {
+
+                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
+                if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                     return;
                 }
-                if (!victimPvpEnabled) {
+                if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                     event.setCancelled(true);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                     return;

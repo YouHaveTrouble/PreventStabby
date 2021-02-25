@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
@@ -11,9 +12,26 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @eu.endermite.togglepvp.util.Listener
 public class PlayerHitBySplashPotionListener implements Listener {
+
+    private final List<PotionEffectType> harmfulPotions = new ArrayList<>();
+
+    public PlayerHitBySplashPotionListener() {
+        harmfulPotions.add(PotionEffectType.BLINDNESS);
+        harmfulPotions.add(PotionEffectType.CONFUSION);
+        harmfulPotions.add(PotionEffectType.HARM);
+        harmfulPotions.add(PotionEffectType.HUNGER);
+        harmfulPotions.add(PotionEffectType.POISON);
+        harmfulPotions.add(PotionEffectType.SLOW_DIGGING);
+        harmfulPotions.add(PotionEffectType.WEAKNESS);
+        harmfulPotions.add(PotionEffectType.SLOW);
+        harmfulPotions.add(PotionEffectType.WITHER);
+    }
 
     /**
      * If thrown potion is applies negative effects and it's thrown by a player it will ahve no effect on player with pvp off
@@ -27,16 +45,9 @@ public class PlayerHitBySplashPotionListener implements Listener {
         boolean harmful = false;
 
         for (PotionEffect effect : event.getPotion().getEffects()) {
-            if (effect.getType().equals(PotionEffectType.BLINDNESS) ||
-                    effect.getType().equals(PotionEffectType.CONFUSION) ||
-                    effect.getType().equals(PotionEffectType.HARM) ||
-                    effect.getType().equals(PotionEffectType.HUNGER) ||
-                    effect.getType().equals(PotionEffectType.POISON) ||
-                    effect.getType().equals(PotionEffectType.SLOW_DIGGING) ||
-                    effect.getType().equals(PotionEffectType.WEAKNESS) ||
-                    effect.getType().equals(PotionEffectType.SLOW) ||
-                    effect.getType().equals(PotionEffectType.WITHER)) {
+            if (harmfulPotions.contains(effect.getType())) {
                     harmful = true;
+                    break;
             }
         }
         if (!harmful)
@@ -48,15 +59,20 @@ public class PlayerHitBySplashPotionListener implements Listener {
                 if (damager == victim)
                     continue;
 
+                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
+                if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
+                    event.setIntensity(victim, 0);
+                    continue;
+                }
+
                 ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                boolean damagerPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-                if (!damagerPvpEnabled) {
+                if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
                     continue;
                 }
-                boolean victimPvpEnabled = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(victim.getUniqueId());
-                if (!victimPvpEnabled) {
+                if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                     event.setIntensity(victim, 0);
                     PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
                     continue;

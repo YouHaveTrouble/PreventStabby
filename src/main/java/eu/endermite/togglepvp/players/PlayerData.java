@@ -9,10 +9,12 @@ public class PlayerData {
     private long cachetime, combattime;
     private boolean pvpEnabled;
     private boolean lastCombatCheck;
+    private long loginTimestamp;
 
-    public PlayerData(boolean pvpEnabled) {
+    public PlayerData(boolean pvpEnabled, long loginTimestamp) {
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
+        this.loginTimestamp = loginTimestamp;
 
         refreshCachetime();
     }
@@ -51,5 +53,13 @@ public class PlayerData {
 
     public void setLastCombatCheck(boolean bool) {
         lastCombatCheck = bool;
+    }
+
+    public void setLoginTimestamp(long loginTimestamp) {
+        this.loginTimestamp = loginTimestamp + TogglePvp.getPlugin().getConfigCache().getLogin_protection_time();
+    }
+
+    public long getLoginTimestamp() {
+        return loginTimestamp;
     }
 }

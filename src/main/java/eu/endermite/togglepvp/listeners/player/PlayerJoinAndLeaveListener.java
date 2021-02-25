@@ -37,7 +37,9 @@ public class PlayerJoinAndLeaveListener implements Listener {
                 if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce()) {
                     PluginMessages.broadcastMessage(player, TogglePvp.getPlugin().getConfigCache().getPunish_for_combat_logout_message());
                 }
-                TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()).setCombattime(now-1);
+                PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+                playerData.setCombattime(now-1);
+                playerData.setLoginTimestamp(Instant.now().getEpochSecond());
             }
         }
     }

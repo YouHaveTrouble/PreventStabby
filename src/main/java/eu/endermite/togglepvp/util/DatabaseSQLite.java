@@ -70,7 +70,7 @@ public class DatabaseSQLite {
             ResultSet result = statement.getResultSet();
             boolean state = result.getBoolean("pvpenabled");
             conn.close();
-            return new PlayerData(state);
+            return new PlayerData(state, 0);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -29,6 +29,7 @@ public class ConfigCache {
     @Getter private final String leaving_combat;
     @Getter final String cant_do_that_during_combat;
     @Getter final boolean only_owner_can_interact_with_pet;
+    @Getter final long login_protection_time;
 
     public ConfigCache() {
 
@@ -48,6 +49,8 @@ public class ConfigCache {
         this.punish_for_combat_logout_message = config.getString("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
         this.only_owner_can_interact_with_pet = config.getBoolean("settings.only_owner_can_interact_with_pet", false);
         this.cache_time = config.getLong("settings.cache_time", 30L);
+
+        this.login_protection_time = config.getLong("settings.login_protection_time", 0);
 
         // Messages
         this.pvp_enabled = config.getString("messages.pvp_enabled", "&cYou enabled PvP!");

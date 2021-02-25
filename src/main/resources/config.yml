@@ -18,6 +18,9 @@ settings:
   # Time (in seconds) to keep player in combat
   combat_time: 25
 
+  # Time (in seconds) that player can't be harmed by other player after logging in
+  login_protection_time: 0
+
   # Kill the player if they log out during combat
   punish_for_combat_logout:
     enabled: true
