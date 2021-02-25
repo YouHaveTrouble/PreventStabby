@@ -2,6 +2,7 @@ package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.PlayerData;
+import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
         PlayerData playerData = TogglePvp.getPlugin().getSqLite().getPlayerInfo(player.getUniqueId());
 
         TogglePvp.getPlugin().getPlayerManager().addPlayer(player.getUniqueId(), playerData);
+        playerData.setLoginTimestamp(Instant.now().getEpochSecond());
     }
     /**
      * This event is here to dump player's saved options from memory
@@ -30,8 +32,10 @@ public class PlayerJoinAndLeaveListener implements Listener {
         Player player = event.getPlayer();
         TogglePvp.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()));
         if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout()) {
+            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
             long now = Instant.now().getEpochSecond();
-            long combatTime = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()).getCombattime();
+            long combatTime = smartCache.getPlayerData(player.getUniqueId()).getCombattime();
+
             if (combatTime > now) {
                 player.setHealth(0);
                 if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce()) {
@@ -39,7 +43,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
                 }
                 PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
                 playerData.setCombattime(now-1);
-                playerData.setLoginTimestamp(Instant.now().getEpochSecond());
+
             }
         }
     }
