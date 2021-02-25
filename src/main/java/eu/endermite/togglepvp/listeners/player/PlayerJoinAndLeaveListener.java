@@ -7,6 +7,7 @@ import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
 import java.time.Instant;
 
 @eu.endermite.togglepvp.util.Listener
@@ -20,6 +21,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
         PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
         playerData.setLoginTimestamp(Instant.now().getEpochSecond());
     }
+
     /**
      * This event is here to save player's data to database
      * Also punishes players who log out during combat
@@ -28,19 +30,22 @@ public class PlayerJoinAndLeaveListener implements Listener {
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event) {
         Player player = event.getPlayer();
         TogglePvp.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()));
-        if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout()) {
-            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
-            long now = Instant.now().getEpochSecond();
-            long combatTime = smartCache.getPlayerData(player.getUniqueId()).getCombattime();
+        if (!TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout())
+            return;
 
-            if (combatTime > now) {
-                player.setHealth(0);
-                if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce())
-                    PluginMessages.broadcastMessage(player, TogglePvp.getPlugin().getConfigCache().getPunish_for_combat_logout_message());
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        long now = Instant.now().getEpochSecond();
+        long combatTime = smartCache.getPlayerData(player.getUniqueId()).getCombattime();
 
-                PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
-                playerData.setCombattime(now-1);
-            }
-        }
+        if (combatTime <= now)
+            return;
+
+        player.setHealth(0);
+        if (TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout_announce())
+            PluginMessages.broadcastMessage(player, TogglePvp.getPlugin().getConfigCache().getPunish_for_combat_logout_message());
+
+        PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+        playerData.setCombattime(now - 1);
+
     }
 }
