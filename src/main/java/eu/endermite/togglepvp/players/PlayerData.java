@@ -10,11 +10,13 @@ public class PlayerData {
     private boolean pvpEnabled;
     private boolean lastCombatCheck;
     private long loginTimestamp;
+    private long teleportTimestamp;
 
     public PlayerData(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
         this.loginTimestamp = Instant.now().getEpochSecond()-1;
+        this.teleportTimestamp = Instant.now().getEpochSecond()-1;
         refreshCachetime();
     }
 
@@ -60,5 +62,13 @@ public class PlayerData {
 
     public long getLoginTimestamp() {
         return loginTimestamp;
+    }
+
+    public void setTeleportTimestamp(long teleportTimestamp) {
+        this.teleportTimestamp = teleportTimestamp + TogglePvp.getPlugin().getConfigCache().getTeleport_protection_time();
+    }
+
+    public long getTeleportTimestamp() {
+        return teleportTimestamp;
     }
 }

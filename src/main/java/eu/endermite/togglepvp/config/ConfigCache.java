@@ -30,7 +30,7 @@ public class ConfigCache {
                 addDefault("settings.lava_and_fire_stopper.enabled", "true");
                 addDefault("settings.lava_and_fire_stopper.radius", "2.5");
 
-                addDefault("settings.channeling_enchant_disabled", "false", "Disables channeling (trident enchant) lightning strike. You may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
+                addDefault("settings.channeling_enchant_disabled", "false", "Disables channeling (trident enchant) lightning strike.\nYou may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
 
                 addDefault("settings.only_owner_can_interact_with_pet", "false", "Makes it so only pet owner can interact with it. Useful if you don't want people renaming other people's pets.");
 
@@ -45,7 +45,7 @@ public class ConfigCache {
                 addDefault("settings.punish_for_combat_logout.announce", "true");
                 addDefault("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
 
-                addDefault("settings.cache_time", "30", "Time (in seconds) to keep player data in memory when players goes offline. This is used for checking if offline players pvp state. Adjust only if you know what you're doing. NEVER set to less than 6.");
+                addDefault("settings.cache_time", "30", "Time (in seconds) to keep player data in memory when players goes offline.\nThis is used for checking if offline players pvp state.\nAdjust only if you know what you're doing. NEVER set to less than 6.");
 
                 addDefault("messages.pvp_enabled", "&cYou enabled PvP!");
                 addDefault("messages.pvp_disabled", "&cYou disabled PvP!");

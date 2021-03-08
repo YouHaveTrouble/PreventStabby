@@ -85,10 +85,13 @@ public class PlayerManager {
 
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
 
-        if (hasLoginProtection(attacker))
+        if (hasLoginProtection(attacker) || hasTeleportProtection(attacker))
             return false;
 
         if (checkVictimSpawnProtection && hasLoginProtection(victim))
+            return false;
+
+        if (checkVictimSpawnProtection && hasTeleportProtection(victim))
             return false;
 
         SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
@@ -121,6 +124,11 @@ public class PlayerManager {
                 return true;
         }
         return false;
+    }
+
+    public boolean hasTeleportProtection(UUID uuid) {
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        return Instant.now().getEpochSecond() < smartCache.getPlayerData(uuid).getTeleportTimestamp();
     }
 
 }
