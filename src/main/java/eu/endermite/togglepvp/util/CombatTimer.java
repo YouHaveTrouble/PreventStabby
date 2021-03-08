@@ -24,7 +24,7 @@ public class CombatTimer {
 
     public static boolean isInCombat(UUID uuid) {
         try {
-            long combattimer = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
+            long combattimer = TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).getCombattime();
             long now = Instant.now().getEpochSecond();
             return combattimer > now;
         } catch (Exception e) {
