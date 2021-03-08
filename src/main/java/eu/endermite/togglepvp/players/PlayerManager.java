@@ -103,7 +103,7 @@ public class PlayerManager {
         if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
             if (sendDenyMessage) {
                 ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                PluginMessages.sendActionBar(victim, config.getCannot_attack_victim());
+                PluginMessages.sendActionBar(attacker, config.getCannot_attack_victim());
             }
             return false;
         }
