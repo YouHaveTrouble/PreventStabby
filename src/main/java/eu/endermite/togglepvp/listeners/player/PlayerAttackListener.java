@@ -1,17 +1,13 @@
 package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
-import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
-import java.time.Instant;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PlayerAttackListener implements Listener {
@@ -25,28 +21,13 @@ public class PlayerAttackListener implements Listener {
         Entity victimEntity = event.getEntity();
 
         if (damagerEntity instanceof Player && victimEntity instanceof Player) {
-            Player damager = (Player) damagerEntity;
-            Player victim = (Player) victimEntity;
+            UUID damager = damagerEntity.getUniqueId();
+            UUID victim = victimEntity.getUniqueId();
 
-            ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
-
-            if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
+            if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true))
+                CombatTimer.refreshPlayersCombatTime(damager, victim);
+            else
                 event.setCancelled(true);
-                return;
-            }
-
-            if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
-                event.setCancelled(true);
-                PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                return;
-            }
-            if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
-                event.setCancelled(true);
-                PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                return;
-            }
-            CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
         }
     }
 

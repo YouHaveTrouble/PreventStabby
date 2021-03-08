@@ -2,10 +2,8 @@ package eu.endermite.togglepvp.listeners.unspecific;
 
 import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.BoundingBoxUtil;
 import eu.endermite.togglepvp.util.CombatTimer;
-import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -16,6 +14,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.BoundingBox;
 
+import java.util.UUID;
+
 @eu.endermite.togglepvp.util.Listener
 public class PlaceWitherRoseListener implements Listener {
 
@@ -23,7 +23,6 @@ public class PlaceWitherRoseListener implements Listener {
     public void onPlayerWitherRosePlace(org.bukkit.event.block.BlockPlaceEvent event) {
 
         ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
 
         if (!config.isLava_and_fire_stopper_enabled())
             return;
@@ -34,38 +33,29 @@ public class PlaceWitherRoseListener implements Listener {
             BoundingBox boundingBox = BoundingBoxUtil.getBoundingBox(location, radius);
             for (Entity entity : location.getWorld().getNearbyEntities(boundingBox)) {
                 if (entity instanceof Player) {
-                    Player damager = event.getPlayer();
-                    Player victim = (Player) entity;
+                    UUID damager = event.getPlayer().getUniqueId();
+                    UUID victim = entity.getUniqueId();
                     if (victim == damager)
                         return;
-                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
+
+                    if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true))
+                        CombatTimer.refreshPlayersCombatTime(damager, victim);
+                    else
                         event.setCancelled(true);
-                        return;
-                    }
-                    if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                        event.setCancelled(true);
-                        return;
-                    }
-                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
                 } else if (entity instanceof Tameable) {
-                    Tameable victim = (Tameable) entity;
-                    Player damager = event.getPlayer();
-                    if (victim.getOwner() == null || victim.getOwner() == damager) {
+                    Tameable tameable = (Tameable) entity;
+                    UUID damager = event.getPlayer().getUniqueId();
+                    if (tameable.getOwner() == null)
                         return;
-                    }
-                    if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+
+                    UUID victim = tameable.getOwner().getUniqueId();
+                    if (victim == damager)
+                        return;
+
+                    if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true, false))
+                        CombatTimer.refreshPlayersCombatTime(damager, victim);
+                    else
                         event.setCancelled(true);
-                        return;
-                    }
-                    if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
-                        PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
-                        event.setCancelled(true);
-                        return;
-                    }
-                    CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
                 }
             }
         }

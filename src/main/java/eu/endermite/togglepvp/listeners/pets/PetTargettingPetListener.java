@@ -20,9 +20,9 @@ public class PetTargettingPetListener implements Listener {
                 return;
 
             SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
-
             boolean damagerPvpEnabled = smartCache.getPlayerData(damager.getOwner().getUniqueId()).isPvpEnabled();
             boolean victimPvpEnabled = smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled();
+
             if (!victimPvpEnabled || !damagerPvpEnabled) {
                 if (damager instanceof Wolf) {
                     Wolf wolf = (Wolf) damager;

@@ -1,12 +1,14 @@
 package eu.endermite.togglepvp.players;
 
 import eu.endermite.togglepvp.TogglePvp;
+import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +48,8 @@ public class PlayerManager {
     public void refreshPlayersCombatTime(UUID uuid) {
         try {
             playerList.get(uuid).refreshCombatTime();
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
     }
 
     public PlayerData getPlayer(UUID uuid) {
@@ -75,4 +78,49 @@ public class PlayerManager {
             return true;
         }
     }
+
+    public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage) {
+        return canDamage(attacker, victim, sendDenyMessage, true);
+    }
+
+    public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
+
+        if (hasLoginProtection(attacker))
+            return false;
+
+        if (checkVictimSpawnProtection && hasLoginProtection(victim))
+            return false;
+
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+
+        if (!smartCache.getPlayerData(attacker).isPvpEnabled()) {
+            if (sendDenyMessage) {
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                PluginMessages.sendActionBar(attacker, config.getCannot_attack_attacker());
+            }
+            return false;
+        }
+        if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
+            if (sendDenyMessage) {
+                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
+                PluginMessages.sendActionBar(victim, config.getCannot_attack_victim());
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param uuid Player UUIDs
+     * @return true if any of the provided UUIDs has spawn protection
+     */
+    public boolean hasLoginProtection(UUID... uuid) {
+        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+        for (UUID checkedUuid : uuid) {
+            if (Instant.now().getEpochSecond() < smartCache.getPlayerData(checkedUuid).getLoginTimestamp())
+                return true;
+        }
+        return false;
+    }
+
 }

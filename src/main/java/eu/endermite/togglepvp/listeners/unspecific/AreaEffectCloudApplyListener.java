@@ -1,10 +1,8 @@
 package eu.endermite.togglepvp.listeners.unspecific;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.util.CombatTimer;
-import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -13,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.potion.PotionEffectType;
 import java.util.Iterator;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class AreaEffectCloudApplyListener implements Listener {
@@ -36,47 +35,37 @@ public class AreaEffectCloudApplyListener implements Listener {
                     potionEffectType.equals(PotionEffectType.SLOW) ||
                     potionEffectType.equals(PotionEffectType.WITHER)) {
 
-                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+                PlayerManager playerManager = TogglePvp.getPlugin().getPlayerManager();
 
                 Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
-                Player damager = (Player) event.getEntity().getSource();
+                UUID damager = ((Player) event.getEntity().getSource()).getUniqueId();
                 while(it.hasNext()) {
                     LivingEntity entity = it.next();
                     if(entity instanceof Player) {
 
-                        Player victim = (Player) entity;
+                        UUID victim = entity.getUniqueId();
                         if (damager == victim)
                             continue;
 
-                        ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                        if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
+                        if (playerManager.canDamage(damager, victim, true))
+                            CombatTimer.refreshPlayersCombatTime(damager, victim);
+                        else
                             it.remove();
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                            continue;
-                        }
-                        if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
-                            it.remove();
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                            continue;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
+
                     } else if (entity instanceof Tameable) {
-                        Tameable victim = (Tameable) entity;
-                        if (victim.getOwner() == null || victim.getOwner() == damager) {
-                            return;
-                        }
-                        ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                        if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
-                            it.remove();
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
+                        Tameable tameable = (Tameable) entity;
+
+                        if (tameable.getOwner() == null)
                             continue;
-                        }
-                        if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
-                            it.remove();
-                            PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
+
+                        UUID victim = tameable.getOwner().getUniqueId();
+                        if (victim == damager)
                             continue;
-                        }
-                        CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
+
+                        if (playerManager.canDamage(damager, victim, true, false))
+                            CombatTimer.refreshPlayersCombatTime(damager, victim);
+                        else
+                            it.remove();
                     }
                 }
             }

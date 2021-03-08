@@ -19,9 +19,9 @@ public final class TogglePvp extends JavaPlugin {
 
     @Getter private static TogglePvp plugin;
     private ConfigCache configCache;
-    private PlayerManager playerManager;
-    private DatabaseSQLite sqLite;
-    private SmartCache smartCache;
+    protected PlayerManager playerManager;
+    protected DatabaseSQLite sqLite;
+    protected SmartCache smartCache;
 
     @Override
     public void onEnable() {

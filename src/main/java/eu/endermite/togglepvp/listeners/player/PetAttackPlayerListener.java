@@ -1,7 +1,7 @@
 package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.players.SmartCache;
+import eu.endermite.togglepvp.players.PlayerManager;
 import eu.endermite.togglepvp.util.CombatTimer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -9,8 +9,7 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
-import java.time.Instant;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PetAttackPlayerListener implements Listener {
@@ -20,7 +19,7 @@ public class PetAttackPlayerListener implements Listener {
      * This is to fix any inconsistancy with pet behavior
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onWolfAttack(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+    public void onPetAttack(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
 
         if (!(event.getDamager() instanceof Tameable))
             return;
@@ -28,16 +27,12 @@ public class PetAttackPlayerListener implements Listener {
         Tameable entity = (Tameable) event.getDamager();
         if (entity.getOwner() != null && event.getEntity() instanceof Player) {
 
-            Player victim = (Player) event.getEntity();
-            SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+            UUID victim = event.getEntity().getUniqueId();
+            UUID damager = entity.getOwner().getUniqueId();
 
-            if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
-                event.setCancelled(true);
-                return;
-            }
-            boolean damagerPvpEnabled = smartCache.getPlayerData(entity.getOwner().getUniqueId()).isPvpEnabled();
-            boolean victimPvpEnabled = smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled();
-            if (!victimPvpEnabled || !damagerPvpEnabled) {
+            PlayerManager playerManager = TogglePvp.getPlugin().getPlayerManager();
+
+            if (!playerManager.canDamage(damager, victim, false)) {
                 if (entity instanceof Wolf) {
                     Wolf wolf = (Wolf) entity;
                     wolf.setAngry(false);
@@ -45,7 +40,7 @@ public class PetAttackPlayerListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            CombatTimer.refreshPlayersCombatTime(entity.getOwner().getUniqueId(), victim.getUniqueId());
+            CombatTimer.refreshPlayersCombatTime(damager, victim);
         }
 
     }

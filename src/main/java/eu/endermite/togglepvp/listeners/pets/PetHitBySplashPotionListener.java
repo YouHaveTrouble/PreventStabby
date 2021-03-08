@@ -1,10 +1,7 @@
 package eu.endermite.togglepvp.listeners.pets;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
-import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -13,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PetHitBySplashPotionListener implements Listener {
@@ -22,7 +20,7 @@ public class PetHitBySplashPotionListener implements Listener {
      * it will have no effect on a pet of a player with pvp off
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onWolfHitBySplashPotion(org.bukkit.event.entity.PotionSplashEvent event) {
+    public void onPetHitBySplashPotion(org.bukkit.event.entity.PotionSplashEvent event) {
 
         if (!(event.getEntity().getShooter() instanceof Player))
             return;
@@ -46,25 +44,21 @@ public class PetHitBySplashPotionListener implements Listener {
             return;
         for (Entity entity : event.getAffectedEntities()) {
             if (entity instanceof Tameable) {
-                Player damager = (Player) event.getEntity().getShooter();
-                Tameable victim = (Tameable) entity;
-                if (victim.getOwner() == null || victim.getOwner() == damager)
+                UUID damager = ((Player) event.getEntity().getShooter()).getUniqueId();
+                Tameable tameable = (Tameable) entity;
+
+                if (tameable.getOwner() == null)
                     continue;
 
-                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
+                UUID victim = tameable.getOwner().getUniqueId();
 
-                if (!TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId())) {
-                    event.setIntensity(victim, 0);
-                    PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
-                    continue;
-                }
-                if (!smartCache.getPlayerData(victim.getOwner().getUniqueId()).isPvpEnabled()) {
-                    event.setIntensity(victim, 0);
-                    PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                    continue;
-                }
-                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getOwner().getUniqueId());
+                if (victim == damager)
+                    return;
+
+                if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true, false))
+                    CombatTimer.refreshPlayersCombatTime(damager, victim);
+                else
+                    event.setCancelled(true);
             }
         }
     }

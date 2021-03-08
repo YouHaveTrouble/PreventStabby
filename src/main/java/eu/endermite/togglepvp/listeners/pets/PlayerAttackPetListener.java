@@ -11,11 +11,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 @eu.endermite.togglepvp.util.Listener
 public class PlayerAttackPetListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerAttacktameable(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+    public void onPlayerAttackPet(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
 
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Tameable) {
             SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
@@ -23,25 +25,25 @@ public class PlayerAttackPetListener implements Listener {
             if (tameable.getOwner() == null)
                 return;
 
-            Player damager = (Player) event.getDamager();
+            UUID damager = event.getDamager().getUniqueId();
+            UUID victim = tameable.getOwner().getUniqueId();
 
-            if (damager.getUniqueId() == tameable.getOwner().getUniqueId())
+            if (damager == victim)
                 return;
 
             ConfigCache config = TogglePvp.getPlugin().getConfigCache();
-            boolean damagerPvpState = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager.getUniqueId());
-
+            boolean damagerPvpState = TogglePvp.getPlugin().getPlayerManager().getPlayerPvPState(damager);
             if (!damagerPvpState) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
                 event.setCancelled(true);
                 return;
             }
-            if (!smartCache.getPlayerData(tameable.getOwner().getUniqueId()).isPvpEnabled()) {
+            if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
                 PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
                 event.setCancelled(true);
                 return;
             }
-            CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), tameable.getOwner().getUniqueId());
+            CombatTimer.refreshPlayersCombatTime(damager);
 
         }
     }

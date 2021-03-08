@@ -1,17 +1,13 @@
 package eu.endermite.togglepvp.listeners.player;
 
 import eu.endermite.togglepvp.TogglePvp;
-import eu.endermite.togglepvp.config.ConfigCache;
-import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.CombatTimer;
-import eu.endermite.togglepvp.util.PluginMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
-import java.time.Instant;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PlayerHitByProjectileListener implements Listener {
@@ -25,33 +21,17 @@ public class PlayerHitByProjectileListener implements Listener {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Projectile) {
             Projectile projectile = (Projectile) event.getDamager();
             if (projectile.getShooter() instanceof Player) {
-                Player damager = (Player) projectile.getShooter();
-                Player victim = (Player) event.getEntity();
+                UUID damager = ((Player) projectile.getShooter()).getUniqueId();
+                UUID victim = event.getEntity().getUniqueId();
 
                 // Ender pearls and other self-damage
-                if (damager == victim) {
+                if (damager == victim)
                     return;
-                }
-                ConfigCache config = TogglePvp.getPlugin().getConfigCache();
 
-                SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
-
-                if (Instant.now().getEpochSecond() < smartCache.getPlayerData(victim.getUniqueId()).getLoginTimestamp()) {
+                if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true))
+                    CombatTimer.refreshPlayersCombatTime(damager, victim);
+                else
                     event.setCancelled(true);
-                    return;
-                }
-
-                if (!smartCache.getPlayerData(damager.getUniqueId()).isPvpEnabled()) {
-                    event.setCancelled(true);
-                    PluginMessages.sendActionBar(damager, config.getCannot_attack_attacker());
-                    return;
-                }
-                if (!smartCache.getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
-                    event.setCancelled(true);
-                    PluginMessages.sendActionBar(damager, config.getCannot_attack_victim());
-                    return;
-                }
-                CombatTimer.refreshPlayersCombatTime(damager.getUniqueId(), victim.getUniqueId());
             }
         }
     }

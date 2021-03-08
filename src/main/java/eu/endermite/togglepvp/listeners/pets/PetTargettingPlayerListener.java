@@ -1,11 +1,14 @@
 package eu.endermite.togglepvp.listeners.pets;
 
 import eu.endermite.togglepvp.TogglePvp;
+import eu.endermite.togglepvp.util.CombatTimer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PetTargettingPlayerListener implements Listener {
@@ -13,7 +16,7 @@ public class PetTargettingPlayerListener implements Listener {
      * Stops pets with owners targetting players with pvp off
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onWolfTarget(org.bukkit.event.entity.EntityTargetEvent event) {
+    public void onPetTargetPlayer(org.bukkit.event.entity.EntityTargetEvent event) {
         if (!(event.getEntity() instanceof Tameable))
             return;
 
@@ -22,12 +25,13 @@ public class PetTargettingPlayerListener implements Listener {
             return;
 
         if (event.getTarget() instanceof Player) {
-            boolean attackerPvPEnabled = TogglePvp.getPlugin().getSmartCache().getPlayerData(entity.getOwner().getUniqueId()).isPvpEnabled();
-            Player victim = (Player) event.getTarget();
-            boolean victimPvpEnabled = TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getUniqueId()).isPvpEnabled();
-            if (!attackerPvPEnabled || !victimPvpEnabled) {
+            UUID damager = entity.getOwner().getUniqueId();
+            UUID victim = event.getTarget().getUniqueId();
+
+            if (TogglePvp.getPlugin().getPlayerManager().canDamage(damager, victim, true, false))
+                CombatTimer.refreshPlayersCombatTime(damager, victim);
+            else
                 event.setCancelled(true);
-            }
         }
     }
 }

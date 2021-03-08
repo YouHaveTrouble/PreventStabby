@@ -21,6 +21,12 @@ public class LightningBlockIgniteListener implements Listener {
             for (Entity entity : lightningStrike.getNearbyEntities(2,2,2)) {
                 if (entity instanceof Player) {
                     Player victim = (Player) entity;
+
+                    if (TogglePvp.getPlugin().getPlayerManager().hasLoginProtection(victim.getUniqueId())) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
                     if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
                         event.setCancelled(true);
                         return;

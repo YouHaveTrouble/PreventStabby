@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import java.util.UUID;
 
 /**
  * Listen for lightning strikes and tag the trident spawned ones.
@@ -24,8 +25,14 @@ public class EntityHitByLightningListener implements Listener {
     public void onPlayerLightningDamage(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1) {
             if (event.getEntity() instanceof Player) {
-                Player victim = (Player) event.getEntity();
-                if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim.getUniqueId()).isPvpEnabled()) {
+                UUID victim = event.getEntity().getUniqueId();
+
+                if (TogglePvp.getPlugin().getPlayerManager().hasLoginProtection(victim)) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (!TogglePvp.getPlugin().getSmartCache().getPlayerData(victim).isPvpEnabled()) {
                     event.setCancelled(true);
                 }
             } else if (event.getEntity() instanceof Tameable) {
