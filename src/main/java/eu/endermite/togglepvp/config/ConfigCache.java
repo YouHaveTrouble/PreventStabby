@@ -1,39 +1,74 @@
 package eu.endermite.togglepvp.config;
 
 import eu.endermite.togglepvp.TogglePvp;
+import io.github.thatsmusic99.configurationmaster.CMFile;
 import lombok.Getter;
-import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigCache {
 
-    @Getter private final boolean pvp_enabled_by_default;
-    @Getter private final boolean lava_and_fire_stopper_enabled;
-    @Getter private final String pvp_enabled;
-    @Getter private final String pvp_disabled;
-    @Getter private final String cannot_attack_victim;
-    @Getter private final String cannot_attack_attacker;
-    @Getter private final String cannot_attack_pets_victim;
-    @Getter private final String cannot_attack_pets_attacker;
-    @Getter private final String no_permission;
-    @Getter private final String no_such_command;
-    @Getter private final String pvp_enabled_other;
-    @Getter private final String pvp_disabled_other;
+    private final TogglePvp plugin = TogglePvp.getPlugin();
+
+    @Getter private final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled, channeling_enchant_disabled,
+            punish_for_combat_logout, punish_for_combat_logout_announce, only_owner_can_interact_with_pet;
+    @Getter private final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
+            cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
+            pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
+            cant_do_that_during_combat;
     @Getter private final double lava_and_fire_stopper_radius;
-    @Getter private final boolean channeling_enchant_disabled;
-    @Getter private final long cache_time;
-    @Getter private final long combat_time;
-    @Getter private final boolean punish_for_combat_logout;
-    @Getter private final boolean punish_for_combat_logout_announce;
-    @Getter private final String punish_for_combat_logout_message;
-    @Getter private final String entering_combat;
-    @Getter private final String leaving_combat;
-    @Getter final String cant_do_that_during_combat;
-    @Getter final boolean only_owner_can_interact_with_pet;
-    @Getter final long login_protection_time;
+    @Getter private final long cache_time, combat_time, login_protection_time, teleport_protection_time;
 
     public ConfigCache() {
 
-        Configuration config = TogglePvp.getPlugin().getConfig();
+        CMFile configFile = new CMFile(plugin, "config") {
+            @Override
+            public void loadDefaults() {
+
+                addDefault("settings.pvp_enabled_by_default", "false", "Decides if pvp should be enabled or disabled by default");
+
+                addComment("settings.lava_and_fire_stopper", "Prevents dumping lava and pufferfish bucket, placing wither roses and lighting blocks on fire near players with pvp off");
+                addDefault("settings.lava_and_fire_stopper.enabled", "true");
+                addDefault("settings.lava_and_fire_stopper.radius", "2.5");
+
+                addDefault("settings.channeling_enchant_disabled", "false", "Disables channeling (trident enchant) lightning strike. You may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
+
+                addDefault("settings.only_owner_can_interact_with_pet", "false", "Makes it so only pet owner can interact with it. Useful if you don't want people renaming other people's pets.");
+
+                addDefault("settings.combat_time", "25", "Time (in seconds) to keep player in combat");
+
+                addDefault("settings.login_protection_time", "0", "Time (in seconds) that player can't be harmed by other player after logging in");
+
+                addDefault("settings.teleport_protection_time", "0", "Time (in seconds) that player can't be harmed by other player after teleporting");
+
+                addComment("settings.punish_for_combat_logout", "Kill the player if they log out during combat");
+                addDefault("settings.punish_for_combat_logout.enabled", "true");
+                addDefault("settings.punish_for_combat_logout.announce", "true");
+                addDefault("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
+
+                addDefault("settings.cache_time", "30", "Time (in seconds) to keep player data in memory when players goes offline. This is used for checking if offline players pvp state. Adjust only if you know what you're doing. NEVER set to less than 6.");
+
+                addDefault("messages.pvp_enabled", "&cYou enabled PvP!");
+                addDefault("messages.pvp_disabled", "&cYou disabled PvP!");
+                addDefault("messages.cannot_attack_victim", "&cYou can't attack players that have PvP turned off!");
+                addDefault("messages.cannot_attack_attacker", "&cYou can't attack players while you have PvP turned off!");
+                addDefault("messages.cannot_attack_pets_victim", "&cYou can't attack pets of players that have PvP turned off");
+                addDefault("messages.cannot_attack_pets_attacker", "&cYou can't attack pets while you have PvP turned off");
+                addDefault("messages.no_permission", "&cYou don't have permission to use that.");
+                addDefault("messages.no_such_command", "&cNo such command.");
+                addDefault("messages.pvp_enabled_others", "&cYou've enabled %player%'s PvP.");
+                addDefault("messages.pvp_disabled_others", "&cYou've disabled %player%'s PvP.");
+                addDefault("messages.entering_combat", "&cEntering combat");
+                addDefault("messages.leaving_combat", "&cLeaving combat");
+                addDefault("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+            }
+        };
+
+        configFile.setDescription("PvP toggle that CARES about your pets!");
+        configFile.addLink("Spigot", "https://www.spigotmc.org/resources/togglepvp.89376/");
+        configFile.addLink("Source", "https://github.com/YouHaveTrouble/TogglePvP");
+
+        configFile.load();
+        FileConfiguration config = configFile.getConfig();
 
         // Settings
         this.pvp_enabled_by_default = config.getBoolean("settings.pvp_enabled_by_default", false);
@@ -51,6 +86,7 @@ public class ConfigCache {
         this.cache_time = config.getLong("settings.cache_time", 30L);
 
         this.login_protection_time = config.getLong("settings.login_protection_time", 0);
+        this.teleport_protection_time = config.getLong("settings.teleport_protection_time", 0);
 
         // Messages
         this.pvp_enabled = config.getString("messages.pvp_enabled", "&cYou enabled PvP!");
@@ -66,5 +102,9 @@ public class ConfigCache {
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
         this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+
+
     }
+
+
 }

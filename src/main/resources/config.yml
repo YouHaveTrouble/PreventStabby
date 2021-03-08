@@ -21,6 +21,10 @@ settings:
   # Time (in seconds) that player can't be harmed by other player after logging in
   login_protection_time: 0
 
+  # Time (in seconds) that player can't be harmed by other player after teleporting
+  teleport_protection_time: 0
+
+
   # Kill the player if they log out during combat
   punish_for_combat_logout:
     enabled: true
