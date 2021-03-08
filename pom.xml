@@ -45,6 +45,11 @@
                                     <pattern>io.github.thatsmusic99</pattern>
                                     <shadedPattern>configurationmaster</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <!-- Replace this with your package! -->
+                                    <shadedPattern>bstats</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -96,6 +101,12 @@
             <groupId>com.github.Thatsmusic99</groupId>
             <artifactId>ConfigurationMaster</artifactId>
             <version>v1.0-RC-2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

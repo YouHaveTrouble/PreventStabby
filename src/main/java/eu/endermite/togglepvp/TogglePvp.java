@@ -7,6 +7,8 @@ import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.Listener;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.CustomChart;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
@@ -57,6 +59,9 @@ public final class TogglePvp extends JavaPlugin {
         // Register command
         Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
         Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());
+
+        Metrics metrics = new Metrics(this, 10597);
+
     }
 
     public void reloadPluginConfig() {
