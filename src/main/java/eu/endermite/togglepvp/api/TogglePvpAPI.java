@@ -75,6 +75,24 @@ public class TogglePvpAPI {
     }
 
     /**
+     * Checks if player has teleport protection.
+     * @param player Player to check
+     * @return True if player has teleport protection, false if not
+     */
+    public static boolean hasTeleportProtection(Player player) {
+        return TogglePvp.getPlugin().getPlayerManager().hasLoginProtection(player.getUniqueId());
+    }
+
+    /**
+     * Checks if player has teleport protection.
+     * @param uuid UUID of player to check
+     * @return True if player has teleport protection, false if not
+     */
+    public static boolean hasTeleportProtection(UUID uuid) {
+        return TogglePvp.getPlugin().getPlayerManager().hasLoginProtection(uuid);
+    }
+
+    /**
      * Checks if player has login protection.
      * @param player Player to check
      * @return True if player has login protection, false if not

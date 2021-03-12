@@ -8,7 +8,6 @@ import eu.endermite.togglepvp.util.Listener;
 import eu.endermite.togglepvp.util.DatabaseSQLite;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.CustomChart;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;

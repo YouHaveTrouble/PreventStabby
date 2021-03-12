@@ -1,6 +1,10 @@
 package eu.endermite.togglepvp.util;
 
 import eu.endermite.togglepvp.TogglePvp;
+import eu.endermite.togglepvp.api.event.PlayerEnterCombatEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -11,9 +15,15 @@ public class CombatTimer {
             long now = Instant.now().getEpochSecond();
             long combattime = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
             if (combattime < now) {
+                Player player = Bukkit.getPlayer(uuid);
+                PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
+                Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
+                if (playerEnterCombatEvent.isCancelled())
+                    return;
+
+                TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
                 PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
             }
-            TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
         } catch (Exception ignored) {}
     }
 
@@ -24,9 +34,7 @@ public class CombatTimer {
 
     public static boolean isInCombat(UUID uuid) {
         try {
-            long combattimer = TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).getCombattime();
-            long now = Instant.now().getEpochSecond();
-            return combattimer > now;
+            return TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).isInCombat();
         } catch (Exception e) {
             return false;
         }

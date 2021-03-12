@@ -1,6 +1,7 @@
 package eu.endermite.togglepvp.players;
 
 import eu.endermite.togglepvp.TogglePvp;
+import eu.endermite.togglepvp.api.event.PlayerLeaveCombatEvent;
 import eu.endermite.togglepvp.config.ConfigCache;
 import eu.endermite.togglepvp.util.CombatTimer;
 import eu.endermite.togglepvp.util.PluginMessages;
@@ -29,10 +30,20 @@ public class PlayerManager {
         combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
             for (Map.Entry<UUID, PlayerData> set : playerList.entrySet()) {
                 UUID uuid = set.getKey();
+                PlayerData playerData = set.getValue();
                 if (!CombatTimer.isInCombat(uuid)) {
-                    if (set.getValue().getLastCombatCheck()) {
-                        set.getValue().setLastCombatCheck(false);
-                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                    if (playerData.getLastCombatCheck()) {
+                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(Bukkit.getPlayer(uuid));
+                        Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+
+                        if (playerLeaveCombatEvent.isCancelled()) {
+                            playerData.refreshCombatTime();
+                            return;
+                        } else {
+                            playerData.setLastCombatCheck(false);
+                            playerData.setInCombat(false);
+                            PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                        }
                     }
                 } else {
                     set.getValue().setLastCombatCheck(true);
@@ -47,7 +58,11 @@ public class PlayerManager {
 
     public void refreshPlayersCombatTime(UUID uuid) {
         try {
-            playerList.get(uuid).refreshCombatTime();
+            PlayerData data = playerList.get(uuid);
+            if (data == null)
+                return;
+            data.refreshCombatTime();
+            data.setInCombat(true);
         } catch (Exception ignored) {
         }
     }

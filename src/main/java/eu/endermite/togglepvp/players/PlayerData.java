@@ -6,17 +6,15 @@ import java.time.Instant;
 
 public class PlayerData {
 
-    private long cachetime, combattime;
-    private boolean pvpEnabled;
-    private boolean lastCombatCheck;
-    private long loginTimestamp;
-    private long teleportTimestamp;
+    private long cachetime, combattime, loginTimestamp, teleportTimestamp;
+    private boolean pvpEnabled, lastCombatCheck, inCombat;
 
     public PlayerData(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
         this.loginTimestamp = Instant.now().getEpochSecond()-1;
         this.teleportTimestamp = Instant.now().getEpochSecond()-1;
+        this.inCombat = false;
         refreshCachetime();
     }
 
@@ -70,5 +68,13 @@ public class PlayerData {
 
     public long getTeleportTimestamp() {
         return teleportTimestamp;
+    }
+
+    public boolean isInCombat() {
+        return inCombat;
+    }
+
+    public void setInCombat(boolean inCombat) {
+        this.inCombat = inCombat;
     }
 }
