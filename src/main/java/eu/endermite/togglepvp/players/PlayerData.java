@@ -55,7 +55,7 @@ public class PlayerData {
     }
 
     public void setLoginTimestamp(long loginTimestamp) {
-        this.loginTimestamp = loginTimestamp + TogglePvp.getPlugin().getConfigCache().getLogin_protection_time();
+        this.loginTimestamp = loginTimestamp + TogglePvp.getPlugin().getConfigCache().getLogin_protection_time()-1;
     }
 
     public long getLoginTimestamp() {
@@ -63,7 +63,7 @@ public class PlayerData {
     }
 
     public void setTeleportTimestamp(long teleportTimestamp) {
-        this.teleportTimestamp = teleportTimestamp + TogglePvp.getPlugin().getConfigCache().getTeleport_protection_time();
+        this.teleportTimestamp = teleportTimestamp + TogglePvp.getPlugin().getConfigCache().getTeleport_protection_time()-1;
     }
 
     public long getTeleportTimestamp() {

@@ -14,16 +14,22 @@ public class CombatTimer {
         try {
             long now = Instant.now().getEpochSecond();
             long combattime = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
-            if (combattime < now) {
-                Player player = Bukkit.getPlayer(uuid);
-                PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
-                Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
-                if (playerEnterCombatEvent.isCancelled())
-                    return;
 
-                TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
-                PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
-            }
+                Player player = Bukkit.getPlayer(uuid);
+                Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                    PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
+                    Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
+                    if (playerEnterCombatEvent.isCancelled())
+                        return;
+                    TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
+
+                    if (combattime <= now) {
+                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
+                    }
+                });
+
+
+
         } catch (Exception ignored) {}
     }
 
@@ -34,7 +40,7 @@ public class CombatTimer {
 
     public static boolean isInCombat(UUID uuid) {
         try {
-            return TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).isInCombat();
+            return TogglePvp.getPlugin().getPlayerManager().getPlayer(uuid).getCombattime() >= Instant.now().getEpochSecond();
         } catch (Exception e) {
             return false;
         }

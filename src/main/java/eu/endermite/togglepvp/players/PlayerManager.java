@@ -34,16 +34,17 @@ public class PlayerManager {
                 if (!CombatTimer.isInCombat(uuid)) {
                     if (playerData.getLastCombatCheck()) {
                         PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(Bukkit.getPlayer(uuid));
-                        Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
-
-                        if (playerLeaveCombatEvent.isCancelled()) {
-                            playerData.refreshCombatTime();
-                            return;
-                        } else {
-                            playerData.setLastCombatCheck(false);
-                            playerData.setInCombat(false);
-                            PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
-                        }
+                        Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                            Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+                            if (playerLeaveCombatEvent.isCancelled()) {
+                                playerData.setLastCombatCheck(true);
+                                playerData.refreshCombatTime();
+                            } else {
+                                playerData.setLastCombatCheck(false);
+                                playerData.setInCombat(false);
+                                PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                            }
+                        });
                     }
                 } else {
                     set.getValue().setLastCombatCheck(true);
