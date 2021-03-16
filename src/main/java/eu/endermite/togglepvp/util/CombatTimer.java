@@ -4,7 +4,6 @@ import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.api.event.PlayerEnterCombatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -15,22 +14,20 @@ public class CombatTimer {
             long now = Instant.now().getEpochSecond();
             long combattime = TogglePvp.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
 
-                Player player = Bukkit.getPlayer(uuid);
-                Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
-                    PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
-                    Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
-                    if (playerEnterCombatEvent.isCancelled())
-                        return;
-                    TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
+            Player player = Bukkit.getPlayer(uuid);
+            PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
+            Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
+                if (playerEnterCombatEvent.isCancelled())
+                    return;
+                TogglePvp.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
 
-                    if (combattime <= now) {
-                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
-                    }
-                });
-
-
-
-        } catch (Exception ignored) {}
+                if (combattime <= now) {
+                    PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getEntering_combat());
+                }
+            });
+        } catch (Exception ignored) {
+        }
     }
 
     public static void refreshPlayersCombatTime(UUID attacker_uuid, UUID victim_uuid) {

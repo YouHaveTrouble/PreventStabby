@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class PlayerManager {
@@ -27,30 +26,24 @@ public class PlayerManager {
             playerList.put(p.getUniqueId(), playerData);
         }
 
-        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
-            for (Map.Entry<UUID, PlayerData> set : playerList.entrySet()) {
-                UUID uuid = set.getKey();
-                PlayerData playerData = set.getValue();
-                if (!CombatTimer.isInCombat(uuid)) {
-                    if (playerData.getLastCombatCheck()) {
-                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(Bukkit.getPlayer(uuid));
-                        Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
-                            Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
-                            if (playerLeaveCombatEvent.isCancelled()) {
-                                playerData.setLastCombatCheck(true);
-                                playerData.refreshCombatTime();
-                            } else {
-                                playerData.setLastCombatCheck(false);
-                                playerData.setInCombat(false);
-                                PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
-                            }
-                        });
+        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> playerList.forEach((uuid, playerData) -> {
+            if (!(!CombatTimer.isInCombat(uuid) && playerData.getLastCombatCheck())) {
+                PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(Bukkit.getPlayer(uuid));
+                Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                    Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+                    if (playerLeaveCombatEvent.isCancelled()) {
+                        playerData.setLastCombatCheck(true);
+                        playerData.refreshCombatTime();
+                    } else {
+                        playerData.setLastCombatCheck(false);
+                        playerData.setInCombat(false);
+                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
                     }
-                } else {
-                    set.getValue().setLastCombatCheck(true);
-                }
+                });
+            } else {
+                playerData.setLastCombatCheck(true);
             }
-        }, 20, 20);
+        }), 20, 20);
     }
 
     public void refreshPlayersCacheTime(UUID uuid) {
