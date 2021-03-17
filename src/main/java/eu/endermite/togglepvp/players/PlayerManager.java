@@ -42,6 +42,7 @@ public class PlayerManager {
                 });
             } else {
                 playerData.setLastCombatCheck(true);
+                playerData.refreshCachetime();
             }
         }), 20, 20);
     }
