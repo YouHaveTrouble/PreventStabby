@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
@@ -26,30 +27,28 @@ public class PlayerManager {
             playerList.put(p.getUniqueId(), playerData);
         }
 
-        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
-            playerList.forEach(((uuid, playerData) -> {
-                if (!CombatTimer.isInCombat(uuid)) {
-                    if (playerData.getLastCombatCheck()) {
-                        Player player = Bukkit.getPlayer(uuid);
-                        if (player == null)
+        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> playerList.forEach(((uuid, playerData) -> {
+            if (!CombatTimer.isInCombat(uuid)) {
+                if (playerData.getLastCombatCheck()) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null)
+                        return;
+                    PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
+                    Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                        Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+                        if (playerLeaveCombatEvent.isCancelled()) {
+                            playerData.refreshCombatTime();
                             return;
-                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
-                        Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
-                            Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
-                            if (playerLeaveCombatEvent.isCancelled()) {
-                                playerData.refreshCombatTime();
-                                return;
-                            }
-                            playerData.setLastCombatCheck(false);
-                            playerData.setInCombat(false);
-                            PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
-                        });
-                    }
-                } else {
-                    playerData.setLastCombatCheck(true);
+                        }
+                        playerData.setLastCombatCheck(false);
+                        playerData.setInCombat(false);
+                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                    });
                 }
-            }));
-        }, 20, 20);
+            } else {
+                playerData.setLastCombatCheck(true);
+            }
+        })), 20, 20);
 
     }
 
@@ -62,6 +61,10 @@ public class PlayerManager {
             PlayerData data = playerList.get(uuid);
             if (data == null)
                 return;
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null || player.isDead())
+                return;
+
             data.refreshCombatTime();
             data.setInCombat(true);
         } catch (Exception ignored) {

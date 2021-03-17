@@ -64,8 +64,6 @@ public final class TogglePvp extends JavaPlugin {
     }
 
     public void reloadPluginConfig() {
-        saveDefaultConfig();
-        reloadConfig();
         configCache = new ConfigCache();
     }
 
