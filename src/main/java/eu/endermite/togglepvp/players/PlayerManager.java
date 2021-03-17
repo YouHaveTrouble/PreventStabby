@@ -26,25 +26,31 @@ public class PlayerManager {
             playerList.put(p.getUniqueId(), playerData);
         }
 
-        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> playerList.forEach((uuid, playerData) -> {
-            if (!(!CombatTimer.isInCombat(uuid) && playerData.getLastCombatCheck())) {
-                PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(Bukkit.getPlayer(uuid));
-                Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
-                    Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
-                    if (playerLeaveCombatEvent.isCancelled()) {
-                        playerData.setLastCombatCheck(true);
-                        playerData.refreshCombatTime();
-                    } else {
-                        playerData.setLastCombatCheck(false);
-                        playerData.setInCombat(false);
-                        PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+        combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(TogglePvp.getPlugin(), () -> {
+            playerList.forEach(((uuid, playerData) -> {
+                if (!CombatTimer.isInCombat(uuid)) {
+                    if (playerData.getLastCombatCheck()) {
+                        Player player = Bukkit.getPlayer(uuid);
+                        if (player == null)
+                            return;
+                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
+                        Bukkit.getScheduler().runTask(TogglePvp.getPlugin(), () -> {
+                            Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+                            if (playerLeaveCombatEvent.isCancelled()) {
+                                playerData.refreshCombatTime();
+                                return;
+                            }
+                            playerData.setLastCombatCheck(false);
+                            playerData.setInCombat(false);
+                            PluginMessages.sendActionBar(uuid, TogglePvp.getPlugin().getConfigCache().getLeaving_combat());
+                        });
                     }
-                });
-            } else {
-                playerData.setLastCombatCheck(true);
-                playerData.refreshCachetime();
-            }
-        }), 20, 20);
+                } else {
+                    playerData.setLastCombatCheck(true);
+                }
+            }));
+        }, 20, 20);
+
     }
 
     public void refreshPlayersCacheTime(UUID uuid) {
