@@ -9,11 +9,11 @@ import eu.endermite.togglepvp.util.DatabaseSQLite;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.Set;
 
 public final class TogglePvp extends JavaPlugin {
@@ -56,11 +56,17 @@ public final class TogglePvp extends JavaPlugin {
         });
 
         // Register command
-        Objects.requireNonNull(getCommand("pvp")).setExecutor(new MainCommand());
-        Objects.requireNonNull(getCommand("pvp")).setTabCompleter(new MainCommand());
+        PluginCommand pvpCommand = getCommand("pvp");
+        if (pvpCommand == null) {
+            getLogger().severe("Error with registering commands.");
+            getLogger().severe("Plugin will now disable.");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        MainCommand mainCommand = new MainCommand();
+        pvpCommand.setExecutor(mainCommand);
+        pvpCommand.setTabCompleter(mainCommand);
 
         Metrics metrics = new Metrics(this, 10597);
-
     }
 
     public void reloadPluginConfig() {

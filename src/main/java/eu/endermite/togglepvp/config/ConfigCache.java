@@ -25,32 +25,32 @@ public class ConfigCache {
             @Override
             public void loadDefaults() {
 
-                addDefault("settings.pvp_enabled_by_default", "false", "Decides if pvp should be enabled or disabled by default");
+                addDefault("settings.pvp_enabled_by_default", false, "Decides if pvp should be enabled or disabled by default");
 
                 addComment("settings.lava_and_fire_stopper", "Prevents dumping lava and pufferfish bucket, placing wither roses and lighting blocks on fire near players with pvp off");
-                addDefault("settings.lava_and_fire_stopper.enabled", "true");
-                addDefault("settings.lava_and_fire_stopper.radius", "2.5");
+                addDefault("settings.lava_and_fire_stopper.enabled", true);
+                addDefault("settings.lava_and_fire_stopper.radius", 2.5);
 
-                addDefault("settings.channeling_enchant_disabled", "false", "Disables channeling (trident enchant) lightning strike.\nYou may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
+                addDefault("settings.channeling_enchant_disabled", false, "Disables channeling (trident enchant) lightning strike.\nYou may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
 
-                addDefault("settings.only_owner_can_interact_with_pet", "false", "Makes it so only pet owner can interact with it. Useful if you don't want people renaming other people's pets.");
+                addDefault("settings.only_owner_can_interact_with_pet", false, "Makes it so only pet owner can interact with it. Useful if you don't want people renaming other people's pets.");
 
-                addDefault("settings.combat_time", "25", "Time (in seconds) to keep player in combat");
+                addDefault("settings.combat_time", 25, "Time (in seconds) to keep player in combat");
 
-                addDefault("settings.login_protection_time", "0", "Time (in seconds) that player can't be harmed by other player after logging in");
+                addDefault("settings.login_protection_time", 0, "Time (in seconds) that player can't be harmed by other player after logging in");
 
-                addDefault("settings.teleport_protection_time", "0", "Time (in seconds) that player can't be harmed by other player after teleporting");
+                addDefault("settings.teleport_protection_time", 0, "Time (in seconds) that player can't be harmed by other player after teleporting");
 
                 addComment("settings.punish_for_combat_logout", "Kill the player if they log out during combat");
-                addDefault("settings.punish_for_combat_logout.enabled", "true");
-                addDefault("settings.punish_for_combat_logout.announce", "true");
+                addDefault("settings.punish_for_combat_logout.enabled", true);
+                addDefault("settings.punish_for_combat_logout.announce", true);
                 addDefault("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
 
                 addDefault("settings.snowballs_do_knockback", false, "Set to true if snowballs should cause knockback to players");
 
                 addDefault("settings.eggs_do_knockback", false, "Set to true if eggs should cause knockback to players");
 
-                addDefault("settings.cache_time", "30", "Time (in seconds) to keep player data in memory when players goes offline.\nThis is used for checking if offline players pvp state.\nAdjust only if you know what you're doing. NEVER set to less than 6.");
+                addDefault("settings.cache_time", 30, "Time (in seconds) to keep player data in memory when players goes offline.\nThis is used for checking if offline players pvp state.\nAdjust only if you know what you're doing. NEVER set to less than 6.");
 
                 addDefault("messages.pvp_enabled", "&cYou enabled PvP!");
                 addDefault("messages.pvp_disabled", "&cYou disabled PvP!");
