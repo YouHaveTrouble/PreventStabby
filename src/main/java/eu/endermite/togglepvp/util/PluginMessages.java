@@ -17,6 +17,11 @@ public class PluginMessages {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static void sendMessage(Player player, String message) {
+        String parsedMessage = ChatColor.translateAlternateColorCodes('&', message);
+        player.sendMessage(parsedMessage);
+    }
+
     public static void sendActionBar(Player player, String message) {
         BaseComponent[] component = TextComponent.fromLegacyText(parseMessage(message));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);

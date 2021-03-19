@@ -8,6 +8,12 @@ commands:
   pvp:
     usage: /pvp [args]
 permissions:
+  toglepvp.combatcommandblock.bypass:
+    default: op
+    description: Allows to bypass combat command blocker
+  toglepvp.combatteleportblock.bypass:
+    default: op
+    description: Allows to bypass combat teleport blocker
   togglepvp.command:
     default: true
     description: Allows usage of /pvp command
