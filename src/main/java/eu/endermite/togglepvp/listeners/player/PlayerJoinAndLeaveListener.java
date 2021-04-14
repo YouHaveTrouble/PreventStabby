@@ -4,11 +4,13 @@ import eu.endermite.togglepvp.TogglePvp;
 import eu.endermite.togglepvp.players.PlayerData;
 import eu.endermite.togglepvp.players.SmartCache;
 import eu.endermite.togglepvp.util.PluginMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @eu.endermite.togglepvp.util.Listener
 public class PlayerJoinAndLeaveListener implements Listener {
@@ -18,9 +20,21 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        SmartCache smartCache = TogglePvp.getPlugin().getSmartCache();
-        PlayerData playerData = smartCache.getPlayerData(player.getUniqueId());
-        playerData.setLoginTimestamp(Instant.now().getEpochSecond());
+        UUID uuid = player.getUniqueId();
+
+        PlayerData playerData = TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+        long time = Instant.now().getEpochSecond();
+        if (playerData == null) {
+            TogglePvp.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(false));
+            Bukkit.getScheduler().runTaskAsynchronously(TogglePvp.getPlugin(), () -> {
+                PlayerData data = TogglePvp.getPlugin().getSqLite().getPlayerInfo(uuid);
+                TogglePvp.getPlugin().getPlayerManager().addPlayer(uuid, data);
+                data.setLoginTimestamp(time);
+            });
+            return;
+        }
+        playerData.refreshCachetime();
+        playerData.setLoginTimestamp(time);
     }
 
     /**
@@ -30,7 +44,8 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler
     public void onPlayerLeave(org.bukkit.event.player.PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        TogglePvp.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId()));
+        Bukkit.getScheduler().runTaskAsynchronously(TogglePvp.getPlugin(), () -> TogglePvp.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), TogglePvp.getPlugin().getPlayerManager().getPlayer(player.getUniqueId())));
+
         if (!TogglePvp.getPlugin().getConfigCache().isPunish_for_combat_logout())
             return;
 
