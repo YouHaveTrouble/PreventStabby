@@ -5,7 +5,7 @@ import me.youhavetrouble.preventstabby.util.CombatTimer;
 import org.bukkit.entity.Player;
 import java.util.UUID;
 
-public class TogglePvpAPI {
+public class PreventStabbyAPI {
 
     /**
      * Sets players PvP state. This will always save to database.
