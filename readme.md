@@ -1,21 +1,21 @@
-<h2>TogglePvP ⚔</h2>
+<h2>PreventStabby ⚔</h2>
 
 Use Issues section to report bugs or submit suggestions.
 
 <h3>Commands</h3>
-Permission: <code>togglepvp.command</code> (given by default to everyone) :
+Permission: <code>preventstabby.command</code> (given by default to everyone) :
 <ul>
 <li>/pvp help- displays help message</li>
 </ul>
 
-Permission: <code>togglepvp.command.toggle</code> (given by default to everyone) :
+Permission: <code>preventstabby.command.toggle</code> (given by default to everyone) :
 <ul>
 <li>/pvp toggle - toggles PvP</li>
 <li>/pvp on - enables PvP (aliases: enable)</li>
 <li>/pvp off - disables PvP (aliases: disable)</li>
 </ul>
 
-Permission: <code>togglepvp.command.toggle.others</code> (given by default to ops) :
+Permission: <code>preventstabby.command.toggle.others</code> (given by default to ops) :
 <ul>
 <li>/pvp toggle [player] - toggles other player's PvP</li>
 <li>/pvp on [player] - enables other player's PvP (aliases: enable)</li>

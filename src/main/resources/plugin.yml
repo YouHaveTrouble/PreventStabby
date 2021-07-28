@@ -1,12 +1,13 @@
 name: TogglePvP
 version: ${project.version}
-main: eu.endermite.togglepvp.TogglePvp
+main: eu.endermite.togglepvp.PreventStabby
 authors: [YouHaveTrouble]
 api-version: 1.13
-description: PvP toggle plugin
+description: Stop people from getting stabbed!
 commands:
-  pvp:
-    usage: /pvp [args]
+  preventstabby:
+    aliases:
+      - pvp
 permissions:
   toglepvp.combatcommandblock.bypass:
     default: op
