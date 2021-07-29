@@ -31,7 +31,7 @@ public final class PreventStabby extends JavaPlugin {
         Util.initData();
         reloadPluginConfig();
         File dbFile = new File("plugins/PreventStabby");
-        sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/TogglePvP.db", dbFile);
+        sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/database.db", dbFile);
         sqLite.createDatabaseFile();
         if (!sqLite.testConnection()) {
             getLogger().severe("Error with accessing database. Check if server has write rights.");
@@ -44,7 +44,7 @@ public final class PreventStabby extends JavaPlugin {
         smartCache.runSmartCache();
 
         // Register listeners
-        Reflections reflections = new Reflections(new String[]{"eu.endermite.preventstabby"});
+        Reflections reflections = new Reflections(new String[]{"me.youhavetrouble.preventstabby"});
         Set<Class<?>> listenerClasses = reflections.getTypesAnnotatedWith(PreventStabbyListener.class);
         listenerClasses.forEach((listener)-> {
             try {
