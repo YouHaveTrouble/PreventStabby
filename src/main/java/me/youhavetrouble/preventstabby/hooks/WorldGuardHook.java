@@ -27,14 +27,10 @@ public class WorldGuardHook {
         PreventStabby plugin = PreventStabby.getPlugin();
         try {
             Class.forName("com.sk89q.worldguard.protection.flags.registry.FlagConflictException");
-            System.out.println("what");
             worldGuardPlugin = WorldGuardPlugin.inst();
-            System.out.println("the");
             if (WorldGuard.getInstance() == null || worldGuardPlugin == null) return;
-            System.out.println("actual");
             plugin.getLogger().info("Hooking into WorldGuard");
             flagRegistry = WorldGuard.getInstance().getFlagRegistry();
-            System.out.println("fuck");
             createForcePvpFlag(plugin);
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return;
