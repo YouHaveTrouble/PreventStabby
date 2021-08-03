@@ -33,12 +33,7 @@ public class PlayerManager {
             Iterator<PlayerData> iterator = playerList.values().iterator();
             while (iterator.hasNext()) {
                 PlayerData playerData = iterator.next();
-                System.out.println(playerData);
                 UUID uuid = playerData.getPlayerUuid();
-                System.out.println("----------------------");
-                System.out.println(uuid.toString());
-                System.out.println("In combat: "+CombatTimer.isInCombat(uuid));
-                System.out.println("Last check: "+playerData.getLastCombatCheck());
                 if (!CombatTimer.isInCombat(uuid)) {
                     if (playerData.getLastCombatCheck()) {
                         Player player = Bukkit.getPlayer(uuid);
