@@ -26,7 +26,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
         long time = Instant.now().getEpochSecond();
         if (playerData == null) {
-            PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(false));
+            PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(uuid,false));
             Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
                 PlayerData data = PreventStabby.getPlugin().getSqLite().getPlayerInfo(uuid);
                 PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, data);

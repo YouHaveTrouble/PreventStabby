@@ -2,6 +2,7 @@ package me.youhavetrouble.preventstabby;
 
 import me.youhavetrouble.preventstabby.commands.MainCommand;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
+import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.players.PlayerManager;
 import me.youhavetrouble.preventstabby.players.SmartCache;
 import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
@@ -68,6 +69,10 @@ public final class PreventStabby extends JavaPlugin {
         pvpCommand.setExecutor(mainCommand);
         pvpCommand.setTabCompleter(mainCommand);
 
+        try {
+            WorldGuardHook.init();
+        } catch (NoClassDefFoundError ignored) {}
+
         Metrics metrics = new Metrics(this, 10597);
     }
 
@@ -78,7 +83,7 @@ public final class PreventStabby extends JavaPlugin {
     public void reloadPluginConfig(CommandSender commandSender) {
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             reloadPluginConfig();
-            commandSender.sendMessage("TogglePvP configuration reloaded.");
+            commandSender.sendMessage("PreventStabby configuration reloaded.");
         });
     }
 

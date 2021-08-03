@@ -7,11 +7,12 @@ import java.util.UUID;
 
 public class PlayerData {
 
-    private UUID playerUuid;
+    private final UUID playerUuid;
     private long cachetime, combattime, loginTimestamp, teleportTimestamp;
     private boolean pvpEnabled, lastCombatCheck, inCombat;
 
-    public PlayerData(boolean pvpEnabled) {
+    public PlayerData(UUID playerUuid, boolean pvpEnabled) {
+        this.playerUuid = playerUuid;
         this.pvpEnabled = pvpEnabled;
         this.combattime = Instant.now().getEpochSecond()-1;
         this.loginTimestamp = Instant.now().getEpochSecond()-1;

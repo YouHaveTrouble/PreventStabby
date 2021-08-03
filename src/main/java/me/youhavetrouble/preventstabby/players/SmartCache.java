@@ -42,7 +42,7 @@ public class SmartCache {
                 return playerData;
             } catch (NullPointerException ex) {
                 // Return false if database call fails
-                return new PlayerData(false);
+                return new PlayerData(uuid,false);
             }
         }
     }
@@ -53,7 +53,7 @@ public class SmartCache {
             PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid).setPvpEnabled(state);
         }
         // Update the database aswell
-        PreventStabby.getPlugin().getSqLite().updatePlayerInfo(uuid, new PlayerData(state));
+        PreventStabby.getPlugin().getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, state));
     }
 
 

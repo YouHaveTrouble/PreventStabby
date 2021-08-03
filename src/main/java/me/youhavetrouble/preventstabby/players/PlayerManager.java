@@ -3,6 +3,7 @@ package me.youhavetrouble.preventstabby.players;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
+import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import lombok.Getter;
@@ -32,12 +33,16 @@ public class PlayerManager {
             Iterator<PlayerData> iterator = playerList.values().iterator();
             while (iterator.hasNext()) {
                 PlayerData playerData = iterator.next();
+                System.out.println(playerData);
                 UUID uuid = playerData.getPlayerUuid();
+                System.out.println("----------------------");
+                System.out.println(uuid.toString());
+                System.out.println("In combat: "+CombatTimer.isInCombat(uuid));
+                System.out.println("Last check: "+playerData.getLastCombatCheck());
                 if (!CombatTimer.isInCombat(uuid)) {
                     if (playerData.getLastCombatCheck()) {
                         Player player = Bukkit.getPlayer(uuid);
-                        if (player == null)
-                            return;
+                        if (player == null) continue;
                         PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
                         Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
                             Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
@@ -111,25 +116,25 @@ public class PlayerManager {
 
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
 
-        if (hasLoginProtection(attacker) || hasTeleportProtection(attacker))
-            return false;
+        if (hasLoginProtection(attacker) || hasTeleportProtection(attacker)) return false;
 
-        if (checkVictimSpawnProtection && hasLoginProtection(victim))
-            return false;
+        if (checkVictimSpawnProtection && hasLoginProtection(victim)) return false;
 
-        if (checkVictimSpawnProtection && hasTeleportProtection(victim))
-            return false;
+        if (checkVictimSpawnProtection && hasTeleportProtection(victim)) return false;
 
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
 
-        if (!smartCache.getPlayerData(attacker).isPvpEnabled()) {
+        Player attackerPlayer = Bukkit.getPlayer(attacker);
+        Player victimPlayer = Bukkit.getPlayer(victim);
+
+        if (!smartCache.getPlayerData(attacker).isPvpEnabled() && (attackerPlayer != null && !isInForcedPvpRegion(attackerPlayer))) {
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
                 PluginMessages.sendActionBar(attacker, config.getCannot_attack_attacker());
             }
             return false;
         }
-        if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
+        if (!smartCache.getPlayerData(victim).isPvpEnabled() && (victimPlayer != null && !isInForcedPvpRegion(victimPlayer))) {
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
                 PluginMessages.sendActionBar(attacker, config.getCannot_attack_victim());
@@ -155,6 +160,11 @@ public class PlayerManager {
     public boolean hasTeleportProtection(UUID uuid) {
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
         return Instant.now().getEpochSecond() < smartCache.getPlayerData(uuid).getTeleportTimestamp();
+    }
+
+    public boolean isInForcedPvpRegion(Player player) {
+        if (!WorldGuardHook.isHooked()) return false;
+        return WorldGuardHook.isPlayerForcedToPvp(player);
     }
 
 }

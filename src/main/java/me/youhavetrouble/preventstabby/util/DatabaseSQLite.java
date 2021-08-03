@@ -64,12 +64,12 @@ public class DatabaseSQLite {
                 }
             }
             Statement statement = conn.createStatement();
-            String sql = "SELECT * FROM `players` WHERE `player_uuid` = '" + uuid.toString() + "';";
+            String sql = "SELECT * FROM `players` WHERE `player_uuid` = '" + uuid + "';";
             statement.execute(sql);
             ResultSet result = statement.getResultSet();
             boolean state = result.getBoolean("pvpenabled");
             conn.close();
-            return new PlayerData(state);
+            return new PlayerData(uuid, state);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

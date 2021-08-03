@@ -1,11 +1,14 @@
-name: TogglePvP
+name: PreventStabby
 version: ${project.version}
-main: eu.endermite.togglepvp.PreventStabby
+main: me.youhavetrouble.preventstabby.PreventStabby
 authors: [YouHaveTrouble]
 api-version: 1.13
 description: Stop people from getting stabbed!
+soft-depend:
+  - WorldGuard
 commands:
   preventstabby:
+    permission: preventstabby.command
     aliases:
       - pvp
 permissions:
