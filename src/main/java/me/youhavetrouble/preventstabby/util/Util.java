@@ -45,14 +45,16 @@ public class Util {
 
         Set<UUID> playerPassengersWithPvpEnabled = new HashSet<>();
 
+        boolean hasPlayerPassengers = false;
         for (Entity passenger : mount.getPassengers()) {
             if (!(passenger instanceof Player)) continue;
             Player player = (Player) passenger;
+            hasPlayerPassengers = true;
             if (PreventStabby.getPlugin().getPlayerManager().getPlayerPvPState(player.getUniqueId()))
                 playerPassengersWithPvpEnabled.add(player.getUniqueId());
         }
 
-        if (!mount.getPassengers().isEmpty() && playerPassengersWithPvpEnabled.isEmpty()) {
+        if (hasPlayerPassengers && playerPassengersWithPvpEnabled.isEmpty()) {
             PluginMessages.sendActionBar(attacker, config.getCannot_attack_mounts_victim());
             return true;
         }
