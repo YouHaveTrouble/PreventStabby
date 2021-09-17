@@ -25,6 +25,7 @@ public final class PreventStabby extends JavaPlugin {
     private PlayerManager playerManager;
     private DatabaseSQLite sqLite;
     private SmartCache smartCache;
+    private static boolean worldGuardHook;
 
     @Override
     public void onEnable() {
@@ -45,7 +46,7 @@ public final class PreventStabby extends JavaPlugin {
         smartCache.runSmartCache();
 
         // Register listeners
-        Reflections reflections = new Reflections(new String[]{"me.youhavetrouble.preventstabby"});
+        Reflections reflections = new Reflections((Object[]) new String[]{"me.youhavetrouble.preventstabby"});
         Set<Class<?>> listenerClasses = reflections.getTypesAnnotatedWith(PreventStabbyListener.class);
         listenerClasses.forEach((listener)-> {
             try {
@@ -71,9 +72,16 @@ public final class PreventStabby extends JavaPlugin {
 
         try {
             WorldGuardHook.init();
-        } catch (NoClassDefFoundError ignored) {}
+            worldGuardHook = true;
+        } catch (NoClassDefFoundError e) {
+            worldGuardHook = false;
+        }
 
         Metrics metrics = new Metrics(this, 10597);
+    }
+
+    public static boolean worldGuardHookEnabled() {
+        return worldGuardHook;
     }
 
     public void reloadPluginConfig() {

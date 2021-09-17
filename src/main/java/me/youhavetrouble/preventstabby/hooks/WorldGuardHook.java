@@ -20,7 +20,6 @@ public class WorldGuardHook {
 
     private static FlagRegistry flagRegistry;
     public static StateFlag FORCE_PVP_FLAG;
-    private static boolean enabled = false;
 
     public static void init() {
         PreventStabby plugin = PreventStabby.getPlugin();
@@ -31,13 +30,11 @@ public class WorldGuardHook {
             plugin.getLogger().info("Hooking into WorldGuard");
             flagRegistry = WorldGuard.getInstance().getFlagRegistry();
             createForcePvpFlag(plugin);
-            enabled = true;
         } catch (NoClassDefFoundError | ClassNotFoundException ignored) {
         }
     }
 
     private static void createForcePvpFlag(Plugin plugin) {
-        if (!enabled) return;
         if (flagRegistry == null) return;
         String flagName = "preventstabby-force-pvp";
         try {
@@ -55,17 +52,12 @@ public class WorldGuardHook {
     }
 
     public static boolean isPlayerForcedToPvp(Player player) {
-        if (!enabled) return false;
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         org.bukkit.Location loc = player.getLocation();
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         ApplicableRegionSet set = query.getApplicableRegions(new Location(BukkitAdapter.adapt(loc.getWorld()), loc.getX(), loc.getY(), loc.getZ()));
         return set.testState(localPlayer, FORCE_PVP_FLAG);
-    }
-
-    public static boolean isHooked() {
-        return enabled;
     }
 
 }

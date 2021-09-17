@@ -112,24 +112,25 @@ public class PlayerManager {
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
 
         if (hasLoginProtection(attacker) || hasTeleportProtection(attacker)) return false;
-
         if (checkVictimSpawnProtection && hasLoginProtection(victim)) return false;
-
         if (checkVictimSpawnProtection && hasTeleportProtection(victim)) return false;
 
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
 
-        Player attackerPlayer = Bukkit.getPlayer(attacker);
-        Player victimPlayer = Bukkit.getPlayer(victim);
+        if (!smartCache.getPlayerData(attacker).isPvpEnabled()) {
+            Player attackerPlayer = Bukkit.getPlayer(attacker);
+            if (PreventStabby.worldGuardHookEnabled() && WorldGuardHook.isPlayerForcedToPvp(attackerPlayer)) return true;
 
-        if (!smartCache.getPlayerData(attacker).isPvpEnabled() && (attackerPlayer != null && !isInForcedPvpRegion(attackerPlayer))) {
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
                 PluginMessages.sendActionBar(attacker, config.getCannot_attack_attacker());
             }
             return false;
         }
-        if (!smartCache.getPlayerData(victim).isPvpEnabled() && (victimPlayer != null && !isInForcedPvpRegion(victimPlayer))) {
+        if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
+            Player victimPlayer = Bukkit.getPlayer(victim);
+            if (PreventStabby.worldGuardHookEnabled() && WorldGuardHook.isPlayerForcedToPvp(victimPlayer)) return true;
+
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
                 PluginMessages.sendActionBar(attacker, config.getCannot_attack_victim());
@@ -155,11 +156,6 @@ public class PlayerManager {
     public boolean hasTeleportProtection(UUID uuid) {
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
         return Instant.now().getEpochSecond() < smartCache.getPlayerData(uuid).getTeleportTimestamp();
-    }
-
-    public boolean isInForcedPvpRegion(Player player) {
-        if (!WorldGuardHook.isHooked()) return false;
-        return WorldGuardHook.isPlayerForcedToPvp(player);
     }
 
 }
