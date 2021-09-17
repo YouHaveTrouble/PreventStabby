@@ -6,7 +6,7 @@
 
     <groupId>me.youhavetrouble</groupId>
     <artifactId>PreventStabby</artifactId>
-    <version>1.3-pre4</version>
+    <version>1.3-pre5</version>
     <packaging>jar</packaging>
 
     <name>PreventStabby</name>
@@ -47,7 +47,6 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <!-- Replace this with your package! -->
                                     <shadedPattern>bstats</shadedPattern>
                                 </relocation>
                             </relocations>
