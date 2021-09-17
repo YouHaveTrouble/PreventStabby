@@ -64,6 +64,8 @@ public class WorldGuardHook {
         return set.testState(localPlayer, FORCE_PVP_FLAG);
     }
 
-
+    public static boolean isHooked() {
+        return enabled;
+    }
 
 }
