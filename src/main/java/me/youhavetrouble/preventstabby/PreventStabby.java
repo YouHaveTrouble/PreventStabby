@@ -22,9 +22,9 @@ public final class PreventStabby extends JavaPlugin {
 
     @Getter private static PreventStabby plugin;
     private ConfigCache configCache;
-    protected PlayerManager playerManager;
-    protected DatabaseSQLite sqLite;
-    protected SmartCache smartCache;
+    private PlayerManager playerManager;
+    private DatabaseSQLite sqLite;
+    private SmartCache smartCache;
 
     @Override
     public void onEnable() {

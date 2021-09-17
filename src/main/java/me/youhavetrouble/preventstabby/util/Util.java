@@ -52,7 +52,7 @@ public class Util {
                 playerPassengersWithPvpEnabled.add(player.getUniqueId());
         }
 
-        if (playerPassengersWithPvpEnabled.isEmpty()) {
+        if (!mount.getPassengers().isEmpty() && playerPassengersWithPvpEnabled.isEmpty()) {
             PluginMessages.sendActionBar(attacker, config.getCannot_attack_mounts_victim());
             return true;
         }

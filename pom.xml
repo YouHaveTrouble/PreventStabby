@@ -6,7 +6,7 @@
 
     <groupId>me.youhavetrouble</groupId>
     <artifactId>PreventStabby</artifactId>
-    <version>1.3-pre3</version>
+    <version>1.3-pre4</version>
     <packaging>jar</packaging>
 
     <name>PreventStabby</name>
@@ -74,8 +74,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>bs-repo</id>
+            <url>https://ci.pluginwiki.us/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>sk89q-repo</id>
@@ -102,10 +102,9 @@
             <version>0.9.12</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Thatsmusic99</groupId>
+            <groupId>com.github.thatsmusic99</groupId>
             <artifactId>ConfigurationMaster</artifactId>
-            <version>v1.0-RC-2</version>
-            <scope>compile</scope>
+            <version>v1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
