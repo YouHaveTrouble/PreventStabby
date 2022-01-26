@@ -85,9 +85,9 @@ public class ConfigCache {
             }
         };
 
-        configFile.setDescription("PvP toggle that CARES about your pets!");
-        configFile.addLink("Spigot", "https://www.spigotmc.org/resources/togglepvp.89376/");
-        configFile.addLink("Source", "https://github.com/YouHaveTrouble/TogglePvP");
+        configFile.setDescription("Prevent people from getting stabbed!");
+        configFile.addLink("Spigot", "https://www.spigotmc.org/resources/89376/");
+        configFile.addLink("Source", "https://github.com/YouHaveTrouble/PreventStabby");
 
         configFile.load();
         FileConfiguration config = configFile.getConfig();
@@ -135,8 +135,6 @@ public class ConfigCache {
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
         this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
-
-
     }
 
 

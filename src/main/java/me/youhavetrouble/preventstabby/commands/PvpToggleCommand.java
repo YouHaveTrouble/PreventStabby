@@ -11,9 +11,7 @@ import org.bukkit.entity.Player;
 public class PvpToggleCommand {
 
     public static void toggle(CommandSender sender, String[] args) {
-
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
-
             if (!sender.hasPermission("preventstabby.command.toggle")) {
                 String message = ChatColor.translateAlternateColorCodes('&', PreventStabby.getPlugin().getConfigCache().getNo_permission());
                 sender.sendMessage(message);
@@ -47,7 +45,6 @@ public class PvpToggleCommand {
                     sender.sendMessage(message);
                     return;
                 }
-
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     if (CombatTimer.isInCombat(player.getUniqueId())) {

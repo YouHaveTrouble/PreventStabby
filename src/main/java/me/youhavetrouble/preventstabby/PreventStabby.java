@@ -77,7 +77,7 @@ public final class PreventStabby extends JavaPlugin {
             worldGuardHook = false;
         }
 
-        Metrics metrics = new Metrics(this, 10597);
+        Metrics metrics = new Metrics(this, 14074);
     }
 
     public static boolean worldGuardHookEnabled() {

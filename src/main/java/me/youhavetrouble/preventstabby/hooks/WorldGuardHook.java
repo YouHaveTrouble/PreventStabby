@@ -24,7 +24,7 @@ public class WorldGuardHook {
     public static void init() {
         PreventStabby plugin = PreventStabby.getPlugin();
         try {
-            Class.forName("com.sk89q.worldguard.protection.flags.registry.FlagConflictException");
+            Class.forName("com.sk89q.worldguard.protection.flags.registry.FlagRegistry");
             WorldGuardPlugin worldGuardPlugin = WorldGuardPlugin.inst();
             if (WorldGuard.getInstance() == null || worldGuardPlugin == null) return;
             plugin.getLogger().info("Hooking into WorldGuard");

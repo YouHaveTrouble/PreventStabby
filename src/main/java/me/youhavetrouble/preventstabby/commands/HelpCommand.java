@@ -11,9 +11,7 @@ public class HelpCommand {
 
     public static void help(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
-
             List<String> helpPage = new ArrayList<>();
-
             helpPage.add(PluginMessages.parseMessage("&b&m             &bPreventStabby Help&b&m             "));
             helpPage.add(PluginMessages.parseMessage("&9/pvp &b&lhelp &f- shows this message"));
             if (sender.hasPermission("preventstabby.command.toggle")) {
@@ -22,7 +20,6 @@ public class HelpCommand {
             }
             String[] helpReady = helpPage.toArray(new String[0]);
             sender.sendMessage(helpReady);
-
         });
     }
 

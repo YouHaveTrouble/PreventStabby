@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 public class ReloadCommand {
 
     public static void reload(CommandSender sender) {
-
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
             if (!sender.hasPermission("preventstabby.command.reload")) {
                 String message = ChatColor.translateAlternateColorCodes('&', PreventStabby.getPlugin().getConfigCache().getNo_permission());
@@ -17,7 +16,6 @@ public class ReloadCommand {
             }
             PreventStabby.getPlugin().reloadPluginConfig(sender);
         });
-
     }
 
 }

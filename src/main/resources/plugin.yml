@@ -12,21 +12,21 @@ commands:
     aliases:
       - pvp
 permissions:
-  toglepvp.combatcommandblock.bypass:
+  preventstabby.combatcommandblock.bypass:
     default: op
     description: Allows to bypass combat command blocker
-  toglepvp.combatteleportblock.bypass:
+  preventstabby.combatteleportblock.bypass:
     default: op
     description: Allows to bypass combat teleport blocker
-  togglepvp.command:
+  preventstabby.command:
     default: true
     description: Allows usage of /pvp command
-  togglepvp.command.toggle:
+  preventstabby.command.toggle:
     default: true
     description: Allows usage of /pvp <toggle/enable/disable> command
-  togglepvp.command.toggle.others:
+  preventstabby.command.toggle.others:
     default: op
     description: Allows usage of /pvp <toggle/enable/disable> <player> command
-  togglepvp.command.reload:
+  preventstabby.command.reload:
     default: op
     description: Allows usage of /pvp reload command
