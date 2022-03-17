@@ -17,6 +17,9 @@ public class CombatCommandListener implements Listener {
         if (!PreventStabby.getPlugin().getConfigCache().isBlock_commands_in_combat())
             return;
 
+        if (event.getPlayer().hasPermission("toglepvp.combatcommandblock.bypass"))
+            return;
+
         PlayerManager playerManager = PreventStabby.getPlugin().getPlayerManager();
 
         if (!playerManager.getPlayer(event.getPlayer().getUniqueId()).isInCombat())
@@ -25,9 +28,6 @@ public class CombatCommandListener implements Listener {
         String command = event.getMessage().replaceFirst("/", "");
 
         if (!PreventStabby.getPlugin().getConfigCache().getCombatBlockedCommands().contains(command))
-            return;
-
-        if (event.getPlayer().hasPermission("toglepvp.combatcommandblock.bypass"))
             return;
 
         event.setCancelled(true);
