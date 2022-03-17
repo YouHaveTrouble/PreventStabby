@@ -15,10 +15,10 @@ import java.util.UUID;
 public class PlayerHitMountWithProjectileListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerAttackMount(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player) || event.getEntity().getPassengers().isEmpty()) return;
+    public void onPlayerHitMountWithProjectile(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Projectile)) return;
         Projectile projectile = (Projectile) event.getDamager();
-        if (!(projectile.getShooter() instanceof Player)) return;
+        if (!(projectile.getShooter() instanceof Player) || event.getEntity().getPassengers().isEmpty()) return;
         Entity entity = event.getEntity();
         UUID damager = event.getDamager().getUniqueId();
         if (Util.processMountAttack(damager, entity))
