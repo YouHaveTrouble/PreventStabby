@@ -38,11 +38,6 @@ public class Util {
 
         ConfigCache config = PreventStabby.getPlugin().getConfigCache();
 
-        if (!PreventStabby.getPlugin().getPlayerManager().getPlayerPvPState(attacker)) {
-            PluginMessages.sendActionBar(attacker, config.getCannot_attack_mounts_attacker());
-            return true;
-        }
-
         Set<UUID> playerPassengersWithPvpEnabled = new HashSet<>();
 
         boolean hasPlayerPassengers = false;
@@ -54,7 +49,14 @@ public class Util {
                 playerPassengersWithPvpEnabled.add(player.getUniqueId());
         }
 
-        if (hasPlayerPassengers && playerPassengersWithPvpEnabled.isEmpty()) {
+        if (!hasPlayerPassengers) return false;
+
+        if (!PreventStabby.getPlugin().getPlayerManager().getPlayerPvPState(attacker)) {
+            PluginMessages.sendActionBar(attacker, config.getCannot_attack_mounts_attacker());
+            return true;
+        }
+
+        if (playerPassengersWithPvpEnabled.isEmpty()) {
             PluginMessages.sendActionBar(attacker, config.getCannot_attack_mounts_victim());
             return true;
         }
