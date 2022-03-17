@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MountHitByExplosionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerAttackMount(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+    public void onMountHitByExplosion(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player) || event.getEntity().getPassengers().isEmpty()) return;
         if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) return;
         UUID damager = event.getDamager().getUniqueId();

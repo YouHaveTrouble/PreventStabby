@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MountHitByFireworkListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerAttackMount(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+    public void onMountHitByFireWork(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Firework) || event.getEntity().getPassengers().isEmpty()) return;
         if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) return;
         Firework firework = (Firework) event.getDamager();
