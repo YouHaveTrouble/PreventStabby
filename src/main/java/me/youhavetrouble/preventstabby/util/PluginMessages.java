@@ -1,5 +1,7 @@
 package me.youhavetrouble.preventstabby.util;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.youhavetrouble.preventstabby.PreventStabby;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -9,16 +11,18 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-
 public class PluginMessages {
 
     public static String parseMessage(String message) {
-        //TODO PAPI support
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public static void sendMessage(Player player, String message) {
-        String parsedMessage = ChatColor.translateAlternateColorCodes('&', message);
+        String parsedMessage = message;
+        if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            parsedMessage = PlaceholderAPI.setPlaceholders(player, parsedMessage);
+        }
+        parsedMessage = ChatColor.translateAlternateColorCodes('&', parsedMessage);
         player.sendMessage(parsedMessage);
     }
 
@@ -29,10 +33,9 @@ public class PluginMessages {
     }
 
     public static void sendActionBar(UUID uuid, String message) {
-        try {
-            Player player = Bukkit.getPlayer(uuid);
-            sendActionBar(player, message);
-        } catch (NullPointerException ignored) {}
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        sendActionBar(player, message);
     }
 
     public static String parsePlayerName(Player player, String message) {

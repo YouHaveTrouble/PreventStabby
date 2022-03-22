@@ -20,7 +20,8 @@ public class ConfigCache {
     @Getter private final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
             cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
             pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
-            cant_do_that_during_combat, cannot_attack_mounts_attacker, cannot_attack_mounts_victim;
+            cant_do_that_during_combat, cannot_attack_mounts_attacker, cannot_attack_mounts_victim,
+            placeholder_combat_time, placeholder_not_in_combat;
     @Getter private final double lava_and_fire_stopper_radius;
     @Getter private final long cache_time, combat_time, login_protection_time, teleport_protection_time;
     @Getter private final Set<String> combatBlockedCommands = new HashSet<>();
@@ -82,6 +83,8 @@ public class ConfigCache {
                 addDefault("messages.entering_combat", "&cEntering combat");
                 addDefault("messages.leaving_combat", "&cLeaving combat");
                 addDefault("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+                addDefault("placeholder.placeholder_combat_time", "Combat time: %time%");
+                addDefault("placeholder.not_in_combat", "Not in combat");
             }
         };
 
@@ -135,6 +138,9 @@ public class ConfigCache {
         this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
         this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
         this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+
+        this.placeholder_combat_time = config.getString("placeholder.placeholder_combat_time", "Combat time: %time%");
+        this.placeholder_not_in_combat = config.getString("placeholder.not_in_combat", "Not in combat");
     }
 
 

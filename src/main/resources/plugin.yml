@@ -6,6 +6,7 @@ api-version: 1.13
 description: Stop people from getting stabbed!
 soft-depend:
   - WorldGuard
+  - PlaceholderAPI
 commands:
   preventstabby:
     permission: preventstabby.command
