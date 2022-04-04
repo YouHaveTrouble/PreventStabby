@@ -37,6 +37,9 @@ public class PlacoholderApiHook extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("combat_time")) {
             return getCombatTimePlaceholder(player.getUniqueId());
         }
+        if (params.equalsIgnoreCase("in_combat")) {
+            return String.valueOf(plugin.getPlayerManager().getPlayer(player.getUniqueId()).isInCombat());
+        }
         return null;
     }
 
