@@ -115,7 +115,7 @@ public class ConfigCache {
         if (block_commands_in_combat) {
             this.combatBlockedCommands.addAll(config.getStringList("settings.block_in_combat.block_commands.commands"));
         }
-        this.block_teleports_in_combat = config.getBoolean("settings.block_in_combat.block_teleports", true);
+        this.block_teleports_in_combat = config.getBoolean("settings.block_in_combat.block_teleports", false);
 
         this.cache_time = config.getLong("settings.cache_time", 30L);
 

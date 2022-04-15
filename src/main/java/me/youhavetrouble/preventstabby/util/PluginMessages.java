@@ -18,16 +18,18 @@ public class PluginMessages {
     }
 
     public static void sendMessage(Player player, String message) {
-        String parsedMessage = message;
         if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            parsedMessage = PlaceholderAPI.setPlaceholders(player, parsedMessage);
+            message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        parsedMessage = ChatColor.translateAlternateColorCodes('&', parsedMessage);
-        player.sendMessage(parsedMessage);
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        player.sendMessage(message);
     }
 
     public static void sendActionBar(Player player, String message) {
         // TODO use adventure
+        if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            message = PlaceholderAPI.setPlaceholders(player, message);
+        }
         BaseComponent[] component = TextComponent.fromLegacyText(parseMessage(message));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
     }
@@ -45,6 +47,9 @@ public class PluginMessages {
 
     public static void broadcastMessage(Player player, String message) {
         message = parsePlayerName(player, message);
+        if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            message = PlaceholderAPI.setPlaceholders(player, message);
+        }
         message = parseMessage(message);
         BaseComponent[] component = TextComponent.fromLegacyText(parseMessage(message));
         Bukkit.spigot().broadcast(component);

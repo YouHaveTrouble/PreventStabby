@@ -12,14 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerManager {
 
     @Getter
-    HashMap<UUID, PlayerData> playerList = new HashMap<>();
+    ConcurrentHashMap<UUID, PlayerData> playerList = new ConcurrentHashMap<>();
 
     public final BukkitTask combatTrackerTask;
 
@@ -30,9 +29,7 @@ public class PlayerManager {
         }
 
         combatTrackerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(PreventStabby.getPlugin(), () -> {
-            Iterator<PlayerData> iterator = playerList.values().iterator();
-            while (iterator.hasNext()) {
-                PlayerData playerData = iterator.next();
+            for (PlayerData playerData : playerList.values()) {
                 UUID uuid = playerData.getPlayerUuid();
                 if (!CombatTimer.isInCombat(uuid)) {
                     if (playerData.getLastCombatCheck()) {
@@ -119,7 +116,8 @@ public class PlayerManager {
 
         if (!smartCache.getPlayerData(attacker).isPvpEnabled()) {
             Player attackerPlayer = Bukkit.getPlayer(attacker);
-            if (PreventStabby.worldGuardHookEnabled() && WorldGuardHook.isPlayerForcedToPvp(attackerPlayer)) return true;
+            if (PreventStabby.worldGuardHookEnabled() && attackerPlayer != null && WorldGuardHook.isPlayerForcedToPvp(attackerPlayer))
+                return true;
 
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
@@ -129,7 +127,8 @@ public class PlayerManager {
         }
         if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
             Player victimPlayer = Bukkit.getPlayer(victim);
-            if (PreventStabby.worldGuardHookEnabled() && WorldGuardHook.isPlayerForcedToPvp(victimPlayer)) return true;
+            if (PreventStabby.worldGuardHookEnabled() && victimPlayer != null && WorldGuardHook.isPlayerForcedToPvp(victimPlayer))
+                return true;
 
             if (sendDenyMessage) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();

@@ -66,6 +66,26 @@ public class PreventStabbyAPI {
     }
 
     /**
+     * Checks if player can be damaged by another. Providing UUID of entity other than player may result in exceptions
+     * @param attackerUuid Attacker's UUID
+     * @param victimUuid Victim's UUID
+     * @return True if victim can be attacked by attacker, false if not
+     */
+    public static boolean canDamage(UUID attackerUuid, UUID victimUuid) {
+        return  PreventStabby.getPlugin().getPlayerManager().canDamage(attackerUuid, victimUuid, false);
+    }
+
+    /**
+     * Checks if player can be damaged by another.
+     * @param attacker Attacker
+     * @param victim Victim
+     * @return True if victim can be attacked by attacker, false if not
+     */
+    public static boolean canDamage(Player attacker, Player victim) {
+        return PreventStabby.getPlugin().getPlayerManager().canDamage(attacker.getUniqueId(), victim.getUniqueId(), false);
+    }
+
+    /**
      * Checks if player has login protection.
      * @param uuid UUID of player to check
      * @return True if player has login protection, false if not

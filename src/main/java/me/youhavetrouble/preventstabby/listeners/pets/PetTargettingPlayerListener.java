@@ -20,16 +20,16 @@ public class PetTargettingPlayerListener implements Listener {
     public void onPetTargetPlayer(org.bukkit.event.entity.EntityTargetEvent event) {
         if (!(event.getEntity() instanceof Tameable)) return;
         Tameable entity = (Tameable) event.getEntity();
-        if (entity.getOwner() == null) return;
+        if (!(entity.getOwner() instanceof Player)) return;
+        if (!(entity.getTarget() instanceof Player)) return;
 
-        if (event.getTarget() instanceof Player) {
-            UUID damager = entity.getOwner().getUniqueId();
-            UUID victim = event.getTarget().getUniqueId();
+        UUID damager = entity.getOwner().getUniqueId();
+        UUID victim = event.getTarget().getUniqueId();
 
-            if (PreventStabby.getPlugin().getPlayerManager().canDamage(damager, victim, true, false))
-                CombatTimer.refreshPlayersCombatTime(damager, victim);
-            else
-                event.setCancelled(true);
-        }
+        if (PreventStabby.getPlugin().getPlayerManager().canDamage(damager, victim, true, false))
+            CombatTimer.refreshPlayersCombatTime(damager, victim);
+        else
+            event.setCancelled(true);
+
     }
 }
