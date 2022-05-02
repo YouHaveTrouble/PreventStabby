@@ -21,7 +21,7 @@ public class PetTargettingPlayerListener implements Listener {
         if (!(event.getEntity() instanceof Tameable)) return;
         Tameable entity = (Tameable) event.getEntity();
         if (!(entity.getOwner() instanceof Player)) return;
-        if (!(entity.getTarget() instanceof Player)) return;
+        if (!(event.getTarget() instanceof Player)) return;
 
         UUID damager = entity.getOwner().getUniqueId();
         UUID victim = event.getTarget().getUniqueId();
