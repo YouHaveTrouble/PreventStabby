@@ -1,6 +1,7 @@
 package me.youhavetrouble.preventstabby.commands;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import org.bukkit.Bukkit;
@@ -11,7 +12,7 @@ public class PvpToggleCommand {
 
     public static void toggle(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
-            if (!sender.hasPermission("preventstabby.command.toggle")) {
+            if (!PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
                 PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
                 return;
             }
@@ -36,7 +37,7 @@ public class PvpToggleCommand {
                     PluginMessages.sendMessage(sender, "Try /pvp toggle <player>");
                 }
             } else if (args.length == 2) {
-                if (!sender.hasPermission("preventstabby.command.toggle.others")) {
+                if (!PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                     PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
                     return;
                 }
@@ -62,7 +63,7 @@ public class PvpToggleCommand {
                 }
                 PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
             } else {
-                if (sender.hasPermission("preventstabby.command.toggle.others")) {
+                if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                     PluginMessages.sendMessage(sender, "Try /pvp toggle <player>");
                 } else {
                     PluginMessages.sendMessage(sender, "Try /pvp toggle");
@@ -72,7 +73,7 @@ public class PvpToggleCommand {
     }
 
     public static void enable(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("preventstabby.command.toggle")) {
+        if (!PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
             PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
             return;
         }
@@ -89,7 +90,7 @@ public class PvpToggleCommand {
                 PluginMessages.sendMessage(sender, "Try /pvp enable <player>");
             }
         } else if (args.length == 2) {
-            if (!sender.hasPermission("preventstabby.command.toggle.others")) {
+            if (!PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
                 return;
             }
@@ -109,7 +110,7 @@ public class PvpToggleCommand {
             PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
             PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
         } else {
-            if (sender.hasPermission("preventstabby.command.toggle.others")) {
+            if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, "Try /pvp enable <player>");
             } else {
                 PluginMessages.sendMessage(sender, "Try /pvp enable");
@@ -118,7 +119,7 @@ public class PvpToggleCommand {
     }
 
     public static void disable(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("preventstabby.command.toggle")) {
+        if (!PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
             PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
             return;
         }
@@ -135,7 +136,7 @@ public class PvpToggleCommand {
                 PluginMessages.sendMessage(sender, "Try /pvp disable <player>");
             }
         } else if (args.length == 2) {
-            if (!sender.hasPermission("preventstabby.command.toggle.others")) {
+            if (!PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
                 return;
             }
@@ -156,7 +157,7 @@ public class PvpToggleCommand {
             PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
 
         } else {
-            if (sender.hasPermission("preventstabby.command.toggle.others")) {
+            if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, "Try /pvp disable <player>");
             } else {
                 PluginMessages.sendMessage(sender, "Try /pvp disable");

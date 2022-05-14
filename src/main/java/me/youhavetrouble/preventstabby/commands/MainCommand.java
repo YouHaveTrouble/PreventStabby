@@ -1,6 +1,7 @@
 package me.youhavetrouble.preventstabby.commands;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,16 +16,16 @@ import java.util.Map;
 
 public class MainCommand implements TabExecutor {
 
-    private final HashMap<String, String> subCommands = new HashMap<>();
+    private final HashMap<String, PreventStabbyPermission> subCommands = new HashMap<>();
 
     public MainCommand() {
-        subCommands.put("help", "preventstabby.command");
-        subCommands.put("toggle", "preventstabby.command.toggle");
-        subCommands.put("on", "preventstabby.command.toggle");
-        subCommands.put("enable", "preventstabby.command.toggle");
-        subCommands.put("off", "preventstabby.command.toggle");
-        subCommands.put("disable", "preventstabby.command.toggle");
-        subCommands.put("reload", "preventstabby.command.reload");
+        subCommands.put("help", PreventStabbyPermission.COMMAND);
+        subCommands.put("toggle", PreventStabbyPermission.COMMAND_TOGGLE);
+        subCommands.put("on", PreventStabbyPermission.COMMAND_TOGGLE);
+        subCommands.put("enable", PreventStabbyPermission.COMMAND_TOGGLE);
+        subCommands.put("off", PreventStabbyPermission.COMMAND_TOGGLE);
+        subCommands.put("disable", PreventStabbyPermission.COMMAND_TOGGLE);
+        subCommands.put("reload", PreventStabbyPermission.COMMAND_RELOAD);
     }
 
     @Override
@@ -67,12 +68,13 @@ public class MainCommand implements TabExecutor {
         List<String> commands = new ArrayList<>();
         if (args.length == 1) {
             String arg1 = args[0].toLowerCase();
-            for (Map.Entry<String, String> entry : subCommands.entrySet()) {
-                if (entry.getKey().toLowerCase().startsWith(arg1) && sender.hasPermission(entry.getValue()))
+            for (Map.Entry<String, PreventStabbyPermission> entry : subCommands.entrySet()) {
+                if (entry.getKey().toLowerCase().startsWith(arg1)
+                        && entry.getValue().doesCommandSenderHave(sender))
                     commands.add(entry.getKey());
             }
             return commands;
-        } else if (args.length == 2 && sender.hasPermission("preventstabby.command.toggle")) {
+        } else if (args.length == 2 && PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
             switch (args[0].toLowerCase()) {
                 default:
                     break;

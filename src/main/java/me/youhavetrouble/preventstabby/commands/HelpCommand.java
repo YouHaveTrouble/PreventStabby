@@ -1,6 +1,7 @@
 package me.youhavetrouble.preventstabby.commands;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,7 @@ public class HelpCommand {
             List<String> helpPage = new ArrayList<>();
             helpPage.add(PluginMessages.parseMessage("&b&m             &bPreventStabby Help&b&m             "));
             helpPage.add(PluginMessages.parseMessage("&9/pvp &b&lhelp &f- shows this message"));
-            if (sender.hasPermission("preventstabby.command.toggle")) {
+            if (PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
                 helpPage.add(PluginMessages.parseMessage("&9/pvp &b&l[on/off] &f- enables or disables PvP"));
                 helpPage.add(PluginMessages.parseMessage("&9/pvp &b&ltoggle &f- toggles PvP status"));
             }
