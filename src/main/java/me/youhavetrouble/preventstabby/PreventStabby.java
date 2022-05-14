@@ -6,6 +6,7 @@ import me.youhavetrouble.preventstabby.hooks.PlacoholderApiHook;
 import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.players.PlayerManager;
 import me.youhavetrouble.preventstabby.players.SmartCache;
+import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
 import me.youhavetrouble.preventstabby.util.DatabaseSQLite;
 import lombok.Getter;
@@ -96,7 +97,7 @@ public final class PreventStabby extends JavaPlugin {
     public void reloadPluginConfig(CommandSender commandSender) {
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             reloadPluginConfig();
-            commandSender.sendMessage("PreventStabby configuration reloaded.");
+            PluginMessages.sendMessage(commandSender, "PreventStabby configuration reloaded.");
         });
     }
 

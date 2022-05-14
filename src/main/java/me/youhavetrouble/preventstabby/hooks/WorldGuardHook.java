@@ -55,6 +55,7 @@ public class WorldGuardHook {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         org.bukkit.Location loc = player.getLocation();
+        if (loc.getWorld() == null) return false;
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         ApplicableRegionSet set = query.getApplicableRegions(new Location(BukkitAdapter.adapt(loc.getWorld()), loc.getX(), loc.getY(), loc.getZ()));
         return set.testState(localPlayer, FORCE_PVP_FLAG);

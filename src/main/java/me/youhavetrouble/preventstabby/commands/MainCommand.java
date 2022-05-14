@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,35 +29,35 @@ public class MainCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("preventstabby.command")) {
-            if (args.length >= 1) {
-                switch (args[0].toLowerCase()) {
-                    case "help":
-                        HelpCommand.help(sender, args);
-                        break;
-                    case "toggle":
-                        PvpToggleCommand.toggle(sender, args);
-                        break;
-                    case "on":
-                    case "enable":
-                        PvpToggleCommand.enable(sender, args);
-                        break;
-                    case "off":
-                    case "disable":
-                        PvpToggleCommand.disable(sender, args);
-                        break;
-                    case "reload":
-                        ReloadCommand.reload(sender);
-                        break;
-                    default:
-                        sender.sendMessage(PluginMessages.parseMessage(PreventStabby.getPlugin().getConfigCache().getNo_such_command()));
-                        break;
-                }
-            } else {
-                HelpCommand.help(sender, args);
+        if (!sender.hasPermission("preventstabby.command")) {
+            PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+            return true;
+        }
+        if (args.length >= 1) {
+            switch (args[0].toLowerCase()) {
+                case "help":
+                    HelpCommand.help(sender, args);
+                    break;
+                case "toggle":
+                    PvpToggleCommand.toggle(sender, args);
+                    break;
+                case "on":
+                case "enable":
+                    PvpToggleCommand.enable(sender, args);
+                    break;
+                case "off":
+                case "disable":
+                    PvpToggleCommand.disable(sender, args);
+                    break;
+                case "reload":
+                    ReloadCommand.reload(sender);
+                    break;
+                default:
+                    PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_such_command());
+                    break;
             }
         } else {
-            sender.sendMessage(PluginMessages.parseMessage(PreventStabby.getPlugin().getConfigCache().getNo_permission()));
+            HelpCommand.help(sender, args);
         }
         return true;
     }

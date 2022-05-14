@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -17,19 +18,27 @@ public class PluginMessages {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public static void sendMessage(Player player, String message) {
-        if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+    public static String parseMessage(CommandSender sender,String message) {
+
+        if (sender instanceof Player && isPlaceholderApiEnabled()) {
+            Player player = (Player) sender;
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        message = ChatColor.translateAlternateColorCodes('&', message);
-        player.sendMessage(message);
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    private static boolean isPlaceholderApiEnabled() {
+        return PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
+
+    public static void sendMessage(CommandSender sender, String message) {
+        message = parseMessage(sender, message);
+        sender.sendMessage(message);
     }
 
     public static void sendActionBar(Player player, String message) {
         // TODO use adventure
-        if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            message = PlaceholderAPI.setPlaceholders(player, message);
-        }
+        message = parseMessage(player, message);
         BaseComponent[] component = TextComponent.fromLegacyText(parseMessage(message));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, component);
     }

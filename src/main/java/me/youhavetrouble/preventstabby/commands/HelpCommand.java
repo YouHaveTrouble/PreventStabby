@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand {
-
+    // TODO change this to be 1 component when transitioning to adventure
     public static void help(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
             List<String> helpPage = new ArrayList<>();
