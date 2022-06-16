@@ -51,7 +51,7 @@ public class ConfigCache {
                 addComment("settings.punish_for_combat_logout", "Kill the player if they log out during combat");
                 addDefault("settings.punish_for_combat_logout.enabled", true);
                 addDefault("settings.punish_for_combat_logout.announce", true);
-                addDefault("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
+                addDefault("settings.punish_for_combat_logout.message", "%player%<reset> <white>logged out while in combat. What a loser.");
 
                 addDefault("settings.snowballs_do_knockback", false, "Set to true if snowballs should cause knockback to players");
 
@@ -68,21 +68,21 @@ public class ConfigCache {
 
                 addDefault("settings.cache_time", 30, "Time (in seconds) to keep player data in memory when players goes offline.\nThis is used for checking if offline players pvp state.\nAdjust only if you know what you're doing. NEVER set to less than 6.");
 
-                addDefault("messages.pvp_enabled", "&cYou enabled PvP!");
-                addDefault("messages.pvp_disabled", "&cYou disabled PvP!");
-                addDefault("messages.cannot_attack_victim", "&cYou can't attack players that have PvP turned off!");
-                addDefault("messages.cannot_attack_attacker", "&cYou can't attack players while you have PvP turned off!");
-                addDefault("messages.cannot_attack_pets_victim", "&cYou can't attack pets of players that have PvP turned off");
-                addDefault("messages.cannot_attack_pets_attacker", "&cYou can't attack pets while you have PvP turned off");
-                addDefault("messages.cannot_attack_mounts_victim", "&cYou can't attack mounts of players that have PvP turned off");
-                addDefault("messages.cannot_attack_mounts_attacker", "&cYou can't attack mounts while you have PvP turned off");
-                addDefault("messages.no_permission", "&cYou don't have permission to use that.");
-                addDefault("messages.no_such_command", "&cNo such command.");
-                addDefault("messages.pvp_enabled_others", "&cYou've enabled %player%'s PvP.");
-                addDefault("messages.pvp_disabled_others", "&cYou've disabled %player%'s PvP.");
-                addDefault("messages.entering_combat", "&cEntering combat");
-                addDefault("messages.leaving_combat", "&cLeaving combat");
-                addDefault("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+                addDefault("messages.pvp_enabled", "<red>You enabled PvP!");
+                addDefault("messages.pvp_disabled", "<red>You disabled PvP!");
+                addDefault("messages.cannot_attack_victim", "<red>You can't attack players that have PvP turned off!");
+                addDefault("messages.cannot_attack_attacker", "<red>You can't attack players while you have PvP turned off!");
+                addDefault("messages.cannot_attack_pets_victim", "<red>You can't attack pets of players that have PvP turned off");
+                addDefault("messages.cannot_attack_pets_attacker", "<red>You can't attack pets while you have PvP turned off");
+                addDefault("messages.cannot_attack_mounts_victim", "<red>You can't attack mounts of players that have PvP turned off");
+                addDefault("messages.cannot_attack_mounts_attacker", "<red>You can't attack mounts while you have PvP turned off");
+                addDefault("messages.no_permission", "<red>You don't have permission to use that.");
+                addDefault("messages.no_such_command", "<red>No such command.");
+                addDefault("messages.pvp_enabled_others", "<red>You've enabled %player%'s PvP.");
+                addDefault("messages.pvp_disabled_others", "<red>You've disabled %player%'s PvP.");
+                addDefault("messages.entering_combat", "<red>Entering combat");
+                addDefault("messages.leaving_combat", "<red>Leaving combat");
+                addDefault("messages.cant_do_that_during_combat", "<red>You can't do that while in combat!");
                 addDefault("placeholder.placeholder_combat_time", "Combat time: %time%");
                 addDefault("placeholder.not_in_combat", "Not in combat");
             }
@@ -106,7 +106,7 @@ public class ConfigCache {
         this.combat_time = config.getLong("settings.combat_time", 25L);
         this.punish_for_combat_logout = config.getBoolean("settings.punish_for_combat_logout.enabled", true);
         this.punish_for_combat_logout_announce = config.getBoolean("settings.punish_for_combat_logout.announce", true);
-        this.punish_for_combat_logout_message = config.getString("settings.punish_for_combat_logout.message", "&f%player% logged out while in combat. What a loser.");
+        this.punish_for_combat_logout_message = config.getString("settings.punish_for_combat_logout.message", "%player%<reset><white> logged out while in combat. What a loser.");
         this.only_owner_can_interact_with_pet = config.getBoolean("settings.only_owner_can_interact_with_pet", false);
 
         this.snowballs_knockback = config.getBoolean("settings.snowballs_do_knockback", false);
@@ -123,21 +123,21 @@ public class ConfigCache {
         this.teleport_protection_time = config.getLong("settings.teleport_protection_time", 0);
 
         // Messages
-        this.pvp_enabled = config.getString("messages.pvp_enabled", "&cYou enabled PvP!");
-        this.pvp_disabled = config.getString("messages.pvp_disabled", "&cYou disabled PvP!");
-        this.cannot_attack_victim = config.getString("messages.cannot_attack_victim", "&cYou can't attack players that have PvP turned off!");
-        this.cannot_attack_attacker = config.getString("messages.cannot_attack_attacker", "&cYou can't attack players while you have PvP turned off!");
-        this.cannot_attack_pets_victim = config.getString("messages.cannot_attack_pets_victim", "&cYou can't attack pets while you have PvP turned off");
-        this.cannot_attack_pets_attacker = config.getString("messages.cannot_attack_pets_attacker", "&cYou can't attack pets of players that have PvP turned off");
-        this.cannot_attack_mounts_victim = config.getString("messages.cannot_attack_mounts_victim", "&cYou can't attack mounts of players that have PvP turned off");
-        this.cannot_attack_mounts_attacker = config.getString("messages.cannot_attack_mounts_attacker", "&cYou can't attack mounts while you have PvP turned off");
-        this.no_permission = config.getString("messages.no_permission", "&cYou don't have permission to use that.");
-        this.no_such_command = config.getString("messages.no_such_command", "&cNo such command.");
-        this.pvp_enabled_other = config.getString("messages.pvp_enabled_others", "&cYou've enabled %player%'s PvP.");
-        this.pvp_disabled_other = config.getString("messages.pvp_disabled_others", "&cYou've disabled %player%'s PvP.");
-        this.entering_combat = config.getString("messages.entering_combat", "&cEntering combat");
-        this.leaving_combat = config.getString("messages.leaving_combat", "&cLeaving combat");
-        this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "&cYou can't do that while in combat!");
+        this.pvp_enabled = config.getString("messages.pvp_enabled", "<red>You enabled PvP!");
+        this.pvp_disabled = config.getString("messages.pvp_disabled", "<red>You disabled PvP!");
+        this.cannot_attack_victim = config.getString("messages.cannot_attack_victim", "<red>You can't attack players that have PvP turned off!");
+        this.cannot_attack_attacker = config.getString("messages.cannot_attack_attacker", "<red>You can't attack players while you have PvP turned off!");
+        this.cannot_attack_pets_victim = config.getString("messages.cannot_attack_pets_victim", "<red>You can't attack pets while you have PvP turned off");
+        this.cannot_attack_pets_attacker = config.getString("messages.cannot_attack_pets_attacker", "<red>You can't attack pets of players that have PvP turned off");
+        this.cannot_attack_mounts_victim = config.getString("messages.cannot_attack_mounts_victim", "<red>You can't attack mounts of players that have PvP turned off");
+        this.cannot_attack_mounts_attacker = config.getString("messages.cannot_attack_mounts_attacker", "<red>You can't attack mounts while you have PvP turned off");
+        this.no_permission = config.getString("messages.no_permission", "<red>You don't have permission to use that.");
+        this.no_such_command = config.getString("messages.no_such_command", "<red>No such command.");
+        this.pvp_enabled_other = config.getString("messages.pvp_enabled_others", "<red>You've enabled %player%'s PvP.");
+        this.pvp_disabled_other = config.getString("messages.pvp_disabled_others", "<red>You've disabled %player%'s PvP.");
+        this.entering_combat = config.getString("messages.entering_combat", "<red>Entering combat");
+        this.leaving_combat = config.getString("messages.leaving_combat", "<red>Leaving combat");
+        this.cant_do_that_during_combat = config.getString("messages.cant_do_that_during_combat", "<red>You can't do that while in combat!");
 
         this.placeholder_combat_time = config.getString("placeholder.placeholder_combat_time", "Combat time: %time%");
         this.placeholder_not_in_combat = config.getString("placeholder.not_in_combat", "Not in combat");

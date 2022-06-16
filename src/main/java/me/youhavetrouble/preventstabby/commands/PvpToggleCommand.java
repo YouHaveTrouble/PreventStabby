@@ -26,13 +26,11 @@ public class PvpToggleCommand {
                     }
                     boolean currentState = PreventStabby.getPlugin().getPlayerManager().togglePlayerPvpState(player.getUniqueId());
 
-                    String message;
                     if (currentState) {
-                        message = PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
                     } else {
-                        message = PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
                     }
-                    PluginMessages.sendMessage(sender, message);
                 } else {
                     PluginMessages.sendMessage(sender, "Try /pvp toggle <player>");
                 }
@@ -51,7 +49,7 @@ public class PvpToggleCommand {
 
                 Player player = Bukkit.getPlayer(args[1]);
                 if (player == null) {
-                    PluginMessages.sendMessage(sender, "&cPlayer offline.");
+                    PluginMessages.sendMessage(sender, "<red>Player offline.");
                     return;
                 }
                 boolean currentState = PreventStabby.getPlugin().getPlayerManager().togglePlayerPvpState(player.getUniqueId());
@@ -103,7 +101,7 @@ public class PvpToggleCommand {
             }
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
-                PluginMessages.sendMessage(sender, PluginMessages.parseMessage("&cPlayer offline."));
+                PluginMessages.sendMessage(sender, "<red>Player offline.");
                 return;
             }
             String message = PreventStabby.getPlugin().getConfigCache().getPvp_enabled_other();
@@ -149,7 +147,7 @@ public class PvpToggleCommand {
             }
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
-                PluginMessages.sendMessage(sender, PluginMessages.parseMessage("&cPlayer offline."));
+                PluginMessages.sendMessage(sender, "<red>Player offline.");
                 return;
             }
             String message = PreventStabby.getPlugin().getConfigCache().getPvp_disabled_other();

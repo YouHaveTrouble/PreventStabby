@@ -11,6 +11,7 @@ import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
 import me.youhavetrouble.preventstabby.util.DatabaseSQLite;
 import lombok.Getter;
 import me.youhavetrouble.preventstabby.util.Util;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -29,6 +30,8 @@ public final class PreventStabby extends JavaPlugin {
     private SmartCache smartCache;
     private static boolean worldGuardHook;
 
+    private static BukkitAudiences adventure;
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -43,6 +46,7 @@ public final class PreventStabby extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        adventure = BukkitAudiences.create(this);
         playerManager = new PlayerManager();
         smartCache = new SmartCache();
         smartCache.runSmartCache();
@@ -113,5 +117,9 @@ public final class PreventStabby extends JavaPlugin {
 
     public SmartCache getSmartCache() {
         return smartCache;
+    }
+
+    public static BukkitAudiences getAudiences() {
+        return adventure;
     }
 }

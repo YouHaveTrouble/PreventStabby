@@ -3,6 +3,7 @@ package me.youhavetrouble.preventstabby.hooks;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class PlacoholderApiHook extends PlaceholderExpansion {
 
     private final PreventStabby plugin;
+    private final LegacyComponentSerializer legacyComponentSerializer;
 
     public PlacoholderApiHook(PreventStabby preventStabby) {
         plugin = preventStabby;
+        this.legacyComponentSerializer = LegacyComponentSerializer.legacyAmpersand();
     }
 
     @Override
@@ -48,9 +51,9 @@ public class PlacoholderApiHook extends PlaceholderExpansion {
         if (seconds > 0) {
             String msg = plugin.getConfigCache().getPlaceholder_combat_time();
             msg = msg.replaceAll("%time%", String.valueOf(seconds));
-            return PluginMessages.parseMessage(msg);
+            return legacyComponentSerializer.serialize(PluginMessages.parseMessage(msg));
         }
-        return PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_not_in_combat());
+        return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_not_in_combat()));
     }
 
 }
