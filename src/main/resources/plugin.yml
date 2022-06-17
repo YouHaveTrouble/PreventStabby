@@ -28,6 +28,9 @@ permissions:
   preventstabby.command.toggle.others:
     default: op
     description: Allows usage of /pvp <toggle/enable/disable> <player> command
+  preventstabby.command.toggle.global:
+    default: op
+    description: Allows usage of /pvp override <enabled/disabled/none> command
   preventstabby.command.reload:
     default: op
     description: Allows usage of /pvp reload command

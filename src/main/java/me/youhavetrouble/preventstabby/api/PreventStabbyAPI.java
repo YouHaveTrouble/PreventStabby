@@ -2,7 +2,10 @@ package me.youhavetrouble.preventstabby.api;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
+import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.entity.Player;
+
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class PreventStabbyAPI {
@@ -139,5 +142,23 @@ public class PreventStabbyAPI {
         return CombatTimer.isInCombat(player.getUniqueId());
     }
 
+    /**
+     * @return Current state of forced PvP
+     */
+    public static PvpState getForcedPvpState() {
+        return PreventStabby.getPlugin().getPlayerManager().getForcedPvpState();
+    }
+
+    /**
+     *
+     * @param newForcedPvpState<br>
+     * true - force enable PvP for every player<br>
+     * false - force disable PvP for every player<br>
+     * null - don't force PvP state<br>
+     */
+    public static void setForcedPvpState(PvpState newForcedPvpState) {
+        PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(newForcedPvpState);
+    }
 
 }
+

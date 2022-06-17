@@ -5,6 +5,7 @@ import me.youhavetrouble.preventstabby.PreventStabby;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,6 +19,7 @@ public class PluginMessages {
 
     public static Component parseMessage(String message) {
         message = makeColorsWork('&', message);
+        message = makeColorsWork(LegacyComponentSerializer.SECTION_CHAR, message);
         return MINIMESSAGE.deserialize(message);
     }
 
@@ -59,6 +61,10 @@ public class PluginMessages {
         if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
+        audiences.all().sendMessage(parseMessage(message));
+    }
+
+    public static void broadcastMessage(String message) {
         audiences.all().sendMessage(parseMessage(message));
     }
 

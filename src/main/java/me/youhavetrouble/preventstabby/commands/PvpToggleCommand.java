@@ -13,7 +13,7 @@ public class PvpToggleCommand {
     public static void toggle(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
             if (!PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
-                PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
                 return;
             }
 

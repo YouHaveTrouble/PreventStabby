@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class MainCommand implements TabExecutor {
         subCommands.put("off", PreventStabbyPermission.COMMAND_TOGGLE);
         subCommands.put("disable", PreventStabbyPermission.COMMAND_TOGGLE);
         subCommands.put("reload", PreventStabbyPermission.COMMAND_RELOAD);
+        subCommands.put("override", PreventStabbyPermission.COMMAND_GLOBAL_TOGGLE);
     }
 
     @Override
@@ -53,6 +55,9 @@ public class MainCommand implements TabExecutor {
                 case "reload":
                     ReloadCommand.reload(sender);
                     break;
+                case "override":
+                    GlobalToggleCommand.globalToggle(sender, args);
+                    break;
                 default:
                     PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_such_command());
                     break;
@@ -74,7 +79,7 @@ public class MainCommand implements TabExecutor {
                     commands.add(entry.getKey());
             }
             return commands;
-        } else if (args.length == 2 && PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
+        } else if (args.length == 2) {
             switch (args[0].toLowerCase()) {
                 default:
                     break;
@@ -83,12 +88,19 @@ public class MainCommand implements TabExecutor {
                 case "enable":
                 case "off":
                 case "disable":
+                    if (!PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) break;
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         commands.add(player.getName());
                     }
                     break;
+                case "override":
+                    if (!PreventStabbyPermission.COMMAND_GLOBAL_TOGGLE.doesCommandSenderHave(sender)) break;
+                    commands.add("enabled");
+                    commands.add("disabled");
+                    commands.add("none");
+                    break;
             }
-            return commands;
+            return StringUtil.copyPartialMatches(args[1], commands, new ArrayList<>());
         }
         return null;
     }

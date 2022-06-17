@@ -4,14 +4,15 @@ import org.bukkit.command.CommandSender;
 
 public enum PreventStabbyPermission {
 
-    COMMAND("preventstabby.command"),
-    COMMAND_TOGGLE("preventstabby.command.toggle"),
-    COMMAND_TOGGLE_OTHERS("preventstabby.command.toggle.others"),
-    COMMAND_RELOAD("preventstabby.command.reload");
+    COMMAND("command"),
+    COMMAND_TOGGLE("command.toggle"),
+    COMMAND_TOGGLE_OTHERS("command.toggle.others"),
+    COMMAND_RELOAD("command.reload"),
+    COMMAND_GLOBAL_TOGGLE("command.toggle.global");
 
     private final String permission;
     PreventStabbyPermission(String permission) {
-        this.permission = permission;
+        this.permission = "preventstabby."+permission;
     }
 
     public boolean doesCommandSenderHave(CommandSender sender) {

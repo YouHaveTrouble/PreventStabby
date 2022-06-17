@@ -7,6 +7,7 @@ import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import lombok.Getter;
+import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -19,6 +20,8 @@ public class PlayerManager {
 
     @Getter
     ConcurrentHashMap<UUID, PlayerData> playerList = new ConcurrentHashMap<>();
+
+    private PvpState pvpForcedState = PvpState.NONE;
 
     public final BukkitTask combatTrackerTask;
 
@@ -61,18 +64,13 @@ public class PlayerManager {
     }
 
     public void refreshPlayersCombatTime(UUID uuid) {
-        try {
-            PlayerData data = playerList.get(uuid);
-            if (data == null)
-                return;
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null || player.isDead())
-                return;
+        PlayerData data = playerList.get(uuid);
+        if (data == null) return;
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null || player.isDead()) return;
+        data.refreshCombatTime();
+        data.setInCombat(true);
 
-            data.refreshCombatTime();
-            data.setInCombat(true);
-        } catch (Exception ignored) {
-        }
     }
 
     public PlayerData getPlayer(UUID uuid) {
@@ -111,6 +109,17 @@ public class PlayerManager {
         if (hasLoginProtection(attacker) || hasTeleportProtection(attacker)) return false;
         if (checkVictimSpawnProtection && hasLoginProtection(victim)) return false;
         if (checkVictimSpawnProtection && hasTeleportProtection(victim)) return false;
+
+        switch (pvpForcedState) {
+            case ENABLED:
+                return true;
+            case DISABLED:
+                PluginMessages.sendActionBar(attacker, PreventStabby.getPlugin().getConfigCache().getCannot_attack_pvp_force_off());
+                return false;
+            case NONE:
+            default:
+                break;
+        }
 
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
 
@@ -157,4 +166,11 @@ public class PlayerManager {
         return Instant.now().getEpochSecond() < smartCache.getPlayerData(uuid).getTeleportTimestamp();
     }
 
+    public PvpState getForcedPvpState() {
+        return pvpForcedState;
+    }
+
+    public void setForcedPvpState(PvpState forcedPvpState) {
+        this.pvpForcedState = forcedPvpState;
+    }
 }
