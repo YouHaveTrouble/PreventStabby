@@ -150,11 +150,7 @@ public class PreventStabbyAPI {
     }
 
     /**
-     *
-     * @param newForcedPvpState<br>
-     * true - force enable PvP for every player<br>
-     * false - force disable PvP for every player<br>
-     * null - don't force PvP state<br>
+     * Sets forced PvP state until server restart or changed with override command or this method.
      */
     public static void setForcedPvpState(PvpState newForcedPvpState) {
         PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(newForcedPvpState);
