@@ -19,6 +19,7 @@ public class FishingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFish(org.bukkit.event.player.PlayerFishEvent event) {
         if (event.getCaught() instanceof Player) {
+            if (!PreventStabby.getPlugin().getConfigCache().isAllow_fishing_rod_pull()) return;
             UUID damager = event.getPlayer().getUniqueId();
             UUID victim = event.getCaught().getUniqueId();
             if (damager == victim)

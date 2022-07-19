@@ -16,7 +16,7 @@ public class ConfigCache {
 
     @Getter private final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled, channeling_enchant_disabled,
             punish_for_combat_logout, punish_for_combat_logout_announce, only_owner_can_interact_with_pet,
-            snowballs_knockback, egg_knockback, block_commands_in_combat, block_teleports_in_combat;
+            snowballs_knockback, egg_knockback, block_commands_in_combat, block_teleports_in_combat, allow_fishing_rod_pull;
     @Getter private final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
             cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
             pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
@@ -56,6 +56,8 @@ public class ConfigCache {
                 addDefault("settings.snowballs_do_knockback", false, "Set to true if snowballs should cause knockback to players");
 
                 addDefault("settings.eggs_do_knockback", false, "Set to true if eggs should cause knockback to players");
+
+                addDefault("settings.allow_fishing_rod_pull", false, "Allows players with pvp off to be pulled by fishing rods");
 
                 addComment("settings.block_in_combat", "Set what actions should be blocked while in combat");
                 addDefault("settings.block_in_combat.block_commands.enabled", true);
@@ -113,6 +115,7 @@ public class ConfigCache {
         this.punish_for_combat_logout_message = config.getString("settings.punish_for_combat_logout.message", "%player%<reset><white> logged out while in combat. What a loser.");
         this.only_owner_can_interact_with_pet = config.getBoolean("settings.only_owner_can_interact_with_pet", false);
 
+        this.allow_fishing_rod_pull = config.getBoolean("settings.allow_fishing_rod_pull", false);
         this.snowballs_knockback = config.getBoolean("settings.snowballs_do_knockback", false);
         this.egg_knockback = config.getBoolean("settings.eggs_do_knockback", false);
         this.block_commands_in_combat = config.getBoolean("settings.block_in_combat.block_commands", true);
