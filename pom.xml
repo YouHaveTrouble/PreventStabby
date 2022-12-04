@@ -6,7 +6,7 @@
 
     <groupId>me.youhavetrouble</groupId>
     <artifactId>PreventStabby</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2</version>
     <packaging>jar</packaging>
 
     <name>PreventStabby</name>
@@ -48,6 +48,10 @@
                                 <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.kyori</pattern>
+                                    <shadedPattern>kyori</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
