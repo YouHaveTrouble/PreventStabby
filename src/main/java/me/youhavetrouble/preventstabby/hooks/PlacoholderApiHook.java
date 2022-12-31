@@ -37,16 +37,24 @@ public class PlacoholderApiHook extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        if (params.equalsIgnoreCase("combat_time")) {
-            return getCombatTimePlaceholder(player.getUniqueId());
+        switch (params) {
+            case "pvp":
+                if (!player.isOnline()) return String.valueOf(false);
+                return String.valueOf(plugin.getPlayerManager().getPlayer(player.getUniqueId()).isPvpEnabled());
+            case "combat_time":
+                return getCombatTimePlaceholder(player.getUniqueId(), player);
+            case "in_combat":
+                if (!player.isOnline()) return String.valueOf(false);
+                return String.valueOf(plugin.getPlayerManager().getPlayer(player.getUniqueId()).isInCombat());
+            default:
+                return null;
         }
-        if (params.equalsIgnoreCase("in_combat")) {
-            return String.valueOf(plugin.getPlayerManager().getPlayer(player.getUniqueId()).isInCombat());
-        }
-        return null;
     }
 
-    private String getCombatTimePlaceholder(UUID uuid) {
+    private String getCombatTimePlaceholder(UUID uuid, OfflinePlayer player) {
+        if (!player.isOnline()) {
+            return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_not_in_combat()));
+        }
         long seconds = plugin.getPlayerManager().getPlayer(uuid).getCombattime() - Instant.now().getEpochSecond();
         if (seconds > 0) {
             String msg = plugin.getConfigCache().getPlaceholder_combat_time();
