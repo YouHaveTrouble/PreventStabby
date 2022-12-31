@@ -1,6 +1,7 @@
 package me.youhavetrouble.preventstabby.commands;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.api.event.PlayerTogglePvpEvent;
 import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
@@ -25,12 +26,17 @@ public class PvpToggleCommand {
                         return;
                     }
                     boolean currentState = PreventStabby.getPlugin().getPlayerManager().togglePlayerPvpState(player.getUniqueId());
-
-                    if (currentState) {
-                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
-                    } else {
-                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
-                    }
+                    PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, currentState, true);
+                    Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                        Bukkit.getPluginManager().callEvent(toggleEvent);
+                        if (toggleEvent.isSendMessage()) {
+                            if (currentState) {
+                                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                            } else {
+                                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                            }
+                        }
+                    });
                 } else {
                     PluginMessages.sendMessage(sender, "Try /pvp toggle <player>");
                 }
@@ -53,6 +59,18 @@ public class PvpToggleCommand {
                     return;
                 }
                 boolean currentState = PreventStabby.getPlugin().getPlayerManager().togglePlayerPvpState(player.getUniqueId());
+                PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, currentState, false);
+                Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    Bukkit.getPluginManager().callEvent(toggleEvent);
+                    if (toggleEvent.isSendMessage()) {
+                        if (currentState) {
+                            PluginMessages.sendMessage(player, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                        } else {
+                            PluginMessages.sendMessage(player, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                        }
+                    }
+                });
+
                 String message;
                 if (currentState) {
                     message = PreventStabby.getPlugin().getConfigCache().getPvp_enabled_other();
@@ -77,7 +95,13 @@ public class PvpToggleCommand {
                     return;
                 }
                 PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
-                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, true, true);
+                Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    Bukkit.getPluginManager().callEvent(toggleEvent);
+                    if (toggleEvent.isSendMessage()) {
+                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                    }
+                });
             } else {
                 PluginMessages.sendMessage(sender, "Try /pvp enable <player>");
             }
@@ -101,6 +125,13 @@ public class PvpToggleCommand {
             String message = PreventStabby.getPlugin().getConfigCache().getPvp_enabled_other();
             PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
             PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
+            PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, true, false);
+            Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                Bukkit.getPluginManager().callEvent(toggleEvent);
+                if (toggleEvent.isSendMessage()) {
+                    PluginMessages.sendMessage(player, PreventStabby.getPlugin().getConfigCache().getPvp_enabled());
+                }
+            });
         } else {
             if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, "Try /pvp enable <player>");
@@ -123,7 +154,13 @@ public class PvpToggleCommand {
                     return;
                 }
                 PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), false);
-                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, false, true);
+                Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    Bukkit.getPluginManager().callEvent(toggleEvent);
+                    if (toggleEvent.isSendMessage()) {
+                        PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                    }
+                });
             } else {
                 PluginMessages.sendMessage(sender, "Try /pvp disable <player>");
             }
@@ -146,7 +183,14 @@ public class PvpToggleCommand {
             }
             String message = PreventStabby.getPlugin().getConfigCache().getPvp_disabled_other();
             PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
-            PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), true);
+            PreventStabby.getPlugin().getPlayerManager().setPlayerPvpState(player.getUniqueId(), false);
+            PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, false, false);
+            Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                Bukkit.getPluginManager().callEvent(toggleEvent);
+                if (toggleEvent.isSendMessage()) {
+                    PluginMessages.sendMessage(player, PreventStabby.getPlugin().getConfigCache().getPvp_disabled());
+                }
+            });
 
         } else {
             if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {

@@ -1,42 +1,49 @@
 package me.youhavetrouble.preventstabby.api.event;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * NOT IMPLEMENTED YET
+ * Fired when player gets their personal pvp state toggled.
  */
-@Deprecated
 public class PlayerTogglePvpEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private final Player player;
-    private boolean newState, sendMessage;
+    private final OfflinePlayer player;
+    private final boolean newState;
+    private boolean sendMessage;
 
-    public PlayerTogglePvpEvent(Player player, boolean newState, boolean sendMessage) {
+    public PlayerTogglePvpEvent(OfflinePlayer player, boolean newState, boolean sendMessage) {
         this.player = player;
         this.newState = newState;
         this.sendMessage = sendMessage;
     }
 
-    public Player getPlayer() {
+    public OfflinePlayer getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the state player's pvp state was toggled to.
+     * @return The state player's pvp state was toggled to.
+     */
     public boolean newState() {
         return newState;
     }
 
-    public void setNewState(boolean newState) {
-        this.newState = newState;
-    }
-
+    /**
+     * Returns true if the state message will be sent to the player, false otherwise
+     * @return True if the state message will be sent to the player, false otherwise
+     */
     public boolean isSendMessage() {
         return sendMessage;
     }
 
+    /**
+     * If this is true at the end of event pipeline, message with the current state will be sent to player.
+     */
     public void setSendMessage(boolean sendMessage) {
         this.sendMessage = sendMessage;
     }
