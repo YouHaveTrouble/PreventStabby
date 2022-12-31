@@ -10,6 +10,12 @@ import org.bukkit.command.CommandSender;
 public class HelpCommand {
     public static void help(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
+
+            if (!PreventStabbyPermission.COMMAND_HELP.doesCommandSenderHave(sender)) {
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+                return;
+            }
+
             Component helpComponent = PluginMessages.MINIMESSAGE
                     .deserialize("<aqua><strikethrough>                    </strikethrough> PreventStabby Help <strikethrough>                    </strikethrough>")
                     .append(Component.newline())

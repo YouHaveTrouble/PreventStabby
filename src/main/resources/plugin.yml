@@ -22,6 +22,11 @@ permissions:
   preventstabby.command:
     default: true
     description: Allows usage of /pvp command
+  preventstabby.command.help:
+    default: true
+    description: Allows usage of /pvp help command
+    children:
+      preventstabby.command: true
   preventstabby.command.toggle:
     default: true
     description: Allows usage of /pvp <toggle/enable/disable> command
