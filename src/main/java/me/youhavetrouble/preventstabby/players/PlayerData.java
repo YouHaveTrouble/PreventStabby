@@ -31,11 +31,16 @@ public class PlayerData {
     /**
      * Returns true if player has personal pvp enabled, false otherwise.
      * @return True if player has personal pvp enabled, false otherwise.
+     * @see PlayerManager#getPlayerPvPState(UUID) 
      */
     public boolean isPvpEnabled() {
         return pvpEnabled;
     }
 
+    /**
+     * Sets player's personal pvp state.
+     * @param pvpEnabled Pvp state to set.
+     */
     public void setPvpEnabled(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
     }
@@ -44,11 +49,7 @@ public class PlayerData {
         return cachetime;
     }
 
-    /**
-     * Lets player cache system know that data should not be removed for the next cache time peroid.<br>
-     * Use with caution, may cause memory leaks if used inappropriately.
-     */
-    public void refreshCacheTime() {
+    protected void refreshCacheTime() {
         this.cachetime = Instant.now().getEpochSecond() + PreventStabby.getPlugin().getConfigCache().getCache_time();
     }
 
@@ -60,17 +61,14 @@ public class PlayerData {
     public long getCombatTime() {
         return Math.max(combattime - Instant.now().getEpochSecond(), 0);
     }
-
-    /**
-     * Sets timestamp for combat expiry
-     * @param combattime Timestamp for when combat should expire
-     */
-    public void setCombattime(long combattime) {
+    
+    protected void setCombattime(long combattime) {
         this.combattime = combattime;
     }
 
     /**
-     * Sets player combat time to the interval set in config.
+     * Sets player in combat and sets combat time to the interval set in config.
+     * @see PlayerManager#refreshPlayersCombatTime(UUID)
      */
     public void refreshCombatTime() {
         this.combattime = Instant.now().getEpochSecond()+ PreventStabby.getPlugin().getConfigCache().getCombat_time();
