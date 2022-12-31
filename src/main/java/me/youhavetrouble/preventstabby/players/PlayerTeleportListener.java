@@ -1,8 +1,6 @@
-package me.youhavetrouble.preventstabby.listeners.player;
+package me.youhavetrouble.preventstabby.players;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import me.youhavetrouble.preventstabby.players.PlayerData;
-import me.youhavetrouble.preventstabby.players.SmartCache;
 import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

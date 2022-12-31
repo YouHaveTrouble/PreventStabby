@@ -5,6 +5,9 @@ import me.youhavetrouble.preventstabby.PreventStabby;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * PreventStabby player data keeper.<br>
+ */
 public class PlayerData {
 
     private final UUID playerUuid;
@@ -18,13 +21,17 @@ public class PlayerData {
         this.loginTimestamp = Instant.now().getEpochSecond()-1;
         this.teleportTimestamp = Instant.now().getEpochSecond()-1;
         this.inCombat = false;
-        refreshCachetime();
+        refreshCacheTime();
     }
 
     public UUID getPlayerUuid() {
         return playerUuid;
     }
 
+    /**
+     * Returns true if player has personal pvp enabled, false otherwise.
+     * @return True if player has personal pvp enabled, false otherwise.
+     */
     public boolean isPvpEnabled() {
         return pvpEnabled;
     }
@@ -33,55 +40,75 @@ public class PlayerData {
         this.pvpEnabled = pvpEnabled;
     }
 
-    public long getCachetime() {
+    protected long getCachetime() {
         return cachetime;
     }
 
-    public void refreshCachetime() {
-        this.cachetime = Instant.now().getEpochSecond()+ PreventStabby.getPlugin().getConfigCache().getCache_time();
+    /**
+     * Lets player cache system know that data should not be removed for the next cache time peroid.<br>
+     * Use with caution, may cause memory leaks if used inappropriately.
+     */
+    public void refreshCacheTime() {
+        this.cachetime = Instant.now().getEpochSecond() + PreventStabby.getPlugin().getConfigCache().getCache_time();
     }
 
-    public long getCombattime() {
-        return combattime;
+    /**
+     * Time left until the end of combat in seconds.
+     * @return Time left until the end of combat in seconds.<br>
+     * Return of 0 means out of combat or about to be out of combat.
+     */
+    public long getCombatTime() {
+        return Math.max(combattime - Instant.now().getEpochSecond(), 0);
     }
 
+    /**
+     * Sets timestamp for combat expiry
+     * @param combattime Timestamp for when combat should expire
+     */
     public void setCombattime(long combattime) {
         this.combattime = combattime;
     }
 
+    /**
+     * Sets player combat time to the interval set in config.
+     */
     public void refreshCombatTime() {
         this.combattime = Instant.now().getEpochSecond()+ PreventStabby.getPlugin().getConfigCache().getCombat_time();
     }
 
-    public boolean getLastCombatCheck() {
+    protected boolean getLastCombatCheck() {
         return lastCombatCheck;
     }
 
-    public void setLastCombatCheck(boolean bool) {
+    protected void setLastCombatCheck(boolean bool) {
         lastCombatCheck = bool;
     }
 
-    public void setLoginTimestamp(long loginTimestamp) {
+    protected void setLoginTimestamp(long loginTimestamp) {
         this.loginTimestamp = loginTimestamp + PreventStabby.getPlugin().getConfigCache().getLogin_protection_time()-1;
     }
 
-    public long getLoginTimestamp() {
+    protected long getLoginTimestamp() {
         return loginTimestamp;
     }
 
-    public void setTeleportTimestamp(long teleportTimestamp) {
+    protected void setTeleportTimestamp(long teleportTimestamp) {
         this.teleportTimestamp = teleportTimestamp + PreventStabby.getPlugin().getConfigCache().getTeleport_protection_time()-1;
     }
 
-    public long getTeleportTimestamp() {
+    protected long getTeleportTimestamp() {
         return teleportTimestamp;
     }
 
+    /**
+     * Returns player's current combat state.
+     * @return Player's current combat state.
+     */
     public boolean isInCombat() {
         return inCombat;
     }
 
-    public void setInCombat(boolean inCombat) {
+    protected void setInCombat(boolean inCombat) {
         this.inCombat = inCombat;
     }
 }

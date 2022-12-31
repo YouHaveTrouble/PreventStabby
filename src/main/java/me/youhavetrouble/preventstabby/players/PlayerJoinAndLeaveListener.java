@@ -1,4 +1,4 @@
-package me.youhavetrouble.preventstabby.listeners.player;
+package me.youhavetrouble.preventstabby.players;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.players.PlayerData;
@@ -34,7 +34,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
             });
             return;
         }
-        playerData.refreshCachetime();
+        playerData.refreshCacheTime();
         playerData.setLoginTimestamp(time);
     }
 

@@ -60,7 +60,7 @@ public class PlayerManager {
     }
 
     public void refreshPlayersCacheTime(UUID uuid) {
-        playerList.get(uuid).refreshCachetime();
+        playerList.get(uuid).refreshCacheTime();
     }
 
     public void refreshPlayersCombatTime(UUID uuid) {

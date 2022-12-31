@@ -55,7 +55,7 @@ public class PlacoholderApiHook extends PlaceholderExpansion {
         if (!player.isOnline()) {
             return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_not_in_combat()));
         }
-        long seconds = plugin.getPlayerManager().getPlayer(uuid).getCombattime() - Instant.now().getEpochSecond();
+        long seconds = plugin.getPlayerManager().getPlayer(uuid).getCombatTime();
         if (seconds > 0) {
             String msg = plugin.getConfigCache().getPlaceholder_combat_time();
             msg = msg.replaceAll("%time%", String.valueOf(seconds));

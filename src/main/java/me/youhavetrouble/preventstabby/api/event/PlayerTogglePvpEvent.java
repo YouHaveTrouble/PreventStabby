@@ -1,5 +1,7 @@
 package me.youhavetrouble.preventstabby.api.event;
 
+import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.players.PlayerData;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -23,6 +25,10 @@ public class PlayerTogglePvpEvent extends Event {
 
     public OfflinePlayer getPlayer() {
         return player;
+    }
+
+    public PlayerData getPlayerData() {
+        return PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
     }
 
     /**

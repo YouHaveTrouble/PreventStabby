@@ -11,8 +11,7 @@ public class CombatTimer {
 
     public static void refreshPlayersCombatTime(UUID uuid) {
         try {
-            long now = Instant.now().getEpochSecond();
-            long combattime = PreventStabby.getPlugin().getSmartCache().getPlayerData(uuid).getCombattime();
+            long combattime = PreventStabby.getPlugin().getSmartCache().getPlayerData(uuid).getCombatTime();
 
             Player player = Bukkit.getPlayer(uuid);
             if (player == null || !player.isOnline()) return;
@@ -22,7 +21,7 @@ public class CombatTimer {
                 if (playerEnterCombatEvent.isCancelled()) return;
                 PreventStabby.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
 
-                if (combattime <= now) {
+                if (combattime <= 0) {
                     PluginMessages.sendActionBar(uuid, PreventStabby.getPlugin().getConfigCache().getEntering_combat());
                 }
             });
@@ -38,7 +37,7 @@ public class CombatTimer {
 
     public static boolean isInCombat(UUID uuid) {
         try {
-            return PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid).getCombattime() >= Instant.now().getEpochSecond();
+            return PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid).getCombatTime() >= Instant.now().getEpochSecond();
         } catch (Exception e) {
             return false;
         }
