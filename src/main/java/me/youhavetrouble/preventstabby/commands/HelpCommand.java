@@ -3,7 +3,6 @@ package me.youhavetrouble.preventstabby.commands;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
-import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -23,7 +22,7 @@ public class HelpCommand {
                         .append(Component.newline())
                         .append(PluginMessages.MINIMESSAGE.deserialize("<blue>/pvp <aqua><bold>toggle</bold> <white>- toggles PvP status"));
             }
-            PreventStabby.getAudiences().sender(sender).sendMessage(helpComponent, MessageType.SYSTEM);
+            PreventStabby.getAudiences().sender(sender).sendMessage(helpComponent);
         });
     }
 

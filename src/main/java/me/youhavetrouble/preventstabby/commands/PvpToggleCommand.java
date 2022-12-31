@@ -17,7 +17,7 @@ public class PvpToggleCommand {
                 return;
             }
 
-            if (args.length == 1) {
+            if (args.length <= 1) {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     if (CombatTimer.isInCombat(player.getUniqueId())) {
@@ -60,12 +60,6 @@ public class PvpToggleCommand {
                     message = PreventStabby.getPlugin().getConfigCache().getPvp_disabled_other();
                 }
                 PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
-            } else {
-                if (PreventStabbyPermission.COMMAND_TOGGLE_OTHERS.doesCommandSenderHave(sender)) {
-                    PluginMessages.sendMessage(sender, "Try /pvp toggle <player>");
-                } else {
-                    PluginMessages.sendMessage(sender, "Try /pvp toggle");
-                }
             }
         });
     }

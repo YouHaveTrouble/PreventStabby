@@ -20,7 +20,7 @@ public class MainCommand implements TabExecutor {
     private final HashMap<String, PreventStabbyPermission> subCommands = new HashMap<>();
 
     public MainCommand() {
-        subCommands.put("help", PreventStabbyPermission.COMMAND);
+        subCommands.put("help", PreventStabbyPermission.COMMAND_HELP);
         subCommands.put("toggle", PreventStabbyPermission.COMMAND_TOGGLE);
         subCommands.put("on", PreventStabbyPermission.COMMAND_TOGGLE);
         subCommands.put("enable", PreventStabbyPermission.COMMAND_TOGGLE);
@@ -36,34 +36,35 @@ public class MainCommand implements TabExecutor {
             PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
             return true;
         }
-        if (args.length >= 1) {
-            switch (args[0].toLowerCase()) {
-                case "help":
-                    HelpCommand.help(sender, args);
-                    break;
-                case "toggle":
-                    PvpToggleCommand.toggle(sender, args);
-                    break;
-                case "on":
-                case "enable":
-                    PvpToggleCommand.enable(sender, args);
-                    break;
-                case "off":
-                case "disable":
-                    PvpToggleCommand.disable(sender, args);
-                    break;
-                case "reload":
-                    ReloadCommand.reload(sender);
-                    break;
-                case "override":
-                    GlobalToggleCommand.globalToggle(sender, args);
-                    break;
-                default:
-                    PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_such_command());
-                    break;
-            }
-        } else {
-            HelpCommand.help(sender, args);
+        if (args.length == 0) {
+            PvpToggleCommand.toggle(sender, args);
+            return true;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "help":
+                HelpCommand.help(sender, args);
+                break;
+            case "toggle":
+                PvpToggleCommand.toggle(sender, args);
+                break;
+            case "on":
+            case "enable":
+                PvpToggleCommand.enable(sender, args);
+                break;
+            case "off":
+            case "disable":
+                PvpToggleCommand.disable(sender, args);
+                break;
+            case "reload":
+                ReloadCommand.reload(sender);
+                break;
+            case "override":
+                GlobalToggleCommand.globalToggle(sender, args);
+                break;
+            default:
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_such_command());
+                break;
         }
         return true;
     }

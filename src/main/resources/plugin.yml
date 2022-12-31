@@ -25,12 +25,20 @@ permissions:
   preventstabby.command.toggle:
     default: true
     description: Allows usage of /pvp <toggle/enable/disable> command
+    children:
+      preventstabby.command: true
   preventstabby.command.toggle.others:
     default: op
     description: Allows usage of /pvp <toggle/enable/disable> <player> command
+    children:
+      preventstabby.command: true
   preventstabby.command.toggle.global:
     default: op
     description: Allows usage of /pvp override <enabled/disabled/none> command
+    children:
+      preventstabby.command: true
   preventstabby.command.reload:
     default: op
     description: Allows usage of /pvp reload command
+    children:
+      preventstabby.command: true
