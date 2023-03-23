@@ -33,6 +33,16 @@ public final class PreventStabby extends JavaPlugin {
     private static BukkitAudiences adventure;
 
     @Override
+    public void onLoad() {
+        try {
+            WorldGuardHook.init();
+            worldGuardHook = true;
+        } catch (NoClassDefFoundError e) {
+            worldGuardHook = false;
+        }
+    }
+    
+    @Override
     public void onEnable() {
         plugin = this;
         Util.initData();
@@ -75,13 +85,6 @@ public final class PreventStabby extends JavaPlugin {
         MainCommand mainCommand = new MainCommand();
         pvpCommand.setExecutor(mainCommand);
         pvpCommand.setTabCompleter(mainCommand);
-
-        try {
-            WorldGuardHook.init();
-            worldGuardHook = true;
-        } catch (NoClassDefFoundError e) {
-            worldGuardHook = false;
-        }
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlacoholderApiHook(this).register();
