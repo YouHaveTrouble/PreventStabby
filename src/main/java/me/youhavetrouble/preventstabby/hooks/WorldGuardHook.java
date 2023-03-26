@@ -12,9 +12,8 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import me.youhavetrouble.preventstabby.PreventStabby;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class WorldGuardHook {
 
@@ -22,19 +21,18 @@ public class WorldGuardHook {
     public static StateFlag FORCE_PVP_FLAG;
 
     public static void init() {
-        PreventStabby plugin = PreventStabby.getPlugin();
         try {
             Class.forName("com.sk89q.worldguard.protection.flags.registry.FlagRegistry");
             WorldGuardPlugin worldGuardPlugin = WorldGuardPlugin.inst();
             if (WorldGuard.getInstance() == null || worldGuardPlugin == null) return;
-            plugin.getLogger().info("Hooking into WorldGuard");
+            Bukkit.getLogger().info("[PreventStabby] Hooking into WorldGuard");
             flagRegistry = WorldGuard.getInstance().getFlagRegistry();
-            createForcePvpFlag(plugin);
+            createForcePvpFlag();
         } catch (NoClassDefFoundError | ClassNotFoundException ignored) {
         }
     }
 
-    private static void createForcePvpFlag(Plugin plugin) {
+    private static void createForcePvpFlag() {
         if (flagRegistry == null) return;
         String flagName = "preventstabby-force-pvp";
         try {
@@ -46,7 +44,7 @@ public class WorldGuardHook {
             if (existing instanceof StateFlag) {
                 FORCE_PVP_FLAG = (StateFlag) existing;
             } else {
-                plugin.getLogger().severe("There is a conflict between flag names!");
+                Bukkit.getLogger().severe("[PreventStabby] There is a conflict between flag names!");
             }
         }
     }
