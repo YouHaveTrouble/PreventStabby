@@ -16,7 +16,7 @@ public class SmartCache {
                 try {
                     Player player = Bukkit.getPlayer(e.getKey());
                     if (player != null && player.isOnline()) {
-                        PreventStabby.getPlugin().getPlayerManager().refreshPlayersCacheTime(e.getKey());
+                        e.getValue().refreshCacheTime();
                     }
                 } catch (NullPointerException ignored) {}
             }
@@ -32,8 +32,9 @@ public class SmartCache {
     public PlayerData getPlayerData(UUID uuid) {
         // Try to get data from cache and refresh it
         try {
-            PreventStabby.getPlugin().getPlayerManager().refreshPlayersCacheTime(uuid);
-            return PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid);
+            PlayerData data = PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid);
+            data.refreshCacheTime();
+            return data;
         } catch (NullPointerException e) {
             // If player data is not in cache get it from database and put into cache
             try {

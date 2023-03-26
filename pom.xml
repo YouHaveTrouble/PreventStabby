@@ -6,7 +6,7 @@
 
     <groupId>me.youhavetrouble</groupId>
     <artifactId>PreventStabby</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
     <packaging>jar</packaging>
 
     <name>PreventStabby</name>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

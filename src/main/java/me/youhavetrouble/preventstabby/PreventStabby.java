@@ -76,18 +76,23 @@ public final class PreventStabby extends JavaPlugin {
         pvpCommand.setExecutor(mainCommand);
         pvpCommand.setTabCompleter(mainCommand);
 
-        try {
-            WorldGuardHook.init();
-            worldGuardHook = true;
-        } catch (NoClassDefFoundError e) {
-            worldGuardHook = false;
-        }
-
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlacoholderApiHook(this).register();
         }
 
         Metrics metrics = new Metrics(this, 14074);
+    }
+
+    @Override
+    public void onLoad() {
+        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+            try {
+                WorldGuardHook.init();
+                worldGuardHook = true;
+            } catch (NoClassDefFoundError e) {
+                worldGuardHook = false;
+            }
+        }
     }
 
     public static boolean worldGuardHookEnabled() {

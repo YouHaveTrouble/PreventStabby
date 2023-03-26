@@ -59,10 +59,10 @@ public class PlayerManager {
 
     }
 
-    public void refreshPlayersCacheTime(UUID uuid) {
-        playerList.get(uuid).refreshCachetime();
-    }
-
+    /**
+     * Sets player in combat and sets combat time to the interval set in config.
+     * @see PlayerData#refreshCombatTime()
+     */
     public void refreshPlayersCombatTime(UUID uuid) {
         PlayerData data = playerList.get(uuid);
         if (data == null) return;
@@ -70,25 +70,46 @@ public class PlayerManager {
         if (player == null || player.isDead()) return;
         data.refreshCombatTime();
         data.setInCombat(true);
-
     }
 
+    /**
+     * Gets player's PlayerData object. Returns null when player with provided UUID doesn't exist.
+     * @param uuid Player's UUID.
+     * @return Player's PlayerData object or null if player doesn't exist.
+     */
     public PlayerData getPlayer(UUID uuid) {
         return playerList.get(uuid);
     }
 
-    public void addPlayer(UUID uuid, PlayerData data) {
+    protected void addPlayer(UUID uuid, PlayerData data) {
         playerList.put(uuid, data);
     }
 
+    /**
+     * Returns true if player has personal pvp enabled, false otherwise.
+     * @param uuid Player's UUID.
+     * @return True if player has personal pvp enabled, false otherwise.
+     * @see PlayerData#isPvpEnabled()
+     */
     public boolean getPlayerPvPState(UUID uuid) {
         return PreventStabby.getPlugin().getSmartCache().getPlayerData(uuid).isPvpEnabled();
     }
 
+    /**
+     * Sets player's personal pvp state.
+     * @param uuid Player's UUID.
+     * @param state Pvp state to set.
+     * @see PlayerData#setPvpEnabled(boolean)
+     */
     public void setPlayerPvpState(UUID uuid, boolean state) {
         PreventStabby.getPlugin().getSmartCache().getPlayerData(uuid).setPvpEnabled(state);
     }
 
+    /**
+     * Toggles player's personal pvp state.
+     * @param uuid Player's UUID.
+     * @return Player's personal pvp state after the change.
+     */
     public boolean togglePlayerPvpState(UUID uuid) {
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
         if (smartCache.getPlayerData(uuid).isPvpEnabled()) {
@@ -100,10 +121,26 @@ public class PlayerManager {
         }
     }
 
+    /**
+     * Check if attacker can harm the victim. Both of them have to have personal pvp enabled and none of them can have
+     * any kind of spawn or teleport protection.
+     * @param attacker Atacker's UUID.
+     * @param victim Victim's UUID.
+     * @param sendDenyMessage Should plugin send a message that there was attempt at damaging to both players?
+     * @return Whenever attacker can harm the victim.
+     */
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage) {
         return canDamage(attacker, victim, sendDenyMessage, true);
     }
 
+    /**
+     * Check if attacker can harm the victim.
+     * @param attacker Atacker's UUID.
+     * @param victim Victim's UUID.
+     * @param sendDenyMessage Should plugin send a message that there was attempt at damaging to both players?
+     * @param checkVictimSpawnProtection Should teleport and spawn protections be taken into account?
+     * @return Whenever attacker can harm the victim.
+     */
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
 
         if (hasLoginProtection(attacker) || hasTeleportProtection(attacker)) return false;
@@ -149,8 +186,8 @@ public class PlayerManager {
     }
 
     /**
-     * @param uuid Player UUIDs
-     * @return true if any of the provided UUIDs has spawn protection
+     * @param uuid Player UUIDs.
+     * @return True if any of the provided UUIDs has spawn protection.
      */
     public boolean hasLoginProtection(UUID... uuid) {
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
@@ -161,15 +198,27 @@ public class PlayerManager {
         return false;
     }
 
+    /**
+     * @param uuid Player UUID.
+     * @return True if player tied to the uuid currently has teleport protection.
+     */
     public boolean hasTeleportProtection(UUID uuid) {
         SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
         return Instant.now().getEpochSecond() < smartCache.getPlayerData(uuid).getTeleportTimestamp();
     }
 
+    /**
+     * Returns current forced pvp state.
+     * @return Current forced pvp state.
+     */
     public PvpState getForcedPvpState() {
         return pvpForcedState;
     }
 
+    /**
+     * Sets current forced pvp state.
+     * @param forcedPvpState New forced pvp state.
+     */
     public void setForcedPvpState(PvpState forcedPvpState) {
         this.pvpForcedState = forcedPvpState;
     }
