@@ -21,7 +21,8 @@ public class ConfigCache {
             cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
             pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
             cant_do_that_during_combat, cannot_attack_mounts_attacker, cannot_attack_mounts_victim, force_pvp_on,
-            force_pvp_off, force_pvp_none, placeholder_combat_time, placeholder_not_in_combat, cannot_attack_pvp_force_off;
+            force_pvp_off, force_pvp_none, placeholder_combat_time, placeholder_not_in_combat, cannot_attack_pvp_force_off,
+            placeholder_pvp_forced_true, placeholder_pvp_forced_false, placeholder_pvp_forced_none;
     @Getter private final double lava_and_fire_stopper_radius;
     @Getter private final long cache_time, combat_time, login_protection_time, teleport_protection_time;
     @Getter private final Set<String> combatBlockedCommands = new HashSet<>();
@@ -91,6 +92,9 @@ public class ConfigCache {
                 addDefault("messages.force_pvp_none", "PvP state is not forced now");
                 addDefault("placeholder.placeholder_combat_time", "Combat time: %time%");
                 addDefault("placeholder.not_in_combat", "Not in combat");
+                addDefault("placeholder.pvp_forced_true", "PvP is forced on");
+                addDefault("placeholder.pvp_forced_false", "PvP is forced off");
+                addDefault("placeholder.pvp_forced_none", "PvP is not forced");
             }
         };
 
@@ -152,6 +156,10 @@ public class ConfigCache {
 
         this.placeholder_combat_time = config.getString("placeholder.placeholder_combat_time", "Combat time: %time%");
         this.placeholder_not_in_combat = config.getString("placeholder.not_in_combat", "Not in combat");
+
+        this.placeholder_pvp_forced_true = config.getString("placeholder.pvp_forced_true", "PvP is forced on");
+        this.placeholder_pvp_forced_false = config.getString("placeholder.pvp_forced_false", "PvP is forced off");
+        this.placeholder_pvp_forced_none = config.getString("placeholder.pvp_forced_none", "PvP is not forced");
     }
 
 

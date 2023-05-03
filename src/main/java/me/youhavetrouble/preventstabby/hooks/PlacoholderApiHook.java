@@ -3,6 +3,7 @@ package me.youhavetrouble.preventstabby.hooks;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,15 @@ public class PlacoholderApiHook extends PlaceholderExpansion {
             case "in_combat":
                 if (!player.isOnline()) return String.valueOf(false);
                 return String.valueOf(plugin.getPlayerManager().getPlayer(player.getUniqueId()).isInCombat());
+            case "pvp_forced":
+                switch (PreventStabby.getPlugin().getPlayerManager().getForcedPvpState()) {
+                    case NONE:
+                        return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_pvp_forced_none()));
+                    case ENABLED:
+                        return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_pvp_forced_true()));
+                    case DISABLED:
+                        return legacyComponentSerializer.serialize(PluginMessages.parseMessage(plugin.getConfigCache().getPlaceholder_pvp_forced_false()));
+                }
             default:
                 return null;
         }
