@@ -27,8 +27,10 @@ public class PetTargettingPlayerListener implements Listener {
         UUID damager = entity.getOwner().getUniqueId();
         UUID victim = event.getTarget().getUniqueId();
 
-        if (PreventStabby.getPlugin().getPlayerManager().canDamage(damager, victim, true, false)) {
-            if (event.getReason().equals(EntityTargetEvent.TargetReason.TEMPT)) {
+        boolean tempting = event.getReason().equals(EntityTargetEvent.TargetReason.TEMPT);
+
+        if (PreventStabby.getPlugin().getPlayerManager().canDamage(damager, victim, !tempting, false)) {
+            if (tempting) {
                 event.setCancelled(true);
                 return;
             }
