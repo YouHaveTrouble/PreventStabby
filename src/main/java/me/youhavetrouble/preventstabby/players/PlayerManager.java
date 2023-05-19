@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -142,6 +143,22 @@ public class PlayerManager {
      * @return Whenever attacker can harm the victim.
      */
     public boolean canDamage(UUID attacker, UUID victim, boolean sendDenyMessage, boolean checkVictimSpawnProtection) {
+        ConfigCache config = PreventStabby.getPlugin().getConfigCache();
+        String attackerMessage = sendDenyMessage ? config.getCannot_attack_attacker() : null;
+        String victimMessage = sendDenyMessage ? config.getCannot_attack_victim() : null;
+        return canDamage(attacker, victim, attackerMessage, victimMessage, checkVictimSpawnProtection);
+    }
+
+    /**
+     * Check if attacker can harm the victim.
+     * @param attacker Atacker's UUID.
+     * @param victim Victim's UUID.
+     * @param attackerDenyMessage Message that action was denied to the attacker.
+     * @param victimDenyMessage Message that action was denied to the victim.
+     * @param checkVictimSpawnProtection Should teleport and spawn protections be taken into account?
+     * @return Whenever attacker can harm the victim.
+     */
+    public boolean canDamage(UUID attacker, UUID victim, @Nullable String attackerDenyMessage, @Nullable String victimDenyMessage, boolean checkVictimSpawnProtection) {
 
         if (hasLoginProtection(attacker) || hasTeleportProtection(attacker)) return false;
         if (checkVictimSpawnProtection && hasLoginProtection(victim)) return false;
@@ -165,9 +182,8 @@ public class PlayerManager {
             if (PreventStabby.worldGuardHookEnabled() && attackerPlayer != null && WorldGuardHook.isPlayerForcedToPvp(attackerPlayer))
                 return true;
 
-            if (sendDenyMessage) {
-                ConfigCache config = PreventStabby.getPlugin().getConfigCache();
-                PluginMessages.sendActionBar(attacker, config.getCannot_attack_attacker());
+            if (attackerDenyMessage != null) {
+                PluginMessages.sendActionBar(attacker, attackerDenyMessage);
             }
             return false;
         }
@@ -176,7 +192,7 @@ public class PlayerManager {
             if (PreventStabby.worldGuardHookEnabled() && victimPlayer != null && WorldGuardHook.isPlayerForcedToPvp(victimPlayer))
                 return true;
 
-            if (sendDenyMessage) {
+            if (victimDenyMessage != null) {
                 ConfigCache config = PreventStabby.getPlugin().getConfigCache();
                 PluginMessages.sendActionBar(attacker, config.getCannot_attack_victim());
             }
