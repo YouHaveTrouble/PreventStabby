@@ -18,37 +18,36 @@ import java.util.UUID;
 @PreventStabbyListener
 public class PlayerHitPetWithProjectileListener implements Listener {
 
-     /**
+    /**
      * Cancels damage done by projectiles to pets of players with pvp off
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerHitPetWithProjectile(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Tameable && event.getDamager() instanceof Projectile) {
-            Projectile projectile = (Projectile) event.getDamager();
-            if (!(projectile.getShooter() instanceof Player)) return;
-            Tameable tameable = (Tameable) event.getEntity();
-            if (tameable.getOwner() == null) return;
+        if (!(event.getEntity() instanceof Tameable) || !(event.getDamager() instanceof Projectile)) return;
+        Projectile projectile = (Projectile) event.getDamager();
+        if (!(projectile.getShooter() instanceof Player)) return;
+        Tameable tameable = (Tameable) event.getEntity();
+        if (tameable.getOwner() == null) return;
 
-            UUID damager = ((Player) projectile.getShooter()).getUniqueId();
-            UUID victim = tameable.getOwner().getUniqueId();
+        UUID damager = ((Player) projectile.getShooter()).getUniqueId();
+        UUID victim = tameable.getOwner().getUniqueId();
 
-            if (damager.equals(victim)) return;
+        if (damager.equals(victim)) return;
 
-            ConfigCache config = PreventStabby.getPlugin().getConfigCache();
-            SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
+        ConfigCache config = PreventStabby.getPlugin().getConfigCache();
 
-            if (!smartCache.getPlayerData(damager).isPvpEnabled()) {
-                PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_attacker());
-                event.setCancelled(true);
-                return;
-            }
-            if (!smartCache.getPlayerData(victim).isPvpEnabled()) {
-                PluginMessages.sendActionBar(damager, config.getCannot_attack_pets_victim());
-                event.setCancelled(true);
-                return;
-            }
+        if (PreventStabby.getPlugin().getPlayerManager()
+                .canDamage(
+                        damager,
+                        victim,
+                        config.getCannot_attack_pets_attacker(),
+                        config.getCannot_attack_pets_victim(),
+                        false
+                ))
             CombatTimer.refreshPlayersCombatTime(damager);
+        else
+            event.setCancelled(true);
 
-        }
+
     }
 }
