@@ -38,7 +38,7 @@ public final class PreventStabby extends JavaPlugin {
         Util.initData();
         reloadPluginConfig();
         File dbFile = new File("plugins/PreventStabby");
-        sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/database.db", dbFile);
+        sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/database.db", dbFile, getLogger());
         sqLite.createDatabaseFile();
         if (!sqLite.testConnection()) {
             getLogger().severe("Error with accessing database. Check if server has write rights.");
