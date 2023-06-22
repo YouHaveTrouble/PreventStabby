@@ -24,7 +24,6 @@ public class PluginMessages {
     }
 
     public static Component parseMessage(CommandSender sender,String message) {
-
         if (sender instanceof Player && isPlaceholderApiEnabled()) {
             Player player = (Player) sender;
             message = PlaceholderAPI.setPlaceholders(player, message);
@@ -37,18 +36,18 @@ public class PluginMessages {
     }
 
     public static void sendMessage(CommandSender sender, String message) {
-        if (message == null) return;
+        if ("".equals(message)) return;
         audiences.sender(sender).sendMessage(parseMessage(sender, message));
     }
 
     public static void sendActionBar(Player player, String message) {
-        if (message == null) return;
+        if ("".equals(message)) return;
         Component parsedMessage = parseMessage(player, message);
         audiences.player(player).sendActionBar(parsedMessage);
     }
 
     public static void sendActionBar(UUID uuid, String message) {
-        if (message == null) return;
+        if ("".equals(message)) return;
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return;
         sendActionBar(player, message);
@@ -60,7 +59,7 @@ public class PluginMessages {
     }
 
     public static void broadcastMessage(Player player, String message) {
-        if (message == null) return;
+        if ("".equals(message)) return;
         message = parsePlayerName(player, message);
         if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
@@ -69,6 +68,7 @@ public class PluginMessages {
     }
 
     public static void broadcastMessage(String message) {
+        if ("".equals(message)) return;
         audiences.all().sendMessage(parseMessage(message));
     }
 
