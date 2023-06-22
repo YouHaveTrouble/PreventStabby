@@ -37,15 +37,18 @@ public class PluginMessages {
     }
 
     public static void sendMessage(CommandSender sender, String message) {
+        if (message == null) return;
         audiences.sender(sender).sendMessage(parseMessage(sender, message));
     }
 
     public static void sendActionBar(Player player, String message) {
+        if (message == null) return;
         Component parsedMessage = parseMessage(player, message);
         audiences.player(player).sendActionBar(parsedMessage);
     }
 
     public static void sendActionBar(UUID uuid, String message) {
+        if (message == null) return;
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return;
         sendActionBar(player, message);
@@ -57,6 +60,7 @@ public class PluginMessages {
     }
 
     public static void broadcastMessage(Player player, String message) {
+        if (message == null) return;
         message = parsePlayerName(player, message);
         if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
