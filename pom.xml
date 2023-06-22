@@ -43,15 +43,15 @@
                             <relocations>
                                 <relocation>
                                     <pattern>io.github.thatsmusic99</pattern>
-                                    <shadedPattern>configurationmaster</shadedPattern>
+                                    <shadedPattern>me.youhavetrouble.preventstabby.configurationmaster</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>bstats</shadedPattern>
+                                    <shadedPattern>me.youhavetrouble.preventstabby.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.kyori</pattern>
-                                    <shadedPattern>kyori</shadedPattern>
+                                    <shadedPattern>me.youhavetrouble.preventstabby.kyori</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
