@@ -27,6 +27,11 @@ public class ConfigCache {
             cant_do_that_during_combat, cannot_attack_mounts_attacker, cannot_attack_mounts_victim, force_pvp_on,
             force_pvp_off, force_pvp_none, placeholder_combat_time, placeholder_not_in_combat, cannot_attack_pvp_force_off,
             placeholder_pvp_forced_true, placeholder_pvp_forced_false, placeholder_pvp_forced_none;
+
+    public final String cannotAttackForcedPvpOff, cannotAttackTeleportOrSpawnProtectionAttacker,
+            cannotAttackTeleportOrSpawnProtectionVictim, cannotAttackPetsTeleportOrSpawnProtectionAttacker,
+            cannotAttackMountsTeleportOrSpawnProtectionAttacker;
+
     @Getter private final double lava_and_fire_stopper_radius;
     @Getter private final long cache_time, combat_time, login_protection_time, teleport_protection_time;
     @Getter private final Set<String> combatBlockedCommands = new HashSet<>();
@@ -99,6 +104,12 @@ public class ConfigCache {
                 addDefault("placeholder.pvp_forced_true", "PvP is forced on");
                 addDefault("placeholder.pvp_forced_false", "PvP is forced off");
                 addDefault("placeholder.pvp_forced_none", "PvP is not forced");
+
+                addDefault("messages.cannot_attack_teleport_or_spawn_protection", "<red>You can't attack players that have recently teleported or logged in");
+                addDefault("messages.cannot_attack_teleport_or_spawn_protection_attacker", "<red>You can't attack players while you have recently teleported or logged in");
+                addDefault("messages.cannot_attack_pets_teleport_or_spawn_protection_attacker", "<red>You can't attack pets while you have recently teleported or logged in");
+                addDefault("messages.cannot_attack_mounts_teleport_or_spawn_protection_attacker", "<red>You can't attack mounts while you have recently teleported or logged in");
+                addDefault("messages.cannot_attack_teleport_or_spawn_protection_victim", "<red>You can't attack players that have recently teleported or logged in");
             }
         };
 
@@ -147,6 +158,7 @@ public class ConfigCache {
         this.cannot_attack_mounts_victim = config.getString("messages.cannot_attack_mounts_victim", "<red>You can't attack mounts of players that have PvP turned off");
         this.cannot_attack_mounts_attacker = config.getString("messages.cannot_attack_mounts_attacker", "<red>You can't attack mounts while you have PvP turned off");
         this.cannot_attack_pvp_force_off = config.getString("messages.cannot_attack_pvp_force_off", "<red>PvP is forcibly disabled");
+
         this.no_permission = config.getString("messages.no_permission", "<red>You don't have permission to use that.");
         this.no_such_command = config.getString("messages.no_such_command", "<red>No such command.");
         this.pvp_enabled_other = config.getString("messages.pvp_enabled_others", "<red>You've enabled %player%'s PvP.");
@@ -164,6 +176,12 @@ public class ConfigCache {
         this.placeholder_pvp_forced_true = config.getString("placeholder.pvp_forced_true", "PvP is forced on");
         this.placeholder_pvp_forced_false = config.getString("placeholder.pvp_forced_false", "PvP is forced off");
         this.placeholder_pvp_forced_none = config.getString("placeholder.pvp_forced_none", "PvP is not forced");
+
+        this.cannotAttackForcedPvpOff = config.getString("messages.cannot_attack_pvp_force_off", "<red>PvP is forcibly disabled");
+        this.cannotAttackTeleportOrSpawnProtectionAttacker = config.getString("messages.cannot_attack_teleport_or_spawn_protection_attacker", "<red>You can't attack players while they have teleport or spawn protection");
+        this.cannotAttackPetsTeleportOrSpawnProtectionAttacker = config.getString("messages.cannot_attack_pets_teleport_or_spawn_protection_attacker", "<red>You can't attack pets while you have teleport or spawn protection");
+        this.cannotAttackMountsTeleportOrSpawnProtectionAttacker = config.getString("messages.cannot_attack_mounts_teleport_or_spawn_protection_attacker", "<red>You can't attack mounts while you have teleport or spawn protection");
+        this.cannotAttackTeleportOrSpawnProtectionVictim = config.getString("messages.cannot_attack_teleport_or_spawn_protection_victim", "<red>You can't attack players while you have teleport or spawn protection");
     }
 
 

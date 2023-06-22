@@ -6,11 +6,8 @@ import me.youhavetrouble.preventstabby.hooks.PlaceholderApiHook;
 import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.players.PlayerManager;
 import me.youhavetrouble.preventstabby.players.SmartCache;
-import me.youhavetrouble.preventstabby.util.PluginMessages;
-import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
-import me.youhavetrouble.preventstabby.util.DatabaseSQLite;
+import me.youhavetrouble.preventstabby.util.*;
 import lombok.Getter;
-import me.youhavetrouble.preventstabby.util.Util;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
@@ -26,6 +23,8 @@ public final class PreventStabby extends JavaPlugin {
     @Getter private static PreventStabby plugin;
     private ConfigCache configCache;
     private PlayerManager playerManager;
+
+    private DamageUtil damageUtil;
     private DatabaseSQLite sqLite;
     private SmartCache smartCache;
     private static boolean worldGuardHook;
@@ -48,6 +47,7 @@ public final class PreventStabby extends JavaPlugin {
         }
         adventure = BukkitAudiences.create(this);
         playerManager = new PlayerManager();
+        damageUtil = new DamageUtil(this);
         smartCache = new SmartCache();
         smartCache.runSmartCache();
 
@@ -116,6 +116,10 @@ public final class PreventStabby extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public DamageUtil getDamageUtil() {
+        return damageUtil;
     }
 
     public DatabaseSQLite getSqLite() {return sqLite;}
