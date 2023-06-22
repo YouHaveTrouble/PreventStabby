@@ -3,6 +3,7 @@ package me.youhavetrouble.preventstabby.players;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -13,39 +14,35 @@ public class SmartCache {
         Bukkit.getScheduler().runTaskTimerAsynchronously(PreventStabby.getPlugin(), () -> {
             // Refresh cache timer if player is online
             for (Map.Entry<UUID, PlayerData> e : PreventStabby.getPlugin().getPlayerManager().getPlayerList().entrySet()) {
-                try {
-                    Player player = Bukkit.getPlayer(e.getKey());
-                    if (player != null && player.isOnline()) {
-                        e.getValue().refreshCacheTime();
-                    }
-                } catch (NullPointerException ignored) {}
+                if (e == null) continue;
+                Player player = Bukkit.getPlayer(e.getKey());
+                if (player != null && player.isOnline()) {
+                    e.getValue().refreshCacheTime();
+                }
             }
             // Check for entries that should be invalidated
             try {
                 long now = Instant.now().getEpochSecond();
                 PreventStabby.getPlugin().getPlayerManager().getPlayerList().entrySet()
                         .removeIf(cacheEntry -> cacheEntry.getValue().getCachetime() < now);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }, 100, 100);
     }
 
     public PlayerData getPlayerData(UUID uuid) {
         // Try to get data from cache and refresh it
-        try {
-            PlayerData data = PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid);
+        PlayerData data = PreventStabby.getPlugin().getPlayerManager().getPlayer(uuid);
+        if (data != null) {
             data.refreshCacheTime();
             return data;
-        } catch (NullPointerException e) {
-            // If player data is not in cache get it from database and put into cache
-            try {
-                PlayerData playerData = PreventStabby.getPlugin().getSqLite().getPlayerInfo(uuid);
-                PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, playerData);
-                return playerData;
-            } catch (NullPointerException ex) {
-                // Return false if database call fails
-                return new PlayerData(uuid,false);
-            }
         }
+        PlayerData playerData = PreventStabby.getPlugin().getSqLite().getPlayerInfo(uuid);
+        if (playerData == null) {
+            playerData = new PlayerData(uuid, false);
+        }
+        PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, playerData);
+        return playerData;
     }
 
     public void setPlayerPvpState(UUID uuid, boolean state) {

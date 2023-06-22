@@ -45,4 +45,10 @@ public class PlayerLeaveCombatEvent extends Event implements Cancellable {
     public HandlerList getHandlers() {
         return HANDLERS;
     }
+
+    @NotNull
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
 }

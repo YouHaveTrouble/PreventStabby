@@ -9,7 +9,6 @@ public enum PreventStabbyPermission {
     COMMAND_TOGGLE_OTHERS("command.toggle.others"),
     COMMAND_RELOAD("command.reload"),
     COMMAND_GLOBAL_TOGGLE("command.toggle.global"),
-
     COMMAND_HELP("command.help");
 
     private final String permission;

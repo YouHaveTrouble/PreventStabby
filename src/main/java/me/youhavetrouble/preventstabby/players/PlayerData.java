@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * PreventStabby player data keeper.<br>
+ * PreventStabby player data keeper.
  */
 public class PlayerData {
 

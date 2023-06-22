@@ -10,6 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * TODO get rid of lombok
+ * TODO parse messages into components and cache that
+ */
 public class ConfigCache {
 
     private final PreventStabby plugin = PreventStabby.getPlugin();

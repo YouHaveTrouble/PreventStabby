@@ -36,24 +36,26 @@ public class PlayerManager {
             for (PlayerData playerData : playerList.values()) {
                 UUID uuid = playerData.getPlayerUuid();
                 if (!CombatTimer.isInCombat(uuid)) {
-                    if (playerData.getLastCombatCheck()) {
-                        Player player = Bukkit.getPlayer(uuid);
-                        if (player == null) continue;
-                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
-                        Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
-                            Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
-                            if (playerLeaveCombatEvent.isCancelled()) {
-                                playerData.refreshCombatTime();
-                                return;
-                            }
-                            playerData.setLastCombatCheck(false);
-                            playerData.setInCombat(false);
-                            PluginMessages.sendActionBar(uuid, PreventStabby.getPlugin().getConfigCache().getLeaving_combat());
-                        });
-                    }
-                } else {
                     playerData.setLastCombatCheck(true);
+                    continue;
                 }
+                if (!playerData.getLastCombatCheck()) continue;
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) continue;
+
+                Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    if (PlayerLeaveCombatEvent.getHandlerList().getRegisteredListeners().length > 0) {
+                        PlayerLeaveCombatEvent playerLeaveCombatEvent = new PlayerLeaveCombatEvent(player);
+                        Bukkit.getPluginManager().callEvent(playerLeaveCombatEvent);
+                        if (playerLeaveCombatEvent.isCancelled()) {
+                            playerData.refreshCombatTime();
+                            return;
+                        }
+                    }
+                    playerData.setLastCombatCheck(false);
+                    playerData.setInCombat(false);
+                    PluginMessages.sendActionBar(uuid, PreventStabby.getPlugin().getConfigCache().getLeaving_combat());
+                });
             }
         }, 20, 20);
 
@@ -62,6 +64,7 @@ public class PlayerManager {
 
     /**
      * Sets player in combat and sets combat time to the interval set in config.
+     *
      * @see PlayerData#refreshCombatTime()
      */
     public void refreshPlayersCombatTime(UUID uuid) {
@@ -75,6 +78,7 @@ public class PlayerManager {
 
     /**
      * Gets player's PlayerData object. Returns null when player with provided UUID doesn't exist.
+     *
      * @param uuid Player's UUID.
      * @return Player's PlayerData object or null if player doesn't exist.
      */
@@ -88,6 +92,7 @@ public class PlayerManager {
 
     /**
      * Returns true if player has personal pvp enabled, false otherwise.
+     *
      * @param uuid Player's UUID.
      * @return True if player has personal pvp enabled, false otherwise.
      * @see PlayerData#isPvpEnabled()
@@ -98,7 +103,8 @@ public class PlayerManager {
 
     /**
      * Sets player's personal pvp state.
-     * @param uuid Player's UUID.
+     *
+     * @param uuid  Player's UUID.
      * @param state Pvp state to set.
      * @see PlayerData#setPvpEnabled(boolean)
      */
@@ -108,25 +114,23 @@ public class PlayerManager {
 
     /**
      * Toggles player's personal pvp state.
+     *
      * @param uuid Player's UUID.
      * @return Player's personal pvp state after the change.
      */
     public boolean togglePlayerPvpState(UUID uuid) {
-        SmartCache smartCache = PreventStabby.getPlugin().getSmartCache();
-        if (smartCache.getPlayerData(uuid).isPvpEnabled()) {
-            smartCache.getPlayerData(uuid).setPvpEnabled(false);
-            return false;
-        } else {
-            smartCache.getPlayerData(uuid).setPvpEnabled(true);
-            return true;
-        }
+        PlayerData playerData = PreventStabby.getPlugin().getSmartCache().getPlayerData(uuid);
+        boolean newState = !playerData.isPvpEnabled();
+        playerData.setPvpEnabled(newState);
+        return newState;
     }
 
     /**
      * Check if attacker can harm the victim. Both of them have to have personal pvp enabled and none of them can have
      * any kind of spawn or teleport protection.
-     * @param attacker Atacker's UUID.
-     * @param victim Victim's UUID.
+     *
+     * @param attacker        Atacker's UUID.
+     * @param victim          Victim's UUID.
      * @param sendDenyMessage Should plugin send a message that there was attempt at damaging to both players?
      * @return Whenever attacker can harm the victim.
      */
@@ -136,9 +140,10 @@ public class PlayerManager {
 
     /**
      * Check if attacker can harm the victim.
-     * @param attacker Atacker's UUID.
-     * @param victim Victim's UUID.
-     * @param sendDenyMessage Should plugin send a message that there was attempt at damaging to both players?
+     *
+     * @param attacker                   Atacker's UUID.
+     * @param victim                     Victim's UUID.
+     * @param sendDenyMessage            Should plugin send a message that there was attempt at damaging to both players?
      * @param checkVictimSpawnProtection Should teleport and spawn protections be taken into account?
      * @return Whenever attacker can harm the victim.
      */
@@ -151,10 +156,11 @@ public class PlayerManager {
 
     /**
      * Check if attacker can harm the victim.
-     * @param attacker Atacker's UUID.
-     * @param victim Victim's UUID.
-     * @param attackerDenyMessage Message that action was denied to the attacker.
-     * @param victimDenyMessage Message that action was denied to the victim.
+     *
+     * @param attacker                   Atacker's UUID.
+     * @param victim                     Victim's UUID.
+     * @param attackerDenyMessage        Message that action was denied to the attacker.
+     * @param victimDenyMessage          Message that action was denied to the victim.
      * @param checkVictimSpawnProtection Should teleport and spawn protections be taken into account?
      * @return Whenever attacker can harm the victim.
      */
@@ -225,6 +231,7 @@ public class PlayerManager {
 
     /**
      * Returns current forced pvp state.
+     *
      * @return Current forced pvp state.
      */
     public PvpState getForcedPvpState() {
@@ -233,6 +240,7 @@ public class PlayerManager {
 
     /**
      * Sets current forced pvp state.
+     *
      * @param forcedPvpState New forced pvp state.
      */
     public void setForcedPvpState(PvpState forcedPvpState) {

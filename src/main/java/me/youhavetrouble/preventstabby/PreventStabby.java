@@ -2,7 +2,7 @@ package me.youhavetrouble.preventstabby;
 
 import me.youhavetrouble.preventstabby.commands.MainCommand;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
-import me.youhavetrouble.preventstabby.hooks.PlacoholderApiHook;
+import me.youhavetrouble.preventstabby.hooks.PlaceholderApiHook;
 import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.players.PlayerManager;
 import me.youhavetrouble.preventstabby.players.SmartCache;
@@ -77,7 +77,7 @@ public final class PreventStabby extends JavaPlugin {
         pvpCommand.setTabCompleter(mainCommand);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PlacoholderApiHook(this).register();
+            new PlaceholderApiHook(this).register();
         }
 
         Metrics metrics = new Metrics(this, 14074);
