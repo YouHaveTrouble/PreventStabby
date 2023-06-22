@@ -17,8 +17,11 @@ public class CombatTimer {
             if (player == null || !player.isOnline()) return;
             PlayerEnterCombatEvent playerEnterCombatEvent = new PlayerEnterCombatEvent(player);
             Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
-                Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
-                if (playerEnterCombatEvent.isCancelled()) return;
+                if (PlayerEnterCombatEvent.getHandlerList().getRegisteredListeners().length > 0) {
+                    Bukkit.getPluginManager().callEvent(playerEnterCombatEvent);
+                    if (playerEnterCombatEvent.isCancelled()) return;
+                }
+
                 PreventStabby.getPlugin().getPlayerManager().refreshPlayersCombatTime(uuid);
 
                 if (combattime <= 0) {
