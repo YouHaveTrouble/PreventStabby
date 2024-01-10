@@ -2,7 +2,6 @@ package me.youhavetrouble.preventstabby.players;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 
-import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -11,16 +10,15 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID playerUuid;
-    private long cachetime, combattime, loginTimestamp, teleportTimestamp;
-    private boolean pvpEnabled, lastCombatCheck, inCombat;
+    private long lastAccessTimestamp, combatStartTimestamp, loginTimestamp, teleportTimestamp;
+    private boolean pvpEnabled;
 
     public PlayerData(UUID playerUuid, boolean pvpEnabled) {
         this.playerUuid = playerUuid;
         this.pvpEnabled = pvpEnabled;
-        this.combattime = Instant.now().getEpochSecond()-1;
-        this.loginTimestamp = Instant.now().getEpochSecond()-1;
-        this.teleportTimestamp = Instant.now().getEpochSecond()-1;
-        this.inCombat = false;
+        this.combatStartTimestamp = Long.MIN_VALUE;
+        this.loginTimestamp = Long.MIN_VALUE;
+        this.teleportTimestamp = Long.MIN_VALUE;
         refreshCacheTime();
     }
 
@@ -41,72 +39,99 @@ public class PlayerData {
      * Sets player's personal pvp state.
      * @param pvpEnabled Pvp state to set.
      */
-    public void setPvpEnabled(boolean pvpEnabled) {
+    protected void setPvpEnabled(boolean pvpEnabled) {
         this.pvpEnabled = pvpEnabled;
     }
 
-    protected long getCachetime() {
-        return cachetime;
+    /**
+     * Returns player's last access timestamp.
+     * @return Player's last access timestamp.
+     */
+    protected long getLastAccessTimestamp() {
+        return lastAccessTimestamp;
     }
 
+    protected boolean isCacheExpired() {
+        return System.currentTimeMillis() - lastAccessTimestamp > PreventStabby.getPlugin().getConfigCache().cache_time * 1000;
+    }
+
+    /**
+     * Refreshes the last access to any of the fields
+     */
     protected void refreshCacheTime() {
-        this.cachetime = Instant.now().getEpochSecond() + PreventStabby.getPlugin().getConfigCache().getCache_time();
+        this.lastAccessTimestamp = System.currentTimeMillis();
     }
 
     /**
-     * Time left until the end of combat in seconds.
-     * @return Time left until the end of combat in seconds.<br>
-     * Return of 0 means out of combat or about to be out of combat.
+     * Retrieves the timestamp when combat started.
+     * @return The timestamp when combat started.
      */
-    public long getCombatTime() {
-        return Math.max(combattime - Instant.now().getEpochSecond(), 0);
-    }
-    
-    protected void setCombattime(long combattime) {
-        this.combattime = combattime;
+    protected long getCombatStartTimestamp() {
+        refreshCacheTime();
+        return combatStartTimestamp;
     }
 
     /**
-     * Sets player in combat and sets combat time to the interval set in config.
-     * @see PlayerManager#refreshPlayersCombatTime(UUID)
+     * Marks the player as in combat.
      */
-    public void refreshCombatTime() {
-        this.combattime = Instant.now().getEpochSecond()+ PreventStabby.getPlugin().getConfigCache().getCombat_time();
+    public void markInCombat() {
+        refreshCacheTime();
+        this.combatStartTimestamp = System.currentTimeMillis();
     }
 
-    protected boolean getLastCombatCheck() {
-        return lastCombatCheck;
+    /**
+     * Sets the login timestamp for the player.
+     * @param loginTimestamp The login timestamp to set.
+     */
+    public void setLoginTimestamp(long loginTimestamp) {
+        this.loginTimestamp = loginTimestamp;
     }
 
-    protected void setLastCombatCheck(boolean bool) {
-        lastCombatCheck = bool;
-    }
-
-    protected void setLoginTimestamp(long loginTimestamp) {
-        this.loginTimestamp = loginTimestamp + PreventStabby.getPlugin().getConfigCache().getLogin_protection_time()-1;
-    }
-
-    protected long getLoginTimestamp() {
+    /**
+     * Retrieves the login timestamp for the player.
+     * @return The login timestamp for the player.
+     */
+    public long getLoginTimestamp() {
         return loginTimestamp;
     }
 
-    protected void setTeleportTimestamp(long teleportTimestamp) {
-        this.teleportTimestamp = teleportTimestamp + PreventStabby.getPlugin().getConfigCache().getTeleport_protection_time()-1;
-    }
-
-    protected long getTeleportTimestamp() {
-        return teleportTimestamp;
+    /**
+     * Sets the timestamp of the player's teleport.
+     * @param teleportTimestamp The timestamp of the player's teleport.
+     */
+    public void setTeleportTimestamp(long teleportTimestamp) {
+        this.teleportTimestamp = teleportTimestamp;
     }
 
     /**
-     * Returns player's current combat state.
-     * @return Player's current combat state.
+     * Checks if the player is currently in combat.
+     *
+     * @return true if the player is in combat, false otherwise.
      */
     public boolean isInCombat() {
-        return inCombat;
+        refreshCacheTime();
+        return System.currentTimeMillis() - (combatStartTimestamp + (PreventStabby.getPlugin().getConfigCache().combat_time * 1000)) < 0;
     }
 
-    protected void setInCombat(boolean inCombat) {
-        this.inCombat = inCombat;
+    /**
+     * Checks if the player has login protection.
+     *
+     * @return true if the player has login protection, false otherwise.
+     */
+    public boolean hasLoginProtection() {
+        return System.currentTimeMillis() - (loginTimestamp + (PreventStabby.getPlugin().getConfigCache().login_protection_time * 1000)) < 0;
+    }
+
+    public boolean hasTeleportProtection() {
+        return System.currentTimeMillis() - (teleportTimestamp + (PreventStabby.getPlugin().getConfigCache().teleport_protection_time * 1000)) < 0;
+    }
+
+    /**
+     * Returns true if the player has any form of protection enabled, including login and teleport protection.
+     *
+     * @return true if the player has protection enabled, false otherwise.
+     */
+    public boolean isProtected() {
+        return  hasLoginProtection() || hasTeleportProtection();
     }
 }

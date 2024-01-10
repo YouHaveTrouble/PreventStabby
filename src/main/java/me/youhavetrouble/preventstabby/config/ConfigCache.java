@@ -1,27 +1,18 @@
 package me.youhavetrouble.preventstabby.config;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import io.github.thatsmusic99.configurationmaster.CMFile;
-import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-/**
- * TODO get rid of lombok
- * TODO parse messages into components and cache that
- */
 public class ConfigCache {
 
-    private final PreventStabby plugin = PreventStabby.getPlugin();
-
-    @Getter private final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled, channeling_enchant_disabled,
+    public final boolean pvp_enabled_by_default, lava_and_fire_stopper_enabled, channeling_enchant_disabled,
             punish_for_combat_logout, punish_for_combat_logout_announce, only_owner_can_interact_with_pet,
             snowballs_knockback, egg_knockback, block_commands_in_combat, block_teleports_in_combat, allow_fishing_rod_pull;
-    @Getter private final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
+    public final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
             cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
             pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
             cant_do_that_during_combat, cannot_attack_mounts_attacker, cannot_attack_mounts_victim, force_pvp_on,
@@ -32,93 +23,14 @@ public class ConfigCache {
             cannotAttackTeleportOrSpawnProtectionVictim, cannotAttackPetsTeleportOrSpawnProtectionAttacker,
             cannotAttackMountsTeleportOrSpawnProtectionAttacker;
 
-    @Getter private final double lava_and_fire_stopper_radius;
-    @Getter private final long cache_time, combat_time, login_protection_time, teleport_protection_time;
-    @Getter private final Set<String> combatBlockedCommands = new HashSet<>();
+    public final double lava_and_fire_stopper_radius;
+    public final long combat_time, login_protection_time, teleport_protection_time, cache_time;
+    private final Set<String> combatBlockedCommands = new HashSet<>();
 
-    public ConfigCache() {
+    public ConfigCache(PreventStabby plugin) {
 
-        CMFile configFile = new CMFile(plugin, "config") {
-            @Override
-            public void loadDefaults() {
-
-                addDefault("settings.pvp_enabled_by_default", false, "Decides if pvp should be enabled or disabled by default");
-
-                addComment("settings.lava_and_fire_stopper", "Prevents dumping lava and pufferfish bucket, placing wither roses and lighting blocks on fire near players with pvp off");
-                addDefault("settings.lava_and_fire_stopper.enabled", true);
-                addDefault("settings.lava_and_fire_stopper.radius", 2.5);
-
-                addDefault("settings.channeling_enchant_disabled", false, "Disables channeling (trident enchant) lightning strike.\nYou may want to keep it disabled because players with pvp off can use it to attack players with pvp on");
-
-                addDefault("settings.only_owner_can_interact_with_pet", false, "Makes it so only pet owner can interact with it. Useful if you don't want people renaming other people's pets.");
-
-                addDefault("settings.combat_time", 25, "Time (in seconds) to keep player in combat");
-
-                addDefault("settings.login_protection_time", 0, "Time (in seconds) that player can't be harmed by other player after logging in");
-
-                addDefault("settings.teleport_protection_time", 0, "Time (in seconds) that player can't be harmed by other player after teleporting");
-
-                addComment("settings.punish_for_combat_logout", "Kill the player if they log out during combat");
-                addDefault("settings.punish_for_combat_logout.enabled", true);
-                addDefault("settings.punish_for_combat_logout.announce", true);
-                addDefault("settings.punish_for_combat_logout.message", "%player%<reset> <white>logged out while in combat. What a loser.");
-
-                addDefault("settings.snowballs_do_knockback", false, "Set to true if snowballs should cause knockback to players");
-
-                addDefault("settings.eggs_do_knockback", false, "Set to true if eggs should cause knockback to players");
-
-                addDefault("settings.allow_fishing_rod_pull", false, "Allows players with pvp off to be pulled by fishing rods");
-
-                addComment("settings.block_in_combat", "Set what actions should be blocked while in combat");
-                addDefault("settings.block_in_combat.block_commands.enabled", true);
-                List<String> defaultCommandsBlocked = new ArrayList<>();
-                defaultCommandsBlocked.add("spawn");
-                defaultCommandsBlocked.add("tpa");
-                defaultCommandsBlocked.add("home");
-                addDefault("settings.block_in_combat.block_commands.commands", defaultCommandsBlocked);
-                addDefault("settings.block_in_combat.block_teleports", true, "Set if players should be denied teleportation attempts while in combat");
-
-                addDefault("settings.cache_time", 30, "Time (in seconds) to keep player data in memory when players goes offline.\nThis is used for checking if offline players pvp state.\nAdjust only if you know what you're doing. NEVER set to less than 6.");
-
-                addDefault("messages.pvp_enabled", "<red>You enabled PvP!");
-                addDefault("messages.pvp_disabled", "<red>You disabled PvP!");
-                addDefault("messages.cannot_attack_victim", "<red>You can't attack players that have PvP turned off!");
-                addDefault("messages.cannot_attack_attacker", "<red>You can't attack players while you have PvP turned off!");
-                addDefault("messages.cannot_attack_pets_victim", "<red>You can't attack pets of players that have PvP turned off");
-                addDefault("messages.cannot_attack_pets_attacker", "<red>You can't attack pets while you have PvP turned off");
-                addDefault("messages.cannot_attack_mounts_victim", "<red>You can't attack mounts of players that have PvP turned off");
-                addDefault("messages.cannot_attack_mounts_attacker", "<red>You can't attack mounts while you have PvP turned off");
-                addDefault("messages.cannot_attack_pvp_force_off", "<red>PvP is forcibly disabled");
-                addDefault("messages.no_permission", "<red>You don't have permission to use that.");
-                addDefault("messages.no_such_command", "<red>No such command.");
-                addDefault("messages.pvp_enabled_others", "<red>You've enabled %player%'s PvP.");
-                addDefault("messages.pvp_disabled_others", "<red>You've disabled %player%'s PvP.");
-                addDefault("messages.entering_combat", "<red>Entering combat");
-                addDefault("messages.leaving_combat", "<red>Leaving combat");
-                addDefault("messages.cant_do_that_during_combat", "<red>You can't do that while in combat!");
-                addDefault("messages.force_pvp_on", "PvP is now force enabled");
-                addDefault("messages.force_pvp_off", "PvP is now force disabled");
-                addDefault("messages.force_pvp_none", "PvP state is not forced now");
-                addDefault("placeholder.placeholder_combat_time", "Combat time: %time%");
-                addDefault("placeholder.not_in_combat", "Not in combat");
-                addDefault("placeholder.pvp_forced_true", "PvP is forced on");
-                addDefault("placeholder.pvp_forced_false", "PvP is forced off");
-                addDefault("placeholder.pvp_forced_none", "PvP is not forced");
-
-                addDefault("messages.cannot_attack_teleport_or_spawn_protection", "<red>You can't attack players that have recently teleported or logged in");
-                addDefault("messages.cannot_attack_teleport_or_spawn_protection_attacker", "<red>You can't attack players while you have recently teleported or logged in");
-                addDefault("messages.cannot_attack_pets_teleport_or_spawn_protection_attacker", "<red>You can't attack pets while you have recently teleported or logged in");
-                addDefault("messages.cannot_attack_mounts_teleport_or_spawn_protection_attacker", "<red>You can't attack mounts while you have recently teleported or logged in");
-                addDefault("messages.cannot_attack_teleport_or_spawn_protection_victim", "<red>You can't attack players that have recently teleported or logged in");
-            }
-        };
-
-        configFile.setDescription("Prevent people from getting stabbed!");
-        configFile.addLink("Spigot", "https://www.spigotmc.org/resources/89376/");
-        configFile.addLink("Source", "https://github.com/YouHaveTrouble/PreventStabby");
-
-        configFile.load();
-        FileConfiguration config = configFile.getConfig();
+        plugin.reloadConfig();
+        FileConfiguration config = plugin.getConfig();
 
         // Settings
         this.pvp_enabled_by_default = config.getBoolean("settings.pvp_enabled_by_default", false);
@@ -182,6 +94,11 @@ public class ConfigCache {
         this.cannotAttackPetsTeleportOrSpawnProtectionAttacker = config.getString("messages.cannot_attack_pets_teleport_or_spawn_protection_attacker", "<red>You can't attack pets while you have teleport or spawn protection");
         this.cannotAttackMountsTeleportOrSpawnProtectionAttacker = config.getString("messages.cannot_attack_mounts_teleport_or_spawn_protection_attacker", "<red>You can't attack mounts while you have teleport or spawn protection");
         this.cannotAttackTeleportOrSpawnProtectionVictim = config.getString("messages.cannot_attack_teleport_or_spawn_protection_victim", "<red>You can't attack players while you have teleport or spawn protection");
+    }
+
+
+    public Set<String> getCombatBlockedCommands() {
+        return Collections.unmodifiableSet(combatBlockedCommands);
     }
 
 

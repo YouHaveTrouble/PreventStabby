@@ -22,20 +22,7 @@ public class PlayerJoinAndLeaveListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-
-        PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
-        long time = Instant.now().getEpochSecond();
-        if (playerData != null) {
-            playerData.refreshCacheTime();
-            playerData.setLoginTimestamp(time);
-            return;
-        }
         PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(uuid, false));
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
-            PlayerData data = PreventStabby.getPlugin().getSqLite().getPlayerInfo(uuid);
-            PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, data);
-            data.setLoginTimestamp(time);
-        });
     }
 
     /**
@@ -45,17 +32,17 @@ public class PlayerJoinAndLeaveListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> PreventStabby.getPlugin().getSqLite().updatePlayerInfo(player.getUniqueId(), PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId())));
 
-        if (!PreventStabby.getPlugin().getConfigCache().isPunish_for_combat_logout()) return;
+
+        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout) return;
 
         PlayerData playerData = PreventStabby.getPlugin().getSmartCache().getPlayerData(player.getUniqueId());
 
         if (!playerData.isInCombat()) return;
 
         player.setHealth(0);
-        if (PreventStabby.getPlugin().getConfigCache().isPunish_for_combat_logout_announce())
-            PluginMessages.broadcastMessage(player, PreventStabby.getPlugin().getConfigCache().getPunish_for_combat_logout_message());
+        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_announce) return;
+        PluginMessages.broadcastMessage(player, PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_message);
 
 
     }

@@ -2,9 +2,7 @@ package me.youhavetrouble.preventstabby.listeners.pets;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
-import me.youhavetrouble.preventstabby.players.SmartCache;
 import me.youhavetrouble.preventstabby.util.CombatTimer;
-import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

@@ -1,12 +1,8 @@
 package me.youhavetrouble.preventstabby.listeners.pets;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import me.youhavetrouble.preventstabby.config.ConfigCache;
-import me.youhavetrouble.preventstabby.players.SmartCache;
-import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PreventStabbyListener;
 import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

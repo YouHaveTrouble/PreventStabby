@@ -2,48 +2,42 @@ package me.youhavetrouble.preventstabby.util;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
+import me.youhavetrouble.preventstabby.players.PlayerData;
 import me.youhavetrouble.preventstabby.players.PlayerManager;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Tameable;
+import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class DamageUtil {
+public class DamageCheck {
 
     private final ConfigCache config;
     private final PlayerManager playerManager;
 
-    public DamageUtil(PreventStabby plugin) {
+    public DamageCheck(PreventStabby plugin) {
         this.config = plugin.getConfigCache();
         this.playerManager = plugin.getPlayerManager();
     }
 
-    public DamageCheckResult canDamage(Entity attacker, Entity victim) {
-
+    public DamageCheckResult canDamage(@NotNull Entity attacker, @NotNull Entity victim) {
         Target attackerData = getUuidOfActualPlayer(attacker);
         Target victimData = getUuidOfActualPlayer(victim);
         if (attackerData == null || victimData == null) return new DamageCheckResult(true, null, null);
 
-        if (playerManager.hasLoginProtection(attackerData.uuid) || playerManager.hasTeleportProtection(attackerData.uuid)) {
-            String message = null;
-            switch (victimData.classifier) {
-                case PLAYER:
-                    message = config.cannotAttackTeleportOrSpawnProtectionAttacker;
-                    break;
-                case PET:
-                    message = config.cannotAttackPetsTeleportOrSpawnProtectionAttacker;
-                    break;
-                case MOUNT:
-                    message = config.cannotAttackMountsTeleportOrSpawnProtectionAttacker;
-                    break;
-            }
+        PlayerData attackerPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(attackerData.playerUuid);
+        PlayerData victimPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(victimData.playerUuid);
+
+        if (attackerPlayerData.isProtected()) {
+            String message = switch (victimData.classifier) {
+                case PLAYER -> config.cannotAttackTeleportOrSpawnProtectionAttacker;
+                case PET -> config.cannotAttackPetsTeleportOrSpawnProtectionAttacker;
+                case MOUNT -> config.cannotAttackMountsTeleportOrSpawnProtectionAttacker;
+                default -> null;
+            };
             return new DamageCheckResult(false, message, null);
         }
-        if (playerManager.hasLoginProtection(victimData.uuid) || playerManager.hasTeleportProtection(victimData.uuid)) {
+        if (victimPlayerData.isProtected()) {
             String message = null;
             if (victimData.classifier == EntityClassifier.PLAYER) {
                 message = config.cannotAttackTeleportOrSpawnProtectionVictim;
@@ -51,17 +45,12 @@ public class DamageUtil {
             return new DamageCheckResult(false, message, null);
         }
 
-        switch (playerManager.getForcedPvpState()) {
-            case NONE:
-            default:
-                break;
-            case DISABLED:
-                return new DamageCheckResult(false, config.cannotAttackForcedPvpOff, null);
-            case ENABLED:
-                return new DamageCheckResult(true, null, null);
-        }
+        return switch (playerManager.getForcedPvpState()) {
+            case DISABLED -> new DamageCheckResult(false, config.cannotAttackForcedPvpOff, null);
+            case ENABLED -> new DamageCheckResult(true, null, null);
+            default -> new DamageCheckResult(true, null, null);
+        };
 
-        return new DamageCheckResult(true, null, null);
     }
 
     /**
@@ -75,10 +64,8 @@ public class DamageUtil {
         if (entity instanceof Player) return new Target(entity.getUniqueId(), EntityClassifier.PLAYER);
 
         // Get shooter of projectile
-        if (entity instanceof Projectile) {
-            Projectile projectile = (Projectile) entity;
-            if (projectile.getShooter() instanceof Player) {
-                Player shooter = (Player) projectile.getShooter();
+        if (entity instanceof Projectile projectile) {
+            if (projectile.getShooter() instanceof Player shooter) {
                 return new Target(shooter.getUniqueId(), EntityClassifier.PLAYER);
             }
         }
@@ -92,8 +79,7 @@ public class DamageUtil {
         }
 
         // Get owner of tamed entity
-        if (entity instanceof Tameable) {
-            Tameable tameable = (Tameable) entity;
+        if (entity instanceof Tameable tameable) {
             if (tameable.getOwner() != null) {
                 return new Target(tameable.getOwner().getUniqueId(), EntityClassifier.PET);
             }
@@ -119,11 +105,20 @@ public class DamageUtil {
     }
 
     public static class Target {
-        public final UUID uuid;
+
+        /**
+         * The unique identifier for a player.
+         */
+        public final UUID playerUuid;
+
+        /**
+         * Represents the entity classifier of a target.
+         * This indicates what type of entity player's id was assumed from
+         */
         public final EntityClassifier classifier;
 
         private Target(UUID uuid, EntityClassifier classifier) {
-            this.uuid = uuid;
+            this.playerUuid = uuid;
             this.classifier = classifier;
         }
     }
