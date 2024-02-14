@@ -11,11 +11,12 @@ public class PlayerData {
 
     private final UUID playerUuid;
     private long lastAccessTimestamp, combatStartTimestamp, loginTimestamp, teleportTimestamp;
-    private boolean pvpEnabled;
+    private boolean pvpEnabled, lastCombatCheck;
 
     public PlayerData(UUID playerUuid, boolean pvpEnabled) {
         this.playerUuid = playerUuid;
         this.pvpEnabled = pvpEnabled;
+        this.lastCombatCheck = false;
         this.combatStartTimestamp = Long.MIN_VALUE;
         this.loginTimestamp = Long.MIN_VALUE;
         this.teleportTimestamp = Long.MIN_VALUE;
@@ -29,7 +30,6 @@ public class PlayerData {
     /**
      * Returns true if player has personal pvp enabled, false otherwise.
      * @return True if player has personal pvp enabled, false otherwise.
-     * @see PlayerManager#getPlayerPvPState(UUID) 
      */
     public boolean isPvpEnabled() {
         return pvpEnabled;
@@ -71,12 +71,25 @@ public class PlayerData {
         return combatStartTimestamp;
     }
 
+    protected boolean getLastCombatCheckState() {
+        return lastCombatCheck;
+    }
+
+    protected void setLastCombatCheckState(boolean state) {
+        this.lastCombatCheck = state;
+    }
+
     /**
      * Marks the player as in combat.
      */
     public void markInCombat() {
         refreshCacheTime();
         this.combatStartTimestamp = System.currentTimeMillis();
+    }
+
+    protected void markNotInCombat() {
+        refreshCacheTime();
+        this.combatStartTimestamp = Long.MIN_VALUE;
     }
 
     /**
@@ -109,8 +122,17 @@ public class PlayerData {
      * @return true if the player is in combat, false otherwise.
      */
     public boolean isInCombat() {
-        refreshCacheTime();
         return System.currentTimeMillis() - (combatStartTimestamp + (PreventStabby.getPlugin().getConfigCache().combat_time * 1000)) < 0;
+    }
+
+    /**
+     * Retrieves the number of seconds left until combat ends for the player.
+     * @return The number of seconds left until combat ends. -1 if not in combat
+     */
+    public long getSecondsLeftUntilCombatEnd() {
+        long timeSinceCombatStart = System.currentTimeMillis() - combatStartTimestamp;
+        long combatTimeConfigured = PreventStabby.getPlugin().getConfigCache().combat_time * 1000;
+        return (timeSinceCombatStart < combatTimeConfigured) ? (combatTimeConfigured - timeSinceCombatStart) / 1000 : -1;
     }
 
     /**

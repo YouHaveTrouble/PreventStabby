@@ -23,7 +23,6 @@ public final class PreventStabby extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        Util.initData();
         reloadPluginConfig();
         playerManager = new PlayerManager(this);
         damageCheck = new DamageCheck(this);

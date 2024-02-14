@@ -1,10 +1,12 @@
 package me.youhavetrouble.preventstabby.players;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.api.event.PlayerEnterCombatEvent;
+import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
 import me.youhavetrouble.preventstabby.util.DamageCheck;
+import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import java.util.UUID;
@@ -21,17 +23,50 @@ public class PlayerManager {
     public PlayerManager(PreventStabby plugin) {
         this.plugin = plugin;
         Bukkit.getAsyncScheduler().runAtFixedRate(plugin, (task) -> {
-            // Refresh cache timer if player is online
+            // Check for entries that should be invalidated
+            playerList.values().removeIf(PlayerData::isCacheExpired);
+        }, 250, 250, TimeUnit.MILLISECONDS);
+
+        Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> {
             for (PlayerData playerData : playerList.values()) {
                 if (playerData == null) continue;
                 Player player = Bukkit.getPlayer(playerData.getPlayerUuid());
-                if (player != null && player.isOnline()) {
-                    playerData.refreshCacheTime();
+                if (player == null || !player.isOnline()) continue;
+                playerData.refreshCacheTime(); // Refresh cache timer if player is online
+                // leaving combat logic
+                if (playerData.getLastCombatCheckState() && !playerData.isInCombat()) {
+                    PlayerLeaveCombatEvent leaveCombatEvent = null;
+                    if (PlayerLeaveCombatEvent.getHandlerList().getRegisteredListeners().length > 0) {
+                        leaveCombatEvent = new PlayerLeaveCombatEvent(player);
+                        Bukkit.getPluginManager().callEvent(leaveCombatEvent);
+                    }
+                    if (leaveCombatEvent != null && leaveCombatEvent.isCancelled()) {
+                        playerData.markInCombat();
+                        playerData.setLastCombatCheckState(playerData.isInCombat());
+                        continue;
+                    }
+                    PluginMessages.sendActionBar(player, plugin.getConfigCache().leaving_combat);
+                    playerData.setLastCombatCheckState(playerData.isInCombat());
+                    continue;
+                }
+                // entering combat logic
+                if (!playerData.getLastCombatCheckState() && playerData.isInCombat()) {
+                    PlayerEnterCombatEvent enterCombatEvent = null;
+                    if (PlayerEnterCombatEvent.getHandlerList().getRegisteredListeners().length > 0) {
+                        enterCombatEvent = new PlayerEnterCombatEvent(player);
+                        Bukkit.getPluginManager().callEvent(enterCombatEvent);
+                    }
+                    if (enterCombatEvent != null && enterCombatEvent.isCancelled()) {
+                        playerData.markNotInCombat();
+                        playerData.setLastCombatCheckState(playerData.isInCombat());
+                        continue;
+                    }
+                    PluginMessages.sendActionBar(player, plugin.getConfigCache().entering_combat);
+                    playerData.setLastCombatCheckState(playerData.isInCombat());
+                    continue;
                 }
             }
-            // Check for entries that should be invalidated
-            playerList.values().removeIf(PlayerData::isCacheExpired);
-        },250, 250, TimeUnit.MILLISECONDS);
+        }, 1, 1);
     }
 
     /**
@@ -57,30 +92,12 @@ public class PlayerManager {
      * @return A {@link DamageCheck.DamageCheckResult} object containing the result of the damage check.
      */
     public DamageCheck.DamageCheckResult canDamage(Entity attacker, Entity victim) {
-        DamageCheck damageCheck = PreventStabby.getPlugin().getDamageUtil();
+        DamageCheck damageCheck = plugin.getDamageUtil();
         return damageCheck.canDamage(attacker, victim);
     }
 
     /**
-     * Determines whether the given players have any form of protection enabled, including login and teleport protection.
-     *
-     * @param players The players to check for protection.
-     * @return true if any of the players have protection enabled, false otherwise.
-     * @see PlayerData#isProtected()
-     */
-    public boolean hasProtection(OfflinePlayer... players) {
-        for (OfflinePlayer offlinePlayer : players) {
-            UUID uuid = offlinePlayer.getUniqueId();
-            PlayerData playerData = playerList.get(uuid);
-            if (playerData == null) continue;
-            if (playerData.isProtected()) return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns current forced pvp state.
-     *
      * @return Current forced pvp state.
      */
     public PvpState getForcedPvpState() {
@@ -89,13 +106,18 @@ public class PlayerManager {
 
     /**
      * Sets current forced pvp state.
-     *
      * @param forcedPvpState New forced pvp state.
      */
     public void setForcedPvpState(PvpState forcedPvpState) {
         this.pvpForcedState = forcedPvpState;
     }
 
+    /**
+     * Retrieves the PlayerData object for the player with the provided UUID. Returns new default if there isn't data.
+     *
+     * @param uuid The UUID of the player.
+     * @return The PlayerData object associated with the player.
+     */
     public CompletableFuture<PlayerData> getPlayerData(UUID uuid) {
         // Try to get data from cache and refresh it
         PlayerData data = getPlayer(uuid);
@@ -105,15 +127,13 @@ public class PlayerManager {
         }
         // Get data from database or provide default
         return CompletableFuture.supplyAsync(() -> {
-            PlayerData playerData = PreventStabby.getPlugin().getSqLite().getPlayerInfo(uuid);
+            PlayerData playerData = plugin.getSqLite().getPlayerInfo(uuid);
             if (playerData == null) {
                 playerData = new PlayerData(uuid, false);
             }
-            PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, playerData);
+            plugin.getPlayerManager().addPlayer(uuid, playerData);
             return playerData;
         });
-
-
     }
 
     public void setPlayerPvpState(UUID uuid, boolean state) {
@@ -122,6 +142,13 @@ public class PlayerManager {
             getPlayer(uuid).setPvpEnabled(state);
         }
         // Update the database aswell
-        PreventStabby.getPlugin().getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, state));
+        plugin.getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, state));
+    }
+
+    public CompletableFuture<Boolean> togglePlayerPvpState(UUID uuid) {
+        return getPlayerData(uuid).thenApply(playerData -> {
+            playerData.setPvpEnabled(!playerData.isPvpEnabled());
+            return playerData.isPvpEnabled();
+        });
     }
 }

@@ -2,7 +2,6 @@ package me.youhavetrouble.preventstabby.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.youhavetrouble.preventstabby.PreventStabby;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -15,7 +14,6 @@ import java.util.UUID;
 public class PluginMessages {
 
     public static final MiniMessage MINIMESSAGE = MiniMessage.miniMessage();
-    private static final BukkitAudiences audiences = PreventStabby.getAudiences();
 
     public static Component parseMessage(String message) {
         message = makeColorsWork('&', message);
@@ -24,8 +22,7 @@ public class PluginMessages {
     }
 
     public static Component parseMessage(CommandSender sender,String message) {
-        if (sender instanceof Player && isPlaceholderApiEnabled()) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player && isPlaceholderApiEnabled()) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
         return parseMessage(message);
@@ -37,13 +34,13 @@ public class PluginMessages {
 
     public static void sendMessage(CommandSender sender, String message) {
         if ("".equals(message)) return;
-        audiences.sender(sender).sendMessage(parseMessage(sender, message));
+        sender.sendMessage(parseMessage(sender, message));
     }
 
     public static void sendActionBar(Player player, String message) {
         if ("".equals(message)) return;
         Component parsedMessage = parseMessage(player, message);
-        audiences.player(player).sendActionBar(parsedMessage);
+        player.sendActionBar(parsedMessage);
     }
 
     public static void sendActionBar(UUID uuid, String message) {
@@ -64,12 +61,12 @@ public class PluginMessages {
         if (PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        audiences.all().sendMessage(parseMessage(message));
+        Bukkit.broadcast(parseMessage(message));
     }
 
     public static void broadcastMessage(String message) {
         if ("".equals(message)) return;
-        audiences.all().sendMessage(parseMessage(message));
+        Bukkit.broadcast(parseMessage(message));
     }
 
     /**

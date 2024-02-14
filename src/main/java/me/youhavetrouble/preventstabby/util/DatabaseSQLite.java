@@ -18,9 +18,10 @@ public class DatabaseSQLite {
         this.url = url;
         this.folder = folder;
         this.logger = logger;
+        createDatabaseFile();
     }
 
-    public void createDatabaseFile() {
+    private void createDatabaseFile() {
         this.folder.mkdir();
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn == null) return;
@@ -34,30 +35,14 @@ public class DatabaseSQLite {
         }
     }
 
-    public boolean testConnection() {
-        try (Connection conn = DriverManager.getConnection(url)) {
-            logger.info("Connection to SQLite has been established.");
-            if (conn != null) return true;
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return false;
-    }
-
     public PlayerData getPlayerInfo(UUID uuid) {
         try (Connection conn = DriverManager.getConnection(url)) {
-            try {
-                PreparedStatement insertnewuser = conn.prepareStatement("INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES (?, ?)");
-                insertnewuser.setString(1, uuid.toString());
-                insertnewuser.setBoolean(2, PreventStabby.getPlugin().getConfigCache().isPvp_enabled_by_default());
-                insertnewuser.executeUpdate();
-            } catch (SQLException e) {
-                if (e.getErrorCode() != 19) {
-                    e.printStackTrace();
-                }
-            }
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM `players` WHERE `player_uuid` = ?");
+            PreparedStatement statement = conn.prepareStatement(
+                    "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES (?, ?); SELECT * FROM `players` WHERE `player_uuid` = ?;"
+            );
             statement.setString(1, uuid.toString());
+            statement.setBoolean(2, PreventStabby.getPlugin().getConfigCache().pvp_enabled_by_default);
+            statement.setString(3, uuid.toString());
             statement.executeQuery();
             ResultSet result = statement.getResultSet();
             boolean state = result.getBoolean("pvpenabled");

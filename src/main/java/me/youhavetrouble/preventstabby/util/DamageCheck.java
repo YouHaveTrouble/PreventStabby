@@ -24,12 +24,18 @@ public class DamageCheck {
         Target attackerData = getUuidOfActualPlayer(attacker);
         Target victimData = getUuidOfActualPlayer(victim);
         if (attackerData == null || victimData == null) return new DamageCheckResult(true, null, null);
+        return canDamage(attackerData.playerUuid, victimData.playerUuid, victimData.classifier);
+    }
 
-        PlayerData attackerPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(attackerData.playerUuid);
-        PlayerData victimPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(victimData.playerUuid);
+    public DamageCheckResult canDamage(UUID attackerId, UUID victimId, EntityClassifier victimClassifier) {
+
+        if (attackerId == null || victimId == null) return new DamageCheckResult(true, null, null);
+
+        PlayerData attackerPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(attackerId);
+        PlayerData victimPlayerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(victimId);
 
         if (attackerPlayerData.isProtected()) {
-            String message = switch (victimData.classifier) {
+            String message = switch (victimClassifier) {
                 case PLAYER -> config.cannotAttackTeleportOrSpawnProtectionAttacker;
                 case PET -> config.cannotAttackPetsTeleportOrSpawnProtectionAttacker;
                 case MOUNT -> config.cannotAttackMountsTeleportOrSpawnProtectionAttacker;
@@ -39,7 +45,7 @@ public class DamageCheck {
         }
         if (victimPlayerData.isProtected()) {
             String message = null;
-            if (victimData.classifier == EntityClassifier.PLAYER) {
+            if (victimClassifier == EntityClassifier.PLAYER) {
                 message = config.cannotAttackTeleportOrSpawnProtectionVictim;
             }
             return new DamageCheckResult(false, message, null);
@@ -50,7 +56,6 @@ public class DamageCheck {
             case ENABLED -> new DamageCheckResult(true, null, null);
             default -> new DamageCheckResult(true, null, null);
         };
-
     }
 
     /**
@@ -60,7 +65,7 @@ public class DamageCheck {
      * @return UUID of the actual player, null if not found
      */
     @Nullable
-    private Target getUuidOfActualPlayer(@NotNull Entity entity) {
+    public Target getUuidOfActualPlayer(@NotNull Entity entity) {
         if (entity instanceof Player) return new Target(entity.getUniqueId(), EntityClassifier.PLAYER);
 
         // Get shooter of projectile

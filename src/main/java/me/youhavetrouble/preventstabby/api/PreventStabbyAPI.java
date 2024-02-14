@@ -1,13 +1,7 @@
 package me.youhavetrouble.preventstabby.api;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import me.youhavetrouble.preventstabby.players.PlayerData;
-import me.youhavetrouble.preventstabby.util.CombatTimer;
 import me.youhavetrouble.preventstabby.util.PvpState;
-import org.bukkit.entity.Player;
-
-import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class PreventStabbyAPI {
 

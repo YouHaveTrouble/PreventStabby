@@ -33,7 +33,7 @@ public class MainCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("preventstabby.command")) {
-            PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+            PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
             return true;
         }
         if (args.length == 0) {
@@ -63,7 +63,7 @@ public class MainCommand implements TabExecutor {
                 GlobalToggleCommand.globalToggle(sender, args);
                 break;
             default:
-                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_such_command());
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_such_command);
                 break;
         }
         return true;

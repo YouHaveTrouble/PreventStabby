@@ -13,7 +13,7 @@ public class GlobalToggleCommand {
     public static void globalToggle(CommandSender sender, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
             if (!PreventStabbyPermission.COMMAND_GLOBAL_TOGGLE.doesCommandSenderHave(sender)) {
-                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;
             }
 
@@ -27,15 +27,15 @@ public class GlobalToggleCommand {
             switch (pvpState) {
                 case ENABLED:
                     PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(PvpState.ENABLED);
-                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().getForce_pvp_on());
+                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().force_pvp_on);
                     break;
                 case DISABLED:
                     PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(PvpState.DISABLED);
-                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().getForce_pvp_off());
+                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().force_pvp_off);
                     break;
                 case NONE:
                     PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(PvpState.NONE);
-                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().getForce_pvp_none());
+                    PluginMessages.broadcastMessage(PreventStabby.getPlugin().getConfigCache().force_pvp_none);
                     break;
                 default:
                     PluginMessages.sendMessage(sender, "Try /pvp override <enabled/disabled/none>");

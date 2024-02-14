@@ -11,7 +11,7 @@ public class ReloadCommand {
     public static void reload(CommandSender sender) {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
             if (!PreventStabbyPermission.COMMAND_RELOAD.doesCommandSenderHave(sender)) {
-                PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+                PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;
             }
             PreventStabby.getPlugin().reloadPluginConfig(sender);

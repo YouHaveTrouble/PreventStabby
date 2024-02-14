@@ -12,7 +12,7 @@ public class HelpCommand {
         Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
 
             if (!PreventStabbyPermission.COMMAND_HELP.doesCommandSenderHave(sender)) {
-                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().getNo_permission());
+                PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;
             }
 
@@ -28,7 +28,7 @@ public class HelpCommand {
                         .append(Component.newline())
                         .append(PluginMessages.MINIMESSAGE.deserialize("<blue>/pvp <aqua><bold>toggle</bold> <white>- toggles PvP status"));
             }
-            PreventStabby.getAudiences().sender(sender).sendMessage(helpComponent);
+            sender.sendMessage(helpComponent);
         });
     }
 
