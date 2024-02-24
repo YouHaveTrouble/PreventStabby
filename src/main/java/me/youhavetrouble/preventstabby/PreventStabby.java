@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class PreventStabby extends JavaPlugin {
 
     private static PreventStabby plugin;
@@ -24,6 +26,8 @@ public final class PreventStabby extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         reloadPluginConfig();
+        File dbFile = new File("plugins/PreventStabby");
+        sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/database.db", dbFile, getLogger());
         playerManager = new PlayerManager(this);
 
         // Register listeners TODO
