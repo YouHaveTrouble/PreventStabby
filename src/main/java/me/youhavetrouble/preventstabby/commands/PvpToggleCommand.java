@@ -3,7 +3,7 @@ package me.youhavetrouble.preventstabby.commands;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.api.event.PlayerTogglePvpEvent;
 import me.youhavetrouble.preventstabby.config.PreventStabbyPermission;
-import me.youhavetrouble.preventstabby.players.PlayerManager;
+import me.youhavetrouble.preventstabby.data.PlayerManager;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

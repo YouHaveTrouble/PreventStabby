@@ -2,6 +2,7 @@ package me.youhavetrouble.preventstabby.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.data.DamageCheckResult;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -67,6 +68,15 @@ public class PluginMessages {
     public static void broadcastMessage(String message) {
         if ("".equals(message)) return;
         Bukkit.broadcast(parseMessage(message));
+    }
+
+    public static void sendOutMessages(DamageCheckResult damageCheckResult) {
+        if (damageCheckResult.victimId() != null && damageCheckResult.feedbackForVictim() != null) {
+            sendActionBar(damageCheckResult.victimId(), damageCheckResult.feedbackForVictim());
+        }
+        if (damageCheckResult.attackerId() != null && damageCheckResult.feedbackForAttacker() != null) {
+            sendActionBar(damageCheckResult.attackerId(), damageCheckResult.feedbackForAttacker());
+        }
     }
 
     /**

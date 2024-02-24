@@ -1,7 +1,7 @@
 package me.youhavetrouble.preventstabby.api.event;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import me.youhavetrouble.preventstabby.players.PlayerData;
+import me.youhavetrouble.preventstabby.data.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

@@ -1,14 +1,19 @@
-package me.youhavetrouble.preventstabby.players;
+package me.youhavetrouble.preventstabby.data;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.api.event.PlayerEnterCombatEvent;
 import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
-import me.youhavetrouble.preventstabby.util.DamageCheck;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +31,17 @@ public class PlayerManager {
             // Check for entries that should be invalidated
             playerList.values().removeIf(PlayerData::isCacheExpired);
         }, 250, 250, TimeUnit.MILLISECONDS);
+
+        Bukkit.getScheduler().runTaskTimer(plugin, (task -> {
+            List<LivingEntity> entities = new ArrayList<>();
+            Bukkit.getWorlds().forEach((world -> entities.addAll(world.getLivingEntities())));
+            Bukkit.getAsyncScheduler().runNow(plugin, (asyncTask) -> entities.forEach(livingEntity -> {
+                if (!(livingEntity instanceof Tameable tameable)) return;
+                UUID ownerId = tameable.getOwnerUniqueId();
+                if (ownerId == null) return;
+                getPlayerData(ownerId);
+            }));
+        }), 0, 20 * 15);
 
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> {
             for (PlayerData playerData : playerList.values()) {
@@ -83,17 +99,64 @@ public class PlayerManager {
         playerList.put(uuid, data);
     }
 
+    public void handleDamageCheck(@NotNull DamageCheckResult damageCheckResult) {
+        PluginMessages.sendOutMessages(damageCheckResult);
+        PlayerData attacker = getPlayer(damageCheckResult.attackerId());
+        PlayerData victim = getPlayer(damageCheckResult.victimId());
+        if (attacker == null || victim == null) return;
+        if (!damageCheckResult.ableToDamage()) return;
+        attacker.markInCombat();
+        victim.markInCombat();
+    }
+
 
     /**
      * Determines whether the given attacker can damage the victim.
      *
      * @param attacker The attacking entity.
-     * @param victim   The victim entity.
-     * @return A {@link DamageCheck.DamageCheckResult} object containing the result of the damage check.
+     * @param victim The victim entity.
+     * @return A {@link DamageCheckResult} object containing the result of the damage check.
      */
-    public DamageCheck.DamageCheckResult canDamage(Entity attacker, Entity victim) {
-        DamageCheck damageCheck = plugin.getDamageUtil();
-        return damageCheck.canDamage(attacker, victim);
+    public DamageCheckResult canDamage(@NotNull Entity attacker, @NotNull Entity victim) {
+        Target attackerData = Target.getTarget(attacker);
+        Target victimData = Target.getTarget(victim);
+        if (attackerData == null || victimData == null) return DamageCheckResult.positive();
+        return canDamage(attackerData.playerUuid, victimData.playerUuid, victimData.classifier);
+    }
+
+    public DamageCheckResult canDamage(UUID attackerId, UUID victimId, Target.EntityClassifier victimClassifier) {
+
+        if (attackerId == null || victimId == null) return DamageCheckResult.positive();
+
+        PlayerData attackerPlayerData = getPlayer(attackerId);
+        PlayerData victimPlayerData = getPlayer(victimId);
+
+        if (attackerPlayerData == null || victimPlayerData == null) {
+            return DamageCheckResult.positive();
+        }
+
+        if (attackerPlayerData.isProtected()) {
+            String message = switch (victimClassifier) {
+                case PLAYER -> plugin.getConfigCache().cannotAttackTeleportOrSpawnProtectionAttacker;
+                case PET -> plugin.getConfigCache().cannotAttackPetsTeleportOrSpawnProtectionAttacker;
+                case MOUNT -> plugin.getConfigCache().cannotAttackMountsTeleportOrSpawnProtectionAttacker;
+                default -> null;
+            };
+            return new DamageCheckResult(false, attackerId, victimId, message, null);
+        }
+        if (victimPlayerData.isProtected()) {
+            String message = null;
+            if (victimClassifier == Target.EntityClassifier.PLAYER) {
+                message = plugin.getConfigCache().cannotAttackTeleportOrSpawnProtectionVictim;
+            }
+            return new DamageCheckResult(false, attackerId, victimId, message, null);
+        }
+
+        return switch (getForcedPvpState()) {
+            case DISABLED -> new DamageCheckResult(false, attackerId, victimId, plugin.getConfigCache().cannotAttackForcedPvpOff, null);
+            case ENABLED -> DamageCheckResult.positive();
+            default -> DamageCheckResult.positive();
+        };
     }
 
     /**

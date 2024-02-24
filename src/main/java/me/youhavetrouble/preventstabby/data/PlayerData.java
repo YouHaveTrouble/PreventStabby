@@ -1,4 +1,4 @@
-package me.youhavetrouble.preventstabby.players;
+package me.youhavetrouble.preventstabby.data;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 
@@ -10,16 +10,17 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID playerUuid;
-    private long lastAccessTimestamp, combatStartTimestamp, loginTimestamp, teleportTimestamp;
+    private long lastAccessTimestamp, loginTimestamp;
+    private Long combatStartTimestamp, teleportTimestamp;
     private boolean pvpEnabled, lastCombatCheck;
 
     public PlayerData(UUID playerUuid, boolean pvpEnabled) {
         this.playerUuid = playerUuid;
         this.pvpEnabled = pvpEnabled;
         this.lastCombatCheck = false;
-        this.combatStartTimestamp = Long.MIN_VALUE;
-        this.loginTimestamp = Long.MIN_VALUE;
-        this.teleportTimestamp = Long.MIN_VALUE;
+        this.combatStartTimestamp = null;
+        this.loginTimestamp = System.currentTimeMillis();
+        this.teleportTimestamp = null;
         refreshCacheTime();
     }
 
@@ -89,14 +90,14 @@ public class PlayerData {
 
     protected void markNotInCombat() {
         refreshCacheTime();
-        this.combatStartTimestamp = Long.MIN_VALUE;
+        this.combatStartTimestamp = null;
     }
 
     /**
      * Sets the login timestamp for the player.
      * @param loginTimestamp The login timestamp to set.
      */
-    public void setLoginTimestamp(long loginTimestamp) {
+    protected void setLoginTimestamp(long loginTimestamp) {
         this.loginTimestamp = loginTimestamp;
     }
 
@@ -130,6 +131,7 @@ public class PlayerData {
      * @return The number of seconds left until combat ends. -1 if not in combat
      */
     public long getSecondsLeftUntilCombatEnd() {
+        if (combatStartTimestamp == null) return -1;
         long timeSinceCombatStart = System.currentTimeMillis() - combatStartTimestamp;
         long combatTimeConfigured = PreventStabby.getPlugin().getConfigCache().combat_time * 1000;
         return (timeSinceCombatStart < combatTimeConfigured) ? (combatTimeConfigured - timeSinceCombatStart) / 1000 : -1;
@@ -145,6 +147,7 @@ public class PlayerData {
     }
 
     public boolean hasTeleportProtection() {
+        if (teleportTimestamp == null) return false;
         return System.currentTimeMillis() - (teleportTimestamp + (PreventStabby.getPlugin().getConfigCache().teleport_protection_time * 1000)) < 0;
     }
 

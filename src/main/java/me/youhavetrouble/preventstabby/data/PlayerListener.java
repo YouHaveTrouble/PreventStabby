@@ -1,8 +1,11 @@
-package me.youhavetrouble.preventstabby.players;
+package me.youhavetrouble.preventstabby.data;
 
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -53,6 +56,18 @@ public class PlayerListener implements Listener {
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
         if (playerData == null) return;
         playerData.markNotInCombat();
+    }
+
+    /**
+     * Load data for owners of loaded tameables
+     */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onEntityLoad(EntityAddToWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Tameable tameable)) return;
+        UUID ownerId = tameable.getOwnerUniqueId();
+        if (ownerId == null) return;
+        PreventStabby.getPlugin().getPlayerManager().getPlayerData(ownerId);
     }
 
 }

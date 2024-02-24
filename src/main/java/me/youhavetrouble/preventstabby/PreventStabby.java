@@ -4,7 +4,8 @@ import me.youhavetrouble.preventstabby.commands.MainCommand;
 import me.youhavetrouble.preventstabby.config.ConfigCache;
 import me.youhavetrouble.preventstabby.hooks.PlaceholderApiHook;
 import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
-import me.youhavetrouble.preventstabby.players.PlayerManager;
+import me.youhavetrouble.preventstabby.data.PlayerListener;
+import me.youhavetrouble.preventstabby.data.PlayerManager;
 import me.youhavetrouble.preventstabby.util.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
@@ -16,7 +17,6 @@ public final class PreventStabby extends JavaPlugin {
     private static PreventStabby plugin;
     private ConfigCache configCache;
     private PlayerManager playerManager;
-    private DamageCheck damageCheck;
     private DatabaseSQLite sqLite;
     private static boolean worldGuardHook;
 
@@ -25,10 +25,9 @@ public final class PreventStabby extends JavaPlugin {
         plugin = this;
         reloadPluginConfig();
         playerManager = new PlayerManager(this);
-        damageCheck = new DamageCheck(this);
 
         // Register listeners TODO
-
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         // Register command
         PluginCommand pvpCommand = getCommand("pvp");
@@ -81,10 +80,6 @@ public final class PreventStabby extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
-    }
-
-    public DamageCheck getDamageUtil() {
-        return damageCheck;
     }
 
     public DatabaseSQLite getSqLite() {return sqLite;}

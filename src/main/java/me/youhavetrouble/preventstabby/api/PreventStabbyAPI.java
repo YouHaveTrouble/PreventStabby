@@ -1,7 +1,9 @@
 package me.youhavetrouble.preventstabby.api;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import me.youhavetrouble.preventstabby.data.DamageCheckResult;
 import me.youhavetrouble.preventstabby.util.PvpState;
+import org.bukkit.entity.Entity;
 
 public class PreventStabbyAPI {
 
@@ -17,6 +19,10 @@ public class PreventStabbyAPI {
      */
     public static void setForcedPvpState(PvpState newForcedPvpState) {
         PreventStabby.getPlugin().getPlayerManager().setForcedPvpState(newForcedPvpState);
+    }
+
+    public static DamageCheckResult canDamage(Entity attacker, Entity victim) {
+        return PreventStabby.getPlugin().getPlayerManager().canDamage(attacker, victim);
     }
 
 }

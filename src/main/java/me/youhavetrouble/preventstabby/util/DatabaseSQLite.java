@@ -1,7 +1,7 @@
 package me.youhavetrouble.preventstabby.util;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
-import me.youhavetrouble.preventstabby.players.PlayerData;
+import me.youhavetrouble.preventstabby.data.PlayerData;
 
 import java.io.File;
 import java.sql.*;
