@@ -12,7 +12,7 @@ public class PlayerDamageListener implements Listener {
 
     private final PreventStabby plugin;
 
-    PlayerDamageListener(PreventStabby plugin) {
+    public PlayerDamageListener(PreventStabby plugin) {
         this.plugin = plugin;
     }
 

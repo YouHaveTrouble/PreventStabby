@@ -10,8 +10,8 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID playerUuid;
-    private long lastAccessTimestamp, loginTimestamp;
-    private Long combatStartTimestamp, teleportTimestamp;
+    private long lastAccessTimestamp;
+    private Long combatStartTimestamp, teleportTimestamp, loginTimestamp;
     private boolean pvpEnabled, lastCombatCheck;
 
     public PlayerData(UUID playerUuid, boolean pvpEnabled) {
@@ -19,7 +19,7 @@ public class PlayerData {
         this.pvpEnabled = pvpEnabled;
         this.lastCombatCheck = false;
         this.combatStartTimestamp = null;
-        this.loginTimestamp = System.currentTimeMillis();
+        this.loginTimestamp = null;
         this.teleportTimestamp = null;
         refreshCacheTime();
     }
@@ -105,7 +105,7 @@ public class PlayerData {
      * Retrieves the login timestamp for the player.
      * @return The login timestamp for the player.
      */
-    public long getLoginTimestamp() {
+    public Long getLoginTimestamp() {
         return loginTimestamp;
     }
 
@@ -123,6 +123,7 @@ public class PlayerData {
      * @return true if the player is in combat, false otherwise.
      */
     public boolean isInCombat() {
+        if (combatStartTimestamp == null) return false;
         return System.currentTimeMillis() - (combatStartTimestamp + (PreventStabby.getPlugin().getConfigCache().combat_time * 1000)) < 0;
     }
 
@@ -143,6 +144,7 @@ public class PlayerData {
      * @return true if the player has login protection, false otherwise.
      */
     public boolean hasLoginProtection() {
+        if (loginTimestamp == null) return false;
         return System.currentTimeMillis() - (loginTimestamp + (PreventStabby.getPlugin().getConfigCache().login_protection_time * 1000)) < 0;
     }
 

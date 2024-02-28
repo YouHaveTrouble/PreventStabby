@@ -100,6 +100,8 @@ public class PlayerManager {
     }
 
     public void handleDamageCheck(@NotNull DamageCheckResult damageCheckResult) {
+        if (damageCheckResult.attackerId() == null) return;
+        if (damageCheckResult.victimId() == null) return;
         PluginMessages.sendOutMessages(damageCheckResult);
         PlayerData attacker = getPlayer(damageCheckResult.attackerId());
         PlayerData victim = getPlayer(damageCheckResult.victimId());
@@ -154,8 +156,8 @@ public class PlayerManager {
 
         return switch (getForcedPvpState()) {
             case DISABLED -> new DamageCheckResult(false, attackerId, victimId, plugin.getConfigCache().cannotAttackForcedPvpOff, null);
-            case ENABLED -> DamageCheckResult.positive();
-            default -> DamageCheckResult.positive();
+            case ENABLED -> DamageCheckResult.positive(attackerId, victimId);
+            default -> DamageCheckResult.positive(attackerId, victimId);
         };
     }
 

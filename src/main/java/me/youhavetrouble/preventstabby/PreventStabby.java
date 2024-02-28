@@ -6,6 +6,7 @@ import me.youhavetrouble.preventstabby.hooks.PlaceholderApiHook;
 import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.data.PlayerListener;
 import me.youhavetrouble.preventstabby.data.PlayerManager;
+import me.youhavetrouble.preventstabby.listeners.PlayerDamageListener;
 import me.youhavetrouble.preventstabby.util.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,8 @@ public final class PreventStabby extends JavaPlugin {
 
         // Register listeners TODO
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+
+        getServer().getPluginManager().registerEvents(new PlayerDamageListener(this), this);
 
         // Register command
         PluginCommand pvpCommand = getCommand("pvp");
