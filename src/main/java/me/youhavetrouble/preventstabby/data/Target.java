@@ -1,15 +1,21 @@
 package me.youhavetrouble.preventstabby.data;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Tameable;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class Target {
+
+    public static final NamespacedKey playerSourceIdKey = new NamespacedKey("preventstabby", "playerSource");
 
     /**
      * The unique identifier for a player.
@@ -59,7 +65,27 @@ public class Target {
             }
         }
 
-        return null;
+        // Try to get player's id from other various entities
+        PersistentDataContainer pdc = entity.getPersistentDataContainer();
+        if (!pdc.has(playerSourceIdKey)) return null;
+        String id = pdc.get(playerSourceIdKey, PersistentDataType.STRING);
+        if (id == null) return null;
+        try {
+            UUID uuid = UUID.fromString(id);
+            return new Target(uuid, EntityClassifier.OTHER);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Assigns the player source ID to the given data holder.
+     * @param dataHolder The persistent data holder to assign the player source ID to.
+     * @param id The UUID of the player source ID to assign.
+     */
+    public static void assignPlayerSourceId(@NotNull PersistentDataHolder dataHolder, @NotNull UUID id) {
+        dataHolder.getPersistentDataContainer().set(playerSourceIdKey, PersistentDataType.STRING, id.toString());
     }
 
     public enum EntityClassifier {
