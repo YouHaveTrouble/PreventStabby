@@ -31,24 +31,26 @@ public class DatabaseSQLite {
             String sql = "CREATE TABLE IF NOT EXISTS `players` (`player_uuid` varchar(36) UNIQUE PRIMARY KEY, `pvpenabled` boolean);";
             statement.execute(sql);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.warning(exception.getMessage());
         }
     }
 
     public PlayerData getPlayerInfo(UUID uuid) {
         try (Connection conn = DriverManager.getConnection(url)) {
             PreparedStatement statement = conn.prepareStatement(
-                    "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES (?, ?); SELECT * FROM `players` WHERE `player_uuid` = ?;"
+                    "INSERT OR IGNORE INTO `players` (player_uuid, pvpenabled) VALUES (?, ?);"
             );
             statement.setString(1, uuid.toString());
             statement.setBoolean(2, PreventStabby.getPlugin().getConfigCache().pvp_enabled_by_default);
-            statement.setString(3, uuid.toString());
+            statement.executeUpdate();
+            statement = conn.prepareStatement("SELECT * FROM `players` WHERE `player_uuid` = ?;");
+            statement.setString(1, uuid.toString());
             statement.executeQuery();
-            ResultSet result = statement.getResultSet();
+            ResultSet result = statement.executeQuery();
             boolean state = result.getBoolean("pvpenabled");
             return new PlayerData(uuid, state);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.warning(exception.getMessage());
         }
         return null;
     }
@@ -61,10 +63,10 @@ public class DatabaseSQLite {
                 insertnewuser.setString(2, uuid.toString());
             } catch (SQLException exception) {
                 logger.severe("Error while saving player data!");
-                exception.printStackTrace();
+                logger.warning(exception.getMessage());
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.warning(exception.getMessage());
         }
     }
 

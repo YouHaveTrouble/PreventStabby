@@ -22,7 +22,6 @@ public class PlayerDamageListener implements Listener {
         Entity victim = event.getEntity();
 
         DamageCheckResult result = plugin.getPlayerManager().canDamage(attacker, victim);
-
         if (!result.ableToDamage()) {
             event.setCancelled(true);
         }

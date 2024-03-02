@@ -6,7 +6,6 @@ import java.util.UUID;
 /**
  * @param ableToDamage  Result of the damage check
  * @param feedbackForAttacker Feedback to send to the attacker
- * @param feedbackForVictim Feedback to send to the victim
  * @param attackerId UUID of attacker player
  * @param victimId UUID of victim player
  */
@@ -15,7 +14,7 @@ public record DamageCheckResult(
         @Nullable UUID attackerId,
         @Nullable UUID victimId,
         @Nullable String feedbackForAttacker,
-        @Nullable String feedbackForVictim
+        boolean shouldVictimBePutInCombat
 ) {
 
     public static DamageCheckResult positive() {
@@ -24,17 +23,17 @@ public record DamageCheckResult(
                 null,
                 null,
                 null,
-                null
+                true
         );
     }
 
-    public static DamageCheckResult positive(UUID attackerId, UUID victimId) {
+    public static DamageCheckResult positive(UUID attackerId, UUID victimId, boolean shouldVictimBePutInCombat) {
         return new DamageCheckResult(
                 true,
                 attackerId,
                 victimId,
                 null,
-                null
+                shouldVictimBePutInCombat
         );
     }
 

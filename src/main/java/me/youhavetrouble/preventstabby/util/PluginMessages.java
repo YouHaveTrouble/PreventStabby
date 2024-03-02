@@ -71,9 +71,6 @@ public class PluginMessages {
     }
 
     public static void sendOutMessages(DamageCheckResult damageCheckResult) {
-        if (damageCheckResult.victimId() != null && damageCheckResult.feedbackForVictim() != null) {
-            sendActionBar(damageCheckResult.victimId(), damageCheckResult.feedbackForVictim());
-        }
         if (damageCheckResult.attackerId() != null && damageCheckResult.feedbackForAttacker() != null) {
             sendActionBar(damageCheckResult.attackerId(), damageCheckResult.feedbackForAttacker());
         }

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class Target {
 
-    public static final NamespacedKey playerSourceIdKey = new NamespacedKey("preventstabby", "playerSource");
+    public static final NamespacedKey playerSourceIdKey = new NamespacedKey("preventstabby", "playersource");
 
     /**
      * The unique identifier for a player.

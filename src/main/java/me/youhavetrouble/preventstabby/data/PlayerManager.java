@@ -41,7 +41,7 @@ public class PlayerManager {
                 if (ownerId == null) return;
                 getPlayerData(ownerId);
             }));
-        }), 0, 20 * 15);
+        }), 5, 20 * 15);
 
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> {
             for (PlayerData playerData : playerList.values()) {
@@ -108,6 +108,7 @@ public class PlayerManager {
         if (attacker == null || victim == null) return;
         if (!damageCheckResult.ableToDamage()) return;
         attacker.markInCombat();
+        if (!damageCheckResult.shouldVictimBePutInCombat()) return;
         victim.markInCombat();
     }
 
@@ -137,28 +138,63 @@ public class PlayerManager {
             return DamageCheckResult.positive();
         }
 
+        if (attackerPlayerData.getPlayerUuid().equals(victimPlayerData.getPlayerUuid())) {
+            return DamageCheckResult.positive(attackerId, victimId, false);
+        }
+
         if (attackerPlayerData.isProtected()) {
             String message = switch (victimClassifier) {
-                case PLAYER -> plugin.getConfigCache().cannotAttackTeleportOrSpawnProtectionAttacker;
-                case PET -> plugin.getConfigCache().cannotAttackPetsTeleportOrSpawnProtectionAttacker;
-                case MOUNT -> plugin.getConfigCache().cannotAttackMountsTeleportOrSpawnProtectionAttacker;
+                case PLAYER -> plugin.getConfigCache().cannot_attack_teleport_or_spawn_protection_attacker;
+                case PET -> plugin.getConfigCache().cannot_attack_pets_teleport_or_spawn_protection_attacker;
+                case MOUNT -> plugin.getConfigCache().cannot_attack_mounts_teleport_or_spawn_protection_attacker;
                 default -> null;
             };
-            return new DamageCheckResult(false, attackerId, victimId, message, null);
+            return new DamageCheckResult(false, attackerId, victimId, message, false);
         }
         if (victimPlayerData.isProtected()) {
             String message = null;
             if (victimClassifier == Target.EntityClassifier.PLAYER) {
-                message = plugin.getConfigCache().cannotAttackTeleportOrSpawnProtectionVictim;
+                message = plugin.getConfigCache().cannot_attack_teleport_or_spawn_protection_victim;
             }
-            return new DamageCheckResult(false, attackerId, victimId, message, null);
+            return new DamageCheckResult(false, attackerId, victimId, message, false);
         }
 
-        return switch (getForcedPvpState()) {
-            case DISABLED -> new DamageCheckResult(false, attackerId, victimId, plugin.getConfigCache().cannotAttackForcedPvpOff, null);
-            case ENABLED -> DamageCheckResult.positive(attackerId, victimId);
-            default -> DamageCheckResult.positive(attackerId, victimId);
-        };
+        switch (getForcedPvpState()) {
+            case DISABLED -> {
+                return new DamageCheckResult(false, attackerId, victimId, plugin.getConfigCache().cannot_attack_forced_pvp_off, false);
+            }
+            case ENABLED -> {
+                return DamageCheckResult.positive(attackerId, victimId, victimClassifier.equals(Target.EntityClassifier.PLAYER));
+            }
+        }
+
+        if (!attackerPlayerData.isPvpEnabled()) {
+            String message = switch (victimClassifier) {
+                case PLAYER -> plugin.getConfigCache().cannot_attack_attacker;
+                case PET -> plugin.getConfigCache().cannot_attack_pets_victim;
+                case MOUNT -> plugin.getConfigCache().cannot_attack_mounts_attacker;
+                default -> null;
+            };
+            return new DamageCheckResult(false, attackerId, victimId, message, victimClassifier.equals(Target.EntityClassifier.PLAYER));
+        }
+
+        if (!victimPlayerData.isPvpEnabled()) {
+            String message = switch (victimClassifier) {
+                case PLAYER -> plugin.getConfigCache().cannot_attack_victim;
+                case PET -> plugin.getConfigCache().cannot_attack_pets_attacker;
+                case MOUNT -> plugin.getConfigCache().cannot_attack_mounts_victim;
+                default -> null;
+            };
+            return new DamageCheckResult(false, attackerId, victimId, message, victimClassifier.equals(Target.EntityClassifier.PLAYER));
+        }
+
+        return new DamageCheckResult(
+                true,
+                attackerId,
+                victimId,
+                null,
+                victimClassifier.equals(Target.EntityClassifier.PLAYER)
+        );
     }
 
     /**

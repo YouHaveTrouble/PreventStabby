@@ -10,22 +10,31 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class PlayerListener implements Listener {
-    /**
-     * This event is here to get players saved options on join
-     */
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
+        if (!event.getLoginResult().equals(AsyncPlayerPreLoginEvent.Result.ALLOWED)) return;
+        UUID uuid = event.getUniqueId();
+        try {
+            PreventStabby.getPlugin().getPlayerManager().getPlayerData(uuid).get();
+        } catch (ExecutionException | InterruptedException e) {
+            PreventStabby.getPlugin().getLogger().severe(e.getMessage());
+            PreventStabby.getPlugin().getLogger().severe("Failed to load data for player %s".formatted(event.getPlayerProfile().getName()));
+            PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(uuid, false));
+        }
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        PreventStabby.getPlugin().getPlayerManager().addPlayer(uuid, new PlayerData(uuid, false));
+        PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
+        playerData.setLoginTimestamp(System.currentTimeMillis());
     }
 
     /**
