@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.util.BoundingBox;
 
@@ -41,14 +42,15 @@ public class EnvironmentalListener implements Listener {
 
         BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
         for (Entity victim : location.getWorld().getNearbyEntities(boundingBox)) {
-            if (victim == placer) continue;
-            DamageCheckResult result = plugin.getPlayerManager().canDamage(placer, victim);
+            if (victim.getUniqueId() == placer.getUniqueId()) continue;
+            Target victimTarget = Target.getTarget(victim);
+            if (victimTarget == null) continue;
+            DamageCheckResult result = plugin.getPlayerManager().canDamage(placer.getUniqueId(), victim.getUniqueId(), victimTarget.classifier);
             if (!result.ableToDamage()) {
                 event.setCancelled(true);
                 break;
             }
         }
-
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -65,7 +67,32 @@ public class EnvironmentalListener implements Listener {
         BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
         for (Entity victim : location.getWorld().getNearbyEntities(boundingBox)) {
             if (victim.getUniqueId() == igniterTarget.playerUuid) continue;
-            DamageCheckResult result = plugin.getPlayerManager().canDamage(igniterTarget.playerUuid, victim.getUniqueId(), igniterTarget.classifier);
+            Target victimTarget = Target.getTarget(victim);
+            if (victimTarget == null) continue;
+            DamageCheckResult result = plugin.getPlayerManager().canDamage(igniterTarget.playerUuid, victim.getUniqueId(), victimTarget.classifier);
+            if (!result.ableToDamage()) {
+                event.setCancelled(true);
+                break;
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockIgnite(BlockPlaceEvent event) {
+        ConfigCache config = plugin.getConfigCache();
+        if (!config.block_stopper_enabled) return;
+        Player player = event.getPlayer();
+        Location location = event.getBlock().getLocation().toCenterLocation();
+        Target target = Target.getTarget(player);
+        if (target == null) return;
+        double radius = config.block_stopper_radius;
+
+        BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
+        for (Entity victim : location.getWorld().getNearbyEntities(boundingBox)) {
+            if (victim.getUniqueId() == target.playerUuid) continue;
+            Target victimTarget = Target.getTarget(victim);
+            if (victimTarget == null) continue;
+            DamageCheckResult result = plugin.getPlayerManager().canDamage(target.playerUuid, victim.getUniqueId(), victimTarget.classifier);
             if (!result.ableToDamage()) {
                 event.setCancelled(true);
                 break;

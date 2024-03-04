@@ -14,8 +14,14 @@ import java.util.Set;
 
 public class ConfigCache {
 
-    public final boolean pvp_enabled_by_default, bucket_stopper_enabled, fire_stopper_enabled, punish_for_combat_logout,
-            punish_for_combat_logout_announce, block_teleports_in_combat, allow_fishing_rod_pull;
+    public final boolean pvp_enabled_by_default,
+            bucket_stopper_enabled,
+            fire_stopper_enabled,
+            block_stopper_enabled,
+            punish_for_combat_logout,
+            punish_for_combat_logout_announce,
+            block_teleports_in_combat,
+            allow_fishing_rod_pull;
     public final String pvp_enabled, pvp_disabled, cannot_attack_victim, cannot_attack_attacker,
             cannot_attack_pets_victim, cannot_attack_pets_attacker, no_permission, no_such_command, pvp_enabled_other,
             pvp_disabled_other, punish_for_combat_logout_message, entering_combat, leaving_combat,
@@ -28,7 +34,7 @@ public class ConfigCache {
             cannot_attack_teleport_or_spawn_protection_victim;
 
     public final double combat_time, login_protection_time, teleport_protection_time, bucket_stopper_radius,
-    fire_stopper_radius;
+    fire_stopper_radius, block_stopper_radius;
     private final Set<String> combatBlockedCommands = new HashSet<>();
 
     private final FileConfiguration config;
@@ -108,6 +114,16 @@ public class ConfigCache {
                 "settings.environmental.fire_stopper.radius",
                 2.5,
                 List.of("Distance from the player where igniting blocks will be disallowed")
+        );
+        this.block_stopper_enabled = getBoolean(
+                "settings.environmental.block_stopper.enabled",
+                true,
+                List.of("Should plugin block placing dangerous blocks near players with pvp off?")
+        );
+        this.block_stopper_radius = getDouble(
+                "settings.environmental.block_stopper.radius",
+                2.5,
+                List.of("Distance from the player where placing dangerous blocks will be disallowed")
         );
 
         // Messages
