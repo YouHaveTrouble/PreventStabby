@@ -33,11 +33,11 @@ public class EnvironmentalListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDangerousBucketDump(PlayerBucketEmptyEvent event) {
         ConfigCache config = plugin.getConfigCache();
-        if (!config.lava_and_fire_stopper_enabled) return;
+        if (!config.bucket_stopper_enabled) return;
         if (!dangerousBuckets.contains(event.getBucket())) return;
         Location location = event.getBlockClicked().getLocation();
         Player placer = event.getPlayer();
-        double radius = config.lava_and_fire_stopper_radius;
+        double radius = config.bucket_stopper_radius;
 
         BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
         for (Entity victim : location.getWorld().getNearbyEntities(boundingBox)) {
@@ -54,13 +54,13 @@ public class EnvironmentalListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
         ConfigCache config = plugin.getConfigCache();
-        if (!config.lava_and_fire_stopper_enabled) return;
+        if (!config.fire_stopper_enabled) return;
         Entity igniter = event.getIgnitingEntity();
         if (igniter == null) return;
         Target igniterTarget = Target.getTarget(igniter);
         if (igniterTarget == null) return;
         Location location = event.getBlock().getLocation();
-        double radius = config.lava_and_fire_stopper_radius;
+        double radius = config.fire_stopper_radius;
 
         BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
         for (Entity victim : location.getWorld().getNearbyEntities(boundingBox)) {

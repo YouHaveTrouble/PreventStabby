@@ -66,6 +66,7 @@ public class PlayerManager {
                     continue;
                 }
                 // entering combat logic
+                if (plugin.getConfigCache().combat_time <= 0) return; // disable combat entering when combat time is <0
                 if (!playerData.getLastCombatCheckState() && playerData.isInCombat()) {
                     PlayerEnterCombatEvent enterCombatEvent = null;
                     if (PlayerEnterCombatEvent.getHandlerList().getRegisteredListeners().length > 0) {

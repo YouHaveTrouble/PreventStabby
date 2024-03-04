@@ -53,7 +53,7 @@ public class PlayerData {
     }
 
     protected boolean isCacheExpired() {
-        return System.currentTimeMillis() - lastAccessTimestamp > PreventStabby.getPlugin().getConfigCache().cache_time * 1000;
+        return System.currentTimeMillis() - lastAccessTimestamp > 60000;
     }
 
     /**
@@ -85,6 +85,7 @@ public class PlayerData {
      */
     public void markInCombat() {
         refreshCacheTime();
+        if (PreventStabby.getPlugin().getConfigCache().combat_time <= 0) return;
         this.combatStartTimestamp = System.currentTimeMillis();
     }
 
@@ -134,7 +135,7 @@ public class PlayerData {
     public long getSecondsLeftUntilCombatEnd() {
         if (combatStartTimestamp == null) return -1;
         long timeSinceCombatStart = System.currentTimeMillis() - combatStartTimestamp;
-        long combatTimeConfigured = PreventStabby.getPlugin().getConfigCache().combat_time * 1000;
+        long combatTimeConfigured = (long) (PreventStabby.getPlugin().getConfigCache().combat_time * 1000);
         return (timeSinceCombatStart < combatTimeConfigured) ? (combatTimeConfigured - timeSinceCombatStart) / 1000 : -1;
     }
 
