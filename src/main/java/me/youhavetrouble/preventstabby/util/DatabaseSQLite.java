@@ -58,9 +58,10 @@ public class DatabaseSQLite {
     public void updatePlayerInfo(UUID uuid, PlayerData data) {
         try (Connection conn = DriverManager.getConnection(url)) {
             try {
-                PreparedStatement insertnewuser = conn.prepareStatement("UPDATE `players` SET pvpenabled = ? WHERE `player_uuid` = ?;");
-                insertnewuser.setBoolean(1, data.isPvpEnabled());
-                insertnewuser.setString(2, uuid.toString());
+                PreparedStatement statement = conn.prepareStatement("UPDATE `players` SET pvpenabled = ? WHERE `player_uuid` = ?;");
+                statement.setBoolean(1, data.isPvpEnabled());
+                statement.setString(2, uuid.toString());
+                statement.executeUpdate();
             } catch (SQLException exception) {
                 logger.severe("Error while saving player data!");
                 logger.warning(exception.getMessage());
