@@ -14,7 +14,7 @@ public class PvpToggleCommand {
     private static final PlayerManager playerManager = PreventStabby.getPlugin().getPlayerManager();
 
     public static void toggle(CommandSender sender, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
+        Bukkit.getAsyncScheduler().runNow(PreventStabby.getPlugin(), (task) -> {
             if (!PreventStabbyPermission.COMMAND_TOGGLE.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;
@@ -31,7 +31,7 @@ public class PvpToggleCommand {
                 }
                 playerManager.togglePlayerPvpState(player.getUniqueId()).thenAccept(newState -> {
                     PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, newState, true);
-                    Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task1) -> {
                         if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                             Bukkit.getPluginManager().callEvent(toggleEvent);
                         }
@@ -63,7 +63,7 @@ public class PvpToggleCommand {
                 }
                 playerManager.togglePlayerPvpState(player.getUniqueId()).thenAccept(newState -> {
                     PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, newState, false);
-                    Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                    Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task1) -> {
                         if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                             Bukkit.getPluginManager().callEvent(toggleEvent);
                         }
@@ -103,7 +103,7 @@ public class PvpToggleCommand {
             }
             playerManager.setPlayerPvpState(player.getUniqueId(), true);
             PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, true, true);
-            Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+            Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task) -> {
                 if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                     Bukkit.getPluginManager().callEvent(toggleEvent);
                 }
@@ -132,7 +132,7 @@ public class PvpToggleCommand {
             PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
             playerManager.setPlayerPvpState(player.getUniqueId(), true);
             PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, true, false);
-            Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+            Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task) -> {
                 if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                     Bukkit.getPluginManager().callEvent(toggleEvent);
                 }
@@ -162,7 +162,7 @@ public class PvpToggleCommand {
                 }
                 playerManager.setPlayerPvpState(player.getUniqueId(), false);
                 PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, false, true);
-                Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+                Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task) -> {
                     if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                         Bukkit.getPluginManager().callEvent(toggleEvent);
                     }
@@ -193,7 +193,7 @@ public class PvpToggleCommand {
             PluginMessages.sendMessage(sender, PluginMessages.parsePlayerName(player, message));
             playerManager.setPlayerPvpState(player.getUniqueId(), false);
             PlayerTogglePvpEvent toggleEvent = new PlayerTogglePvpEvent(player, false, false);
-            Bukkit.getScheduler().runTask(PreventStabby.getPlugin(), () -> {
+            Bukkit.getGlobalRegionScheduler().run(PreventStabby.getPlugin(), (task) -> {
                 if (PlayerTogglePvpEvent.getHandlerList().getRegisteredListeners().length > 0) {
                     Bukkit.getPluginManager().callEvent(toggleEvent);
                 }

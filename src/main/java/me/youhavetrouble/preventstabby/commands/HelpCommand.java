@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 
 public class HelpCommand {
     public static void help(CommandSender sender, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
+        Bukkit.getAsyncScheduler().runNow(PreventStabby.getPlugin(), (task) -> {
 
             if (!PreventStabbyPermission.COMMAND_HELP.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);

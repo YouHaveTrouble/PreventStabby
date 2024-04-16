@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 public class ReloadCommand {
 
     public static void reload(CommandSender sender) {
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
+        Bukkit.getAsyncScheduler().runNow(PreventStabby.getPlugin(), (task) -> {
             if (!PreventStabbyPermission.COMMAND_RELOAD.doesCommandSenderHave(sender)) {
                 PluginMessages.parseMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;

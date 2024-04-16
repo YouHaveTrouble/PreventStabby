@@ -33,7 +33,7 @@ public final class PreventStabby extends JavaPlugin {
         sqLite = new DatabaseSQLite("jdbc:sqlite:plugins/PreventStabby/database.db", dbFile, getLogger());
         playerManager = new PlayerManager(this);
 
-        // Register listeners TODO
+        // Register listeners
         getServer().getPluginManager().registerEvents(new UtilListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new EnvironmentalListener(this), this);
@@ -80,7 +80,7 @@ public final class PreventStabby extends JavaPlugin {
     }
 
     public void reloadPluginConfig(CommandSender commandSender) {
-        getServer().getScheduler().runTaskAsynchronously(this, () -> {
+        getServer().getAsyncScheduler().runNow(this, (task) -> {
             reloadPluginConfig();
             PluginMessages.sendMessage(commandSender, "PreventStabby configuration reloaded.");
         });

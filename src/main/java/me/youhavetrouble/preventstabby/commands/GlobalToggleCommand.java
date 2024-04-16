@@ -11,7 +11,7 @@ import java.util.Locale;
 
 public class GlobalToggleCommand {
     public static void globalToggle(CommandSender sender, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(PreventStabby.getPlugin(), () -> {
+        Bukkit.getAsyncScheduler().runNow(PreventStabby.getPlugin(), (task) -> {
             if (!PreventStabbyPermission.COMMAND_GLOBAL_TOGGLE.doesCommandSenderHave(sender)) {
                 PluginMessages.sendMessage(sender, PreventStabby.getPlugin().getConfigCache().no_permission);
                 return;

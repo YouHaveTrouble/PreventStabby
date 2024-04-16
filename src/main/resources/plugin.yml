@@ -3,6 +3,7 @@ version: ${project.version}
 main: me.youhavetrouble.preventstabby.PreventStabby
 authors: [YouHaveTrouble]
 api-version: 1.20
+folia-supported: true
 description: Stop people from getting stabbed!
 soft-depend:
   - WorldGuard
