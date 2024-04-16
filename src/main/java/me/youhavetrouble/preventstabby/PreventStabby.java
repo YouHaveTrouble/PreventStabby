@@ -46,6 +46,7 @@ public final class PreventStabby extends JavaPlugin {
             getLogger().severe("Error with registering commands.");
             getLogger().severe("Plugin will now disable.");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         MainCommand mainCommand = new MainCommand();
         pvpCommand.setExecutor(mainCommand);
