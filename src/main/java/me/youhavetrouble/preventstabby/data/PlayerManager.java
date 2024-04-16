@@ -32,12 +32,14 @@ public class PlayerManager {
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> Bukkit.getWorlds().forEach((world -> {
             for (Chunk chunk : world.getLoadedChunks()) {
                 if (!chunk.isEntitiesLoaded()) continue;
-                for (Entity entity : chunk.getEntities()) {
-                    if (!(entity instanceof Tameable tameable)) continue;
-                    UUID ownerId = tameable.getOwnerUniqueId();
-                    if (ownerId == null) continue;
-                    getPlayerData(ownerId);
-                }
+                Bukkit.getRegionScheduler().run(plugin, chunk.getWorld(), chunk.getX(), chunk.getZ(), (task1)  -> {
+                    for (Entity entity : chunk.getEntities()) {
+                        if (!(entity instanceof Tameable tameable)) continue;
+                        UUID ownerId = tameable.getOwnerUniqueId();
+                        if (ownerId == null) continue;
+                        getPlayerData(ownerId);
+                    }
+                });
             }
         })), 5, 20 * 15);
 
@@ -248,6 +250,7 @@ public class PlayerManager {
     public CompletableFuture<Boolean> togglePlayerPvpState(UUID uuid) {
         return getPlayerData(uuid).thenApply(playerData -> {
             playerData.setPvpEnabled(!playerData.isPvpEnabled());
+            plugin.getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, playerData.isPvpEnabled()));
             return playerData.isPvpEnabled();
         });
     }
