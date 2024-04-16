@@ -6,14 +6,11 @@ import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,16 +29,17 @@ public class PlayerManager {
             playerList.values().removeIf(PlayerData::isCacheExpired);
         }, 250, 250, TimeUnit.MILLISECONDS);
 
-        Bukkit.getScheduler().runTaskTimer(plugin, (task -> {
-            List<LivingEntity> entities = new ArrayList<>();
-            Bukkit.getWorlds().forEach((world -> entities.addAll(world.getLivingEntities())));
-            Bukkit.getAsyncScheduler().runNow(plugin, (asyncTask) -> entities.forEach(livingEntity -> {
-                if (!(livingEntity instanceof Tameable tameable)) return;
-                UUID ownerId = tameable.getOwnerUniqueId();
-                if (ownerId == null) return;
-                getPlayerData(ownerId);
-            }));
-        }), 5, 20 * 15);
+        Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> Bukkit.getWorlds().forEach((world -> {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                if (!chunk.isEntitiesLoaded()) continue;
+                for (Entity entity : chunk.getEntities()) {
+                    if (!(entity instanceof Tameable tameable)) continue;
+                    UUID ownerId = tameable.getOwnerUniqueId();
+                    if (ownerId == null) continue;
+                    getPlayerData(ownerId);
+                }
+            }
+        })), 5, 20 * 15);
 
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> {
             for (PlayerData playerData : playerList.values()) {
