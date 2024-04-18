@@ -46,6 +46,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout) return;
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+        if (playerData == null) return;
         if (!playerData.isInCombat()) return;
         player.setHealth(0);
         if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_announce) return;
@@ -56,6 +57,7 @@ public class PlayerListener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
+        if (playerData == null) return; // Plugins using players as entities can cause this state
         playerData.setTeleportTimestamp(Instant.now().getEpochSecond());
     }
 
@@ -63,7 +65,7 @@ public class PlayerListener implements Listener {
     public void onPlayerDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
-        if (playerData == null) return;
+        if (playerData == null) return; // Plugins using players as entities can cause this state
         playerData.markNotInCombat();
     }
 
