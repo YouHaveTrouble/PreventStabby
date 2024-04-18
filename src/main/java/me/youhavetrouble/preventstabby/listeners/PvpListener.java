@@ -24,7 +24,7 @@ public class PvpListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         Entity attacker = event.getDamager();
         Entity victim = event.getEntity();
@@ -36,7 +36,7 @@ public class PvpListener implements Listener {
         plugin.getPlayerManager().handleDamageCheck(result);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent event) {
         if (!(event.getEntity().getShooter() instanceof Player thrower)) return;
         boolean harmful = false;
@@ -56,7 +56,7 @@ public class PvpListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPotionCloudEffectApply(AreaEffectCloudApplyEvent event) {
         if (!(event.getEntity().getSource() instanceof Player thrower)) return;
         boolean harmful = false;
@@ -78,7 +78,7 @@ public class PvpListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onFish(PlayerFishEvent event) {
         if (event.getCaught() instanceof Item) return;
         if (plugin.getConfigCache().allow_fishing_rod_pull) return;
