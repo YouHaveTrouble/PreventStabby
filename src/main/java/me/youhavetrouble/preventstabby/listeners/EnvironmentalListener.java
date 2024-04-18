@@ -31,7 +31,7 @@ public class EnvironmentalListener implements Listener {
         dangerousBuckets.add(Material.POWDER_SNOW_BUCKET);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onDangerousBucketDump(PlayerBucketEmptyEvent event) {
         ConfigCache config = plugin.getConfigCache();
         if (!config.bucket_stopper_enabled) return;
@@ -53,7 +53,7 @@ public class EnvironmentalListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
         ConfigCache config = plugin.getConfigCache();
         if (!config.fire_stopper_enabled) return;
@@ -77,7 +77,7 @@ public class EnvironmentalListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockIgnite(BlockPlaceEvent event) {
         ConfigCache config = plugin.getConfigCache();
         if (!config.block_stopper_enabled) return;
