@@ -12,9 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Locale;
 
 public class PvpListener implements Listener {
 
@@ -91,6 +94,21 @@ public class PvpListener implements Listener {
             event.setCancelled(true);
         }
         plugin.getPlayerManager().handleDamageCheck(result);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onCommandInCombat(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        if (!plugin.getPlayerManager().getPlayer(player.getUniqueId()).isInCombat()) return;
+        String message = event.getMessage().toLowerCase(Locale.ROOT);
+        if (message.startsWith("/")) {
+            message = message.substring(1);
+        }
+        message = message.split(" ")[0];
+        if (!plugin.getConfigCache().getCombatBlockedCommands().contains(message)) return;
+
+        event.setCancelled(true);
+        player.sendMessage(plugin.getConfigCache().cant_do_that_during_combat);
     }
 
 }

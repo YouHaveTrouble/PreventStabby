@@ -7,10 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigCache {
 
@@ -66,12 +63,14 @@ public class ConfigCache {
                 List.of("Should killing of a player that logged out of combat be announced?")
         );
 
-        this.combatBlockedCommands.addAll(getList(
+        List<String> commandsBlockedInCombat = getList(
                 "settings.block_in_combat.commands",
                 List.of("spawn", "tpa", "home"),
                 List.of("Commands to block when player is in combat")
-                )
         );
+        for (String command : commandsBlockedInCombat) {
+            this.combatBlockedCommands.add(command.toLowerCase(Locale.ENGLISH));
+        }
 
         this.block_teleports_in_combat = getBoolean(
                 "settings.block_in_combat.teleports",
@@ -125,6 +124,8 @@ public class ConfigCache {
                 2.5,
                 List.of("Distance from the player where placing dangerous blocks will be disallowed")
         );
+
+
 
         // Messages
         this.pvp_enabled = getString("messages.pvp_enabled", "<red>You enabled PvP!");
