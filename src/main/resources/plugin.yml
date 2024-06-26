@@ -2,7 +2,7 @@ name: PreventStabby
 version: ${project.version}
 main: me.youhavetrouble.preventstabby.PreventStabby
 authors: [YouHaveTrouble]
-api-version: 1.20
+api-version: 1.21
 folia-supported: true
 description: Stop people from getting stabbed!
 soft-depend:
