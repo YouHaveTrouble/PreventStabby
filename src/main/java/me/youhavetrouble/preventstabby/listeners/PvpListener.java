@@ -2,10 +2,7 @@ package me.youhavetrouble.preventstabby.listeners;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.data.DamageCheckResult;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +13,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.Locale;
 
@@ -63,7 +61,10 @@ public class PvpListener implements Listener {
     public void onPotionCloudEffectApply(AreaEffectCloudApplyEvent event) {
         if (!(event.getEntity().getSource() instanceof Player thrower)) return;
         boolean harmful = false;
-        for (PotionEffect effect : event.getEntity().getBasePotionType().getPotionEffects()) {
+        AreaEffectCloud cloud = event.getEntity();
+        if (cloud.getBasePotionType() == null) return;
+        PotionType potionType = cloud.getBasePotionType();
+        for (PotionEffect effect : potionType.getPotionEffects()) {
             if (!PotionEffectType.Category.HARMFUL.equals(effect.getType().getEffectCategory())) continue;
             harmful = true;
             break;
