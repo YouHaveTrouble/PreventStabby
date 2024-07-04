@@ -1,6 +1,7 @@
 package me.youhavetrouble.preventstabby.config;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +34,7 @@ public class ConfigCache {
     public final double combat_time, login_protection_time, teleport_protection_time, bucket_stopper_radius,
     fire_stopper_radius, block_stopper_radius;
     private final Set<String> combatBlockedCommands = new HashSet<>();
+    private final Set<Material> dangerousBlocks = new HashSet<>();
 
     private final FileConfiguration config;
 
@@ -124,6 +126,19 @@ public class ConfigCache {
                 2.5,
                 List.of("Distance from the player where placing dangerous blocks will be disallowed")
         );
+        List<String> rawDangerousBlocks = getList(
+                "settings.environmental.block_stopper.blocks",
+                List.of("tnt", "magma_block", "cactus", "campfire"),
+                List.of("List of dangerous blocks that will be blocked when placed near players with pvp off")
+        );
+        for (String block : rawDangerousBlocks) {
+            Material material = Material.matchMaterial(block);
+            if (material != null) {
+                dangerousBlocks.add(material);
+            } else {
+                plugin.getLogger().warning("Invalid material: " + block);
+            }
+        }
 
 
 
@@ -173,6 +188,10 @@ public class ConfigCache {
 
     public Set<String> getCombatBlockedCommands() {
         return Collections.unmodifiableSet(combatBlockedCommands);
+    }
+
+    public Set<Material> getDangerousBlocks() {
+        return Collections.unmodifiableSet(dangerousBlocks);
     }
 
     private String getString(String path, @NotNull String def) {

@@ -78,13 +78,14 @@ public class EnvironmentalListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onBlockIgnite(BlockPlaceEvent event) {
+    public void onDangerousBlockPlace(BlockPlaceEvent event) {
         ConfigCache config = plugin.getConfigCache();
         if (!config.block_stopper_enabled) return;
         Player player = event.getPlayer();
         Location location = event.getBlock().getLocation().toCenterLocation();
         Target target = Target.getTarget(player);
         if (target == null) return;
+        if (!config.getDangerousBlocks().contains(event.getBlock().getType())) return;
         double radius = config.block_stopper_radius;
 
         BoundingBox boundingBox = BoundingBox.of(location.toVector(), radius, radius, radius);
