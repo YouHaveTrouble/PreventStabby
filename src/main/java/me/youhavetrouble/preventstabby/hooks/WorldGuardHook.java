@@ -15,17 +15,19 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Logger;
+
 public class WorldGuardHook {
 
     private static FlagRegistry flagRegistry;
     public static StateFlag FORCE_PVP_FLAG;
 
-    public static void init() {
+    public static void init(Logger logger) {
         try {
             Class.forName("com.sk89q.worldguard.protection.flags.registry.FlagRegistry");
             WorldGuardPlugin worldGuardPlugin = WorldGuardPlugin.inst();
             if (WorldGuard.getInstance() == null || worldGuardPlugin == null) return;
-            PreventStabby.getPlugin().getLogger().info("[PreventStabby] Hooking into WorldGuard");
+            logger.info("Hooking into WorldGuard");
             flagRegistry = WorldGuard.getInstance().getFlagRegistry();
             createForcePvpFlag();
         } catch (NoClassDefFoundError | ClassNotFoundException ignored) {

@@ -11,6 +11,7 @@ import me.youhavetrouble.preventstabby.listeners.PvpListener;
 import me.youhavetrouble.preventstabby.listeners.UtilListener;
 import me.youhavetrouble.preventstabby.util.*;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.MultiLineChart;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,11 +64,13 @@ public final class PreventStabby extends JavaPlugin {
     public void onLoad() {
         if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             try {
-                WorldGuardHook.init();
+                WorldGuardHook.init(this.getLogger());
                 worldGuardHook = true;
             } catch (NoClassDefFoundError e) {
                 worldGuardHook = false;
             }
+        } else {
+            worldGuardHook = false;
         }
     }
 
