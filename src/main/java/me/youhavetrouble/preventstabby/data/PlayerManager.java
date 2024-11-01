@@ -6,11 +6,12 @@ import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,25 +30,29 @@ public class PlayerManager {
             playerList.values().removeIf(PlayerData::isCacheExpired);
         }, 250, 250, TimeUnit.MILLISECONDS);
 
-        Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> Bukkit.getWorlds().forEach((world -> {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                if (!chunk.isEntitiesLoaded()) continue;
-                Bukkit.getRegionScheduler().run(plugin, chunk.getWorld(), chunk.getX(), chunk.getZ(), (task1)  -> {
-                    for (Entity entity : chunk.getEntities()) {
-                        if (!(entity instanceof Tameable tameable)) continue;
-                        UUID ownerId = tameable.getOwnerUniqueId();
-                        if (ownerId == null) continue;
-                        getPlayerData(ownerId);
-                    }
-                });
+        Bukkit.getAsyncScheduler().runAtFixedRate(plugin, (task) -> {
+            Collection<? extends Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+            // Load data for all online players as a failsafe
+            CompletableFuture.allOf(players.stream().map(player -> getPlayerData(player.getUniqueId())).toArray(CompletableFuture[]::new)).join();
+            // Refresh cache time for all players
+            for (PlayerData playerData : playerList.values()) {
+                if (playerData == null) continue;
+                playerData.refreshCacheTime();
             }
-        })), 5, 20 * 15);
+        }, 1, 1, TimeUnit.SECONDS);
 
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (task) -> {
             for (PlayerData playerData : playerList.values()) {
                 if (playerData == null) continue;
                 Player player = Bukkit.getPlayer(playerData.getPlayerUuid());
-                if (player == null || !player.isOnline()) continue;
+                if (player == null || !player.isOnline()) {
+                    // player not online, so check for related entities
+                    playerData.getRelatedEntities().removeIf( uuid -> {
+                        Entity entity = Bukkit.getEntity(uuid);
+                        return entity == null;
+                    });
+                    if (playerData.getRelatedEntities().isEmpty()) continue;
+                }
                 playerData.refreshCacheTime(); // Refresh cache timer if player is online
                 // leaving combat logic
                 if (playerData.getLastCombatCheckState() && !playerData.isInCombat()) {
@@ -238,13 +243,15 @@ public class PlayerManager {
         });
     }
 
-    public void setPlayerPvpState(UUID uuid, boolean state) {
+    public CompletableFuture<Void> setPlayerPvpState(UUID uuid, boolean state) {
         // If player is in cache update that
         if (getPlayer(uuid) != null) {
             getPlayer(uuid).setPvpEnabled(state);
         }
-        // Update the database aswell
-        plugin.getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, state));
+        return CompletableFuture.runAsync(() -> {
+            // Update the database aswell
+            plugin.getSqLite().updatePlayerInfo(uuid, new PlayerData(uuid, state));
+        });
     }
 
     public CompletableFuture<Boolean> togglePlayerPvpState(UUID uuid) {

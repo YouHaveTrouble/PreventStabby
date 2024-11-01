@@ -11,12 +11,16 @@ import me.youhavetrouble.preventstabby.listeners.PvpListener;
 import me.youhavetrouble.preventstabby.listeners.UtilListener;
 import me.youhavetrouble.preventstabby.util.*;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.MultiLineChart;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Tameable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.UUID;
 
 public final class PreventStabby extends JavaPlugin {
 
@@ -58,6 +62,24 @@ public final class PreventStabby extends JavaPlugin {
         }
 
         Metrics metrics = new Metrics(this, 14074);
+
+        getServer().getOnlinePlayers().forEach(player -> playerManager.getPlayerData(player.getUniqueId()));
+        getServer().getWorlds().forEach(world -> {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                if (!chunk.isEntitiesLoaded()) continue;
+                Bukkit.getRegionScheduler().run(plugin, chunk.getWorld(), chunk.getX(), chunk.getZ(), (task)  -> {
+                    for (Entity entity : chunk.getEntities()) {
+                        if (!(entity instanceof Tameable tameable)) continue;
+                        UUID ownerId = tameable.getOwnerUniqueId();
+                        if (ownerId == null) continue;
+                        getPlayerManager().getPlayerData(ownerId).thenAccept(playerData -> {
+                            if (playerData == null) return;
+                            playerData.addRelatedEntity(entity.getUniqueId());
+                        });
+                    }
+                });
+            }
+        });
     }
 
     @Override

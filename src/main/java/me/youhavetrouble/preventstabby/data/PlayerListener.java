@@ -78,7 +78,10 @@ public class PlayerListener implements Listener {
         if (!(entity instanceof Tameable tameable)) return;
         UUID ownerId = tameable.getOwnerUniqueId();
         if (ownerId == null) return;
-        PreventStabby.getPlugin().getPlayerManager().getPlayerData(ownerId);
+        PreventStabby.getPlugin().getPlayerManager().getPlayerData(ownerId).thenAccept(playerData -> {
+            if (playerData == null) return;
+            playerData.addRelatedEntity(entity.getUniqueId());
+        });
     }
 
 }

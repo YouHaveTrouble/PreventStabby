@@ -1,7 +1,10 @@
 package me.youhavetrouble.preventstabby.data;
 
 import me.youhavetrouble.preventstabby.PreventStabby;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -13,6 +16,7 @@ public class PlayerData {
     private long lastAccessTimestamp;
     private Long combatStartTimestamp, teleportTimestamp, loginTimestamp;
     private boolean pvpEnabled, lastCombatCheck;
+    private final Set<UUID> relatedEntities = new HashSet<>();
 
     public PlayerData(UUID playerUuid, boolean pvpEnabled) {
         this.playerUuid = playerUuid;
@@ -106,6 +110,7 @@ public class PlayerData {
      * Retrieves the login timestamp for the player.
      * @return The login timestamp for the player.
      */
+    @Nullable
     public Long getLoginTimestamp() {
         return loginTimestamp;
     }
@@ -161,5 +166,29 @@ public class PlayerData {
      */
     public boolean isProtected() {
         return  hasLoginProtection() || hasTeleportProtection();
+    }
+
+    /**
+     * Get the list of entities related to the player that should keep player's data loaded
+     * @return The list of entities related to the player that should keep player's data loaded
+     */
+    public Set<UUID> getRelatedEntities() {
+        return relatedEntities;
+    }
+
+    /**
+     * @see #getRelatedEntities()
+     * @param entity The entity id to add to the list of related entities
+     */
+    public void addRelatedEntity(UUID entity) {
+        relatedEntities.add(entity);
+    }
+
+    /**
+     * @see #getRelatedEntities()
+     * @param entity The entity id to remove from the list of related entities
+     */
+    public void removeRelatedEntity(UUID entity) {
+        relatedEntities.remove(entity);
     }
 }
