@@ -52,6 +52,8 @@ public class WorldGuardHook {
     }
 
     public static boolean isPlayerForcedToPvp(Player player) {
+        if (player == null) return false;
+        if (!PreventStabby.worldGuardHookEnabled()) return false;
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         org.bukkit.Location loc = player.getLocation();

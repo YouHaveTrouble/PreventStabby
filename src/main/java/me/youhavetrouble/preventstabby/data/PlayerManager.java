@@ -3,6 +3,7 @@ package me.youhavetrouble.preventstabby.data;
 import me.youhavetrouble.preventstabby.PreventStabby;
 import me.youhavetrouble.preventstabby.api.event.PlayerEnterCombatEvent;
 import me.youhavetrouble.preventstabby.api.event.PlayerLeaveCombatEvent;
+import me.youhavetrouble.preventstabby.hooks.WorldGuardHook;
 import me.youhavetrouble.preventstabby.util.PluginMessages;
 import me.youhavetrouble.preventstabby.util.PvpState;
 import org.bukkit.Bukkit;
@@ -174,7 +175,7 @@ public class PlayerManager {
             }
         }
 
-        if (!attackerPlayerData.isPvpEnabled()) {
+        if (!attackerPlayerData.isPvpEnabled() && !WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(attackerId))) {
             String message = switch (victimClassifier) {
                 case PLAYER -> plugin.getConfigCache().cannot_attack_attacker;
                 case PET -> plugin.getConfigCache().cannot_attack_pets_victim;
@@ -184,7 +185,7 @@ public class PlayerManager {
             return new DamageCheckResult(false, attackerId, victimId, message, victimClassifier.equals(Target.EntityClassifier.PLAYER));
         }
 
-        if (!victimPlayerData.isPvpEnabled()) {
+        if (!victimPlayerData.isPvpEnabled() && !WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(victimId))) {
             String message = switch (victimClassifier) {
                 case PLAYER -> plugin.getConfigCache().cannot_attack_victim;
                 case PET -> plugin.getConfigCache().cannot_attack_pets_attacker;
