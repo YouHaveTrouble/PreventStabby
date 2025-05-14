@@ -204,38 +204,63 @@ public class ConfigCache {
     }
 
     private String getString(String path, @NotNull String def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getString(path, def);
-        config.set(path, def);
+        String value;
+        if (config.isSet(path)) {
+            value = config.getString(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private boolean getBoolean(String path, boolean def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getBoolean(path, def);
-        config.set(path, def);
+        boolean value;
+        if (config.isSet(path)) {
+            value = config.getBoolean(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private double getDouble(String path, double def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getDouble(path, def);
-        config.set(path, def);
+        double value;
+        if (config.isSet(path)) {
+            value = config.getDouble(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private long getLong(String path, long def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getLong(path, def);
-        config.set(path, def);
+        long value;
+        if (config.isSet(path)) {
+            value = config.getLong(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private List<String> getList(String path, List<String> def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getStringList(path);
-        config.set(path, def);
+        List<String> value;
+        if (config.isSet(path)) {
+            value = config.getStringList(path);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private List<String> getList(String path, List<String> def) {
