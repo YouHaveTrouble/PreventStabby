@@ -42,6 +42,10 @@ public class ConfigCache {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
+        migrate("settings.punish_for_combat_logout.enabled",
+                "settings.punish_for_combat_logout.kill",
+                true);
+
         // Settings
         this.pvp_enabled_by_default = getBoolean(
                 "settings.pvp_enabled_by_default",
@@ -238,5 +242,11 @@ public class ConfigCache {
         return getList(path, def, null);
     }
 
-
+    private void migrate(String oldPath, String newPath, @Nullable Object defaultValue) {
+        if (config.isSet(oldPath) && !config.isSet(newPath)) {
+            Object value = config.get(oldPath);
+            config.set(newPath, value != null ? value : defaultValue);
+            config.set(oldPath, null);
+        }
+    }
 }
