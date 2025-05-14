@@ -16,7 +16,7 @@ public class ConfigCache {
             bucket_stopper_enabled,
             fire_stopper_enabled,
             block_stopper_enabled,
-            punish_for_combat_logout,
+            punish_for_combat_logout_kill,
             punish_for_combat_logout_announce,
             block_teleports_in_combat,
             allow_fishing_rod_pull;
@@ -42,6 +42,10 @@ public class ConfigCache {
         plugin.reloadConfig();
         config = plugin.getConfig();
 
+        migrate("settings.punish_for_combat_logout.enabled",
+                "settings.punish_for_combat_logout.kill",
+                true);
+
         // Settings
         this.pvp_enabled_by_default = getBoolean(
                 "settings.pvp_enabled_by_default",
@@ -54,15 +58,16 @@ public class ConfigCache {
                 25,
                 List.of("How long in seconds should combat last since the last hit")
         );
-        this.punish_for_combat_logout = getBoolean(
-                "settings.punish_for_combat_logout.enabled",
+
+        this.punish_for_combat_logout_kill = getBoolean(
+                "settings.punish_for_combat_logout.kill",
                 true,
                 List.of("Should players be killed if they log out during combat?")
         );
         this.punish_for_combat_logout_announce = getBoolean(
                 "settings.punish_for_combat_logout.announce",
                 true,
-                List.of("Should killing of a player that logged out of combat be announced?")
+                List.of("Should we announce that player logged out of combat?")
         );
 
         List<String> commandsBlockedInCombat = getList(
@@ -199,43 +204,74 @@ public class ConfigCache {
     }
 
     private String getString(String path, @NotNull String def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getString(path, def);
-        config.set(path, def);
+        String value;
+        if (config.isSet(path)) {
+            value = config.getString(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private boolean getBoolean(String path, boolean def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getBoolean(path, def);
-        config.set(path, def);
+        boolean value;
+        if (config.isSet(path)) {
+            value = config.getBoolean(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private double getDouble(String path, double def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getDouble(path, def);
-        config.set(path, def);
+        double value;
+        if (config.isSet(path)) {
+            value = config.getDouble(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private long getLong(String path, long def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getLong(path, def);
-        config.set(path, def);
+        long value;
+        if (config.isSet(path)) {
+            value = config.getLong(path, def);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private List<String> getList(String path, List<String> def, @Nullable List<String> comments) {
-        if (config.isSet(path)) return config.getStringList(path);
-        config.set(path, def);
+        List<String> value;
+        if (config.isSet(path)) {
+            value = config.getStringList(path);
+        } else {
+            config.set(path, def);
+            value = def;
+        }
         if (comments != null) config.setComments(path, comments);
-        return def;
+        return value;
     }
 
     private List<String> getList(String path, List<String> def) {
         return getList(path, def, null);
     }
 
-
+    private void migrate(String oldPath, String newPath, @Nullable Object defaultValue) {
+        if (config.isSet(oldPath) && !config.isSet(newPath)) {
+            Object value = config.get(oldPath);
+            config.set(newPath, value != null ? value : defaultValue);
+            config.set(oldPath, null);
+        }
+    }
 }

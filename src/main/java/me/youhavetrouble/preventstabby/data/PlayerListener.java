@@ -44,13 +44,14 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout) return;
+        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_announce) {
+            PluginMessages.broadcastMessage(player, PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_message);
+        }
+        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_kill) return;
         PlayerData playerData = PreventStabby.getPlugin().getPlayerManager().getPlayer(player.getUniqueId());
         if (playerData == null) return;
         if (!playerData.isInCombat()) return;
         player.setHealth(0);
-        if (!PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_announce) return;
-        PluginMessages.broadcastMessage(player, PreventStabby.getPlugin().getConfigCache().punish_for_combat_logout_message);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
