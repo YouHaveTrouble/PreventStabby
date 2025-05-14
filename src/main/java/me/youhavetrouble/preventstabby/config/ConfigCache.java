@@ -16,7 +16,7 @@ public class ConfigCache {
             bucket_stopper_enabled,
             fire_stopper_enabled,
             block_stopper_enabled,
-            punish_for_combat_logout,
+            punish_for_combat_logout_kill,
             punish_for_combat_logout_announce,
             block_teleports_in_combat,
             allow_fishing_rod_pull;
@@ -54,15 +54,16 @@ public class ConfigCache {
                 25,
                 List.of("How long in seconds should combat last since the last hit")
         );
-        this.punish_for_combat_logout = getBoolean(
-                "settings.punish_for_combat_logout.enabled",
+
+        this.punish_for_combat_logout_kill = getBoolean(
+                "settings.punish_for_combat_logout.kill",
                 true,
                 List.of("Should players be killed if they log out during combat?")
         );
         this.punish_for_combat_logout_announce = getBoolean(
                 "settings.punish_for_combat_logout.announce",
                 true,
-                List.of("Should killing of a player that logged out of combat be announced?")
+                List.of("Should we announce that player logged out of combat?")
         );
 
         List<String> commandsBlockedInCombat = getList(
