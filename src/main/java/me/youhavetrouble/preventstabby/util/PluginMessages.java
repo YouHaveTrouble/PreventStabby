@@ -9,6 +9,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -33,12 +34,12 @@ public class PluginMessages {
         return PreventStabby.getPlugin().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
     }
 
-    public static void sendMessage(CommandSender sender, String message) {
+    public static void sendMessage(@NotNull CommandSender sender, String message) {
         if ("".equals(message)) return;
         sender.sendMessage(parseMessage(sender, message));
     }
 
-    public static void sendActionBar(Player player, String message) {
+    public static void sendActionBar(@NotNull Player player, String message) {
         if ("".equals(message)) return;
         Component parsedMessage = parseMessage(player, message);
         player.sendActionBar(parsedMessage);

@@ -46,15 +46,16 @@ public class PlayerManager {
             for (PlayerData playerData : playerList.values()) {
                 if (playerData == null) continue;
                 Player player = Bukkit.getPlayer(playerData.getPlayerUuid());
+                playerData.getRelatedEntities().removeIf( uuid -> {
+                    Entity entity = Bukkit.getEntity(uuid);
+                    return entity == null;
+                });
                 if (player == null || !player.isOnline()) {
                     // player not online, so check for related entities
-                    playerData.getRelatedEntities().removeIf( uuid -> {
-                        Entity entity = Bukkit.getEntity(uuid);
-                        return entity == null;
-                    });
                     if (playerData.getRelatedEntities().isEmpty()) continue;
                 }
-                playerData.refreshCacheTime(); // Refresh cache timer if player is online
+                playerData.refreshCacheTime();
+                if (player == null || !player.isOnline()) continue; // If player is offline, skip the rest of the logic
                 // leaving combat logic
                 if (playerData.getLastCombatCheckState() && !playerData.isInCombat()) {
                     PlayerLeaveCombatEvent leaveCombatEvent = null;
