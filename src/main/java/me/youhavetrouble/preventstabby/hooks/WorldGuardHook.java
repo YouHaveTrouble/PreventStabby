@@ -51,7 +51,7 @@ public class WorldGuardHook {
         }
     }
 
-    public static boolean isPlayerForcedToPvp(Player player) {
+    public static Boolean isPlayerForcedToPvp(Player player) {
         if (player == null) return false;
         if (!PreventStabby.worldGuardHookEnabled()) return false;
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
@@ -60,7 +60,11 @@ public class WorldGuardHook {
         if (loc.getWorld() == null) return false;
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         ApplicableRegionSet set = query.getApplicableRegions(new Location(BukkitAdapter.adapt(loc.getWorld()), loc.getX(), loc.getY(), loc.getZ()));
-        return set.testState(localPlayer, FORCE_PVP_FLAG);
+        return switch (set.queryState(localPlayer, FORCE_PVP_FLAG)) {
+            case ALLOW -> true;
+            case DENY -> false;
+            case null-> null;
+        };
     }
 
 }

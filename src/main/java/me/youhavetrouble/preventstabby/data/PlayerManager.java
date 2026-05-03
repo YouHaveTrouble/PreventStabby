@@ -176,7 +176,14 @@ public class PlayerManager {
             }
         }
 
-        if (!attackerPlayerData.isPvpEnabled() || (PreventStabby.worldGuardHookEnabled() && !WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(attackerId)))) {
+        Boolean attackerForcedPvpState = null;
+        Boolean victimForcedPvpState = null;
+        if (PreventStabby.worldGuardHookEnabled()) {
+            attackerForcedPvpState = WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(attackerId));
+            victimForcedPvpState = WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(victimId));
+        }
+
+        if (!attackerPlayerData.isPvpEnabled() || Boolean.FALSE.equals(attackerForcedPvpState)) {
             String message = switch (victimClassifier) {
                 case PLAYER -> plugin.getConfigCache().cannot_attack_attacker;
                 case PET -> plugin.getConfigCache().cannot_attack_pets_victim;
@@ -186,7 +193,7 @@ public class PlayerManager {
             return new DamageCheckResult(false, attackerId, victimId, message, victimClassifier.equals(Target.EntityClassifier.PLAYER));
         }
 
-        if (!victimPlayerData.isPvpEnabled() || (PreventStabby.worldGuardHookEnabled() && !WorldGuardHook.isPlayerForcedToPvp(Bukkit.getPlayer(victimId)))) {
+        if (!victimPlayerData.isPvpEnabled() || Boolean.FALSE.equals(victimForcedPvpState)) {
             String message = switch (victimClassifier) {
                 case PLAYER -> plugin.getConfigCache().cannot_attack_victim;
                 case PET -> plugin.getConfigCache().cannot_attack_pets_attacker;
